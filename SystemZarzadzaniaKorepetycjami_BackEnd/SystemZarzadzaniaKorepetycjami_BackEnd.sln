@@ -3,7 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.10.35027.167
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SystemZarzadzaniaKorepetycjami_BackEnd", "SystemZarzadzaniaKorepetycjami_BackEnd.csproj", "{9CB43A50-CEDB-4DFB-9FEB-5B9DB35A5372}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SystemZarzadzaniaKorepetycjami_BackEnd", "SystemZarzadzaniaKorepetycjami_BackEnd.csproj", "{9CB43A50-CEDB-4DFB-9FEB-5B9DB35A5372}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SystemZarzadzaniaKorepetycjami_BackEnd_Test", "..\SystemZarzadzaniaKorepetycjami_BackEnd_Test\SystemZarzadzaniaKorepetycjami_BackEnd_Test.csproj", "{858515A4-666F-4074-A8DB-54531F8571AE}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +17,10 @@ Global
 		{9CB43A50-CEDB-4DFB-9FEB-5B9DB35A5372}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9CB43A50-CEDB-4DFB-9FEB-5B9DB35A5372}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9CB43A50-CEDB-4DFB-9FEB-5B9DB35A5372}.Release|Any CPU.Build.0 = Release|Any CPU
+		{858515A4-666F-4074-A8DB-54531F8571AE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{858515A4-666F-4074-A8DB-54531F8571AE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{858515A4-666F-4074-A8DB-54531F8571AE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{858515A4-666F-4074-A8DB-54531F8571AE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
