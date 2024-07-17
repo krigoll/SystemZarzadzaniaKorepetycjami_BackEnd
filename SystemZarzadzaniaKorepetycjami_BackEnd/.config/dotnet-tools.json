@@ -1,0 +1,13 @@
+{
+  "version": 1,
+  "isRoot": true,
+  "tools": {
+    "erikej.efcorepowertools.cli": {
+      "version": "8.1.311-nightly",
+      "commands": [
+        "efcpt"
+      ],
+      "rollForward": false
+    }
+  }
+}

@@ -1,0 +1,126 @@
+﻿{
+  "CodeGenerationMode": 4,
+  "ContextClassName": "SZKContext",
+  "ContextNamespace": null,
+  "FilterSchemas": false,
+  "IncludeConnectionString": false,
+  "ModelNamespace": null,
+  "OutputContextPath": null,
+  "OutputPath": "Models",
+  "PreserveCasingWithRegex": true,
+  "ProjectRootNamespace": "SystemZarzadzaniaKorepetycjami_BackEnd",
+  "Schemas": null,
+  "SelectedHandlebarsLanguage": 0,
+  "SelectedToBeGenerated": 0,
+  "T4TemplatePath": null,
+  "Tables": [
+    {
+      "Name": "[dbo].[Administrator]",
+      "ObjectType": 0
+    },
+    {
+      "Name": "[dbo].[Calendar]",
+      "ObjectType": 0
+    },
+    {
+      "Name": "[dbo].[Lesson]",
+      "ObjectType": 0
+    },
+    {
+      "Name": "[dbo].[Lesson_Status]",
+      "ObjectType": 0
+    },
+    {
+      "Name": "[dbo].[Mark]",
+      "ObjectType": 0
+    },
+    {
+      "Name": "[dbo].[Message]",
+      "ObjectType": 0
+    },
+    {
+      "Name": "[dbo].[Opinion]",
+      "ObjectType": 0
+    },
+    {
+      "Name": "[dbo].[Person]",
+      "ObjectType": 0
+    },
+    {
+      "Name": "[dbo].[Report]",
+      "ObjectType": 0
+    },
+    {
+      "Name": "[dbo].[Student]",
+      "ObjectType": 0
+    },
+    {
+      "Name": "[dbo].[Student_Answer]",
+      "ObjectType": 0
+    },
+    {
+      "Name": "[dbo].[Subject]",
+      "ObjectType": 0
+    },
+    {
+      "Name": "[dbo].[Subject_Category]",
+      "ObjectType": 0
+    },
+    {
+      "Name": "[dbo].[Subject_Level]",
+      "ObjectType": 0
+    },
+    {
+      "Name": "[dbo].[Task]",
+      "ObjectType": 0
+    },
+    {
+      "Name": "[dbo].[Task_On_Test]",
+      "ObjectType": 0
+    },
+    {
+      "Name": "[dbo].[Task_Type]",
+      "ObjectType": 0
+    },
+    {
+      "Name": "[dbo].[Teacher]",
+      "ObjectType": 0
+    },
+    {
+      "Name": "[dbo].[Teacher_Salary]",
+      "ObjectType": 0
+    },
+    {
+      "Name": "[dbo].[Test]",
+      "ObjectType": 0
+    },
+    {
+      "Name": "[dbo].[Test_For_Student]",
+      "ObjectType": 0
+    }
+  ],
+  "UiHint": null,
+  "UncountableWords": null,
+  "UseAsyncStoredProcedureCalls": true,
+  "UseBoolPropertiesWithoutDefaultSql": false,
+  "UseDatabaseNames": false,
+  "UseDateOnlyTimeOnly": true,
+  "UseDbContextSplitting": false,
+  "UseDecimalDataAnnotationForSprocResult": true,
+  "UseFluentApiOnly": true,
+  "UseHandleBars": true,
+  "UseHierarchyId": false,
+  "UseInflector": false,
+  "UseLegacyPluralizer": false,
+  "UseManyToManyEntity": false,
+  "UseNoDefaultConstructor": false,
+  "UseNoNavigations": false,
+  "UseNoObjectFilter": false,
+  "UseNodaTime": false,
+  "UseNullableReferences": false,
+  "UsePrefixNavigationNaming": false,
+  "UseSchemaFolders": false,
+  "UseSchemaNamespaces": false,
+  "UseSpatial": false,
+  "UseT4": false
+}
