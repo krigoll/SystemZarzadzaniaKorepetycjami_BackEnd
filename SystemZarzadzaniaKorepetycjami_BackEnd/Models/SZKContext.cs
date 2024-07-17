@@ -1,37 +1,40 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using System;
+using System.Collections.Generic;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata;
 
 namespace SystemZarzadzaniaKorepetycjami_BackEnd.Models
 {
-    public partial class SZKContext : DbContext
-    {
-        public SZKContext()
-        {
-        }
+public partial class SZKContext : DbContext
+{
+    public virtual DbSet<Administrator> Administrator { get; set; }
+    public virtual DbSet<Calendar> Calendar { get; set; }
+    public virtual DbSet<Lesson> Lesson { get; set; }
+    public virtual DbSet<LessonStatus> LessonStatus { get; set; }
+    public virtual DbSet<Mark> Mark { get; set; }
+    public virtual DbSet<Message> Message { get; set; }
+    public virtual DbSet<Opinion> Opinion { get; set; }
+    public virtual DbSet<Person> Person { get; set; }
+    public virtual DbSet<Report> Report { get; set; }
+    public virtual DbSet<Student> Student { get; set; }
+    public virtual DbSet<StudentAnswer> StudentAnswer { get; set; }
+    public virtual DbSet<Subject> Subject { get; set; }
+    public virtual DbSet<SubjectCategory> SubjectCategory { get; set; }
+    public virtual DbSet<SubjectLevel> SubjectLevel { get; set; }
+    public virtual DbSet<Task> Task { get; set; }
+    public virtual DbSet<TaskType> TaskType { get; set; }
+    public virtual DbSet<Teacher> Teacher { get; set; }
+    public virtual DbSet<TeacherSalary> TeacherSalary { get; set; }
+    public virtual DbSet<Test> Test { get; set; }
+    public virtual DbSet<TestForStudent> TestForStudent { get; set; }
 
-        public SZKContext(DbContextOptions<SZKContext> options) : base(options)
-        {
-        }
+public SZKContext()
+{
+}
 
-        public virtual DbSet<Administrator> Administrator { get; set; }
-        public virtual DbSet<Calendar> Calendar { get; set; }
-        public virtual DbSet<Lesson> Lesson { get; set; }
-        public virtual DbSet<LessonStatus> LessonStatus { get; set; }
-        public virtual DbSet<Mark> Mark { get; set; }
-        public virtual DbSet<Message> Message { get; set; }
-        public virtual DbSet<Opinion> Opinion { get; set; }
-        public virtual DbSet<Person> Person { get; set; }
-        public virtual DbSet<Report> Report { get; set; }
-        public virtual DbSet<Student> Student { get; set; }
-        public virtual DbSet<StudentAnswer> StudentAnswer { get; set; }
-        public virtual DbSet<Subject> Subject { get; set; }
-        public virtual DbSet<SubjectCategory> SubjectCategory { get; set; }
-        public virtual DbSet<SubjectLevel> SubjectLevel { get; set; }
-        public virtual DbSet<Task> Task { get; set; }
-        public virtual DbSet<TaskType> TaskType { get; set; }
-        public virtual DbSet<Teacher> Teacher { get; set; }
-        public virtual DbSet<TeacherSalary> TeacherSalary { get; set; }
-        public virtual DbSet<Test> Test { get; set; }
-        public virtual DbSet<TestForStudent> TestForStudent { get; set; }
+public SZKContext(DbContextOptions<SZKContext> options) : base(options)
+{
+}
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -428,10 +431,8 @@ namespace SystemZarzadzaniaKorepetycjami_BackEnd.Models
                     .WithMany(p => p.IdTest)
                     .UsingEntity<Dictionary<string, object>>(
                         "TaskOnTest",
-                        l => l.HasOne<Task>().WithMany().HasForeignKey("IdTask").OnDelete(DeleteBehavior.ClientSetNull)
-                            .HasConstraintName("Task_On_Test_Task"),
-                        r => r.HasOne<Test>().WithMany().HasForeignKey("IdTest").OnDelete(DeleteBehavior.ClientSetNull)
-                            .HasConstraintName("Task_On_Test_Test"),
+                        l => l.HasOne<Task>().WithMany().HasForeignKey("IdTask").OnDelete(DeleteBehavior.ClientSetNull).HasConstraintName("Task_On_Test_Task"),
+                        r => r.HasOne<Test>().WithMany().HasForeignKey("IdTest").OnDelete(DeleteBehavior.ClientSetNull).HasConstraintName("Task_On_Test_Test"),
                         j =>
                         {
                             j.HasKey("IdTest", "IdTask").HasName("Task_On_Test_pk");
@@ -466,5 +467,5 @@ namespace SystemZarzadzaniaKorepetycjami_BackEnd.Models
         }
 
         partial void OnModelCreatingPartial(ModelBuilder modelBuilder);
-    }
+}
 }

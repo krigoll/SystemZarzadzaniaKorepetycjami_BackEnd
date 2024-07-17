@@ -1,9 +1,12 @@
-﻿namespace SystemZarzadzaniaKorepetycjami_BackEnd.Models
-{
-    public partial class Administrator
-    {
-        public int IdAdministrator { get; private set; }
+﻿using System;
+using System.Collections.Generic;
 
-        public virtual Person IdAdministratorNavigation { get; private set; }
-    }
+namespace SystemZarzadzaniaKorepetycjami_BackEnd.Models
+{
+public partial class Administrator
+{
+    public int IdAdministrator { get; private set; }
+
+            public virtual Person IdAdministratorNavigation { get; private set; }
+}
 }
