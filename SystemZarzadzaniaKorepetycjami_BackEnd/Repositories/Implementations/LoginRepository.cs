@@ -1,6 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using SystemZarzadzaniaKorepetycjami_BackEnd.DTOs;
-using SystemZarzadzaniaKorepetycjami_BackEnd.Enums;
 using SystemZarzadzaniaKorepetycjami_BackEnd.Models;
 using SystemZarzadzaniaKorepetycjami_BackEnd.Repositories.Interfaces;
 
@@ -14,8 +13,8 @@ public class LoginRepository : ILoginRepository
     {
         this._context = context;
     }
-    
-    public async Task<Person> findPersonByEmailAndPasswordAsync(LoginDTO loginDto)
+
+    public async Task<Person?> findPersonByEmailAndPasswordAsync(LoginDTO loginDto)
     {
         return await _context.Person.FirstOrDefaultAsync(c => c.Email == loginDto.Email); // TODO Password
     }
