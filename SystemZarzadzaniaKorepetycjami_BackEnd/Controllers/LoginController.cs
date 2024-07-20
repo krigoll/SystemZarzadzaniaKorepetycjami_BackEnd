@@ -34,7 +34,9 @@ public class LoginController : ControllerBase
             new Claim(ClaimTypes.Role, "admin")
         };
 
-        var secret = "sdn209jsldjp29jdlsjdlsjdisjdklmlmjklml2me9wj92292992929esklmdsmdsmd.sdsd";
+        var builder = WebApplication.CreateBuilder();
+        var config = builder.Configuration;
+        var secret = config["Jwt:Secret"];
         var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secret));
         var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
     
