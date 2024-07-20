@@ -3,8 +3,13 @@ using System.Security.Claims;
 using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using SystemZarzadzaniaKorepetycjami_BackEnd.Models;
+using SystemZarzadzaniaKorepetycjami_BackEnd.Repositories.Implementations;
+using SystemZarzadzaniaKorepetycjami_BackEnd.Repositories.Interfaces;
+using SystemZarzadzaniaKorepetycjami_BackEnd.Services.Implementations;
+using SystemZarzadzaniaKorepetycjami_BackEnd.Services.Interfaces;
 using Task = System.Threading.Tasks.Task;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -48,6 +53,15 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+builder.Services.AddScoped<ILoginRepository, LoginRepository>();
+builder.Services.AddScoped<ILoginService, LoginService>();
+builder.Services.AddDbContext<SZKContext>(options =>
+{
+    options.UseSqlServer(
+        builder.Configuration.GetConnectionString("DbConnectionString")
+    );
+});
 
 var app = builder.Build();
 
