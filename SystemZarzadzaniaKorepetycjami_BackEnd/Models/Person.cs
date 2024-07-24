@@ -17,6 +17,7 @@ public partial class Person
     public string Surname { get; private set; }
     public DateOnly BirthDate { get; private set; }
     public string Email { get; private set; }
+    public string Password { get; private set; }
     public string PhoneNumber { get; private set; }
     public byte[] Image { get; private set; }
     public DateOnly JoiningDate { get; private set; }
