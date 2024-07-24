@@ -19,7 +19,7 @@ public class LoginService : ILoginService
         try
         {
             var person = await _loginRepository.findPersonByEmailAndPasswordAsync(loginDto);
-            return person == null ? LoginStatus.USER_EXISTS : LoginStatus.USER_NOT_EXISTS;
+            return person == null ? LoginStatus.USER_NOT_EXISTS : LoginStatus.USER_EXISTS;
         }
         catch (Exception e)
         {

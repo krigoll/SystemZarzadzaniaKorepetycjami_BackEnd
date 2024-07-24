@@ -16,8 +16,6 @@ public class LoginRepository : ILoginRepository
 
     public async Task<Person?> findPersonByEmailAndPasswordAsync(LoginDTO loginDto)
     {
-        var cos = await _context.Person.FirstOrDefaultAsync(c => c.Email == loginDto.Email); // TODO Password
-        Console.Write(cos);
-        return cos;
+        return await _context.Person.FirstOrDefaultAsync(c => c.Email == loginDto.Email); // TODO Password
     }
 }
