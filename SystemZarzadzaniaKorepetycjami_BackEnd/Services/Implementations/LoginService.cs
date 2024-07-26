@@ -18,7 +18,7 @@ public class LoginService : ILoginService
     {
         try
         {
-            var person = await _loginRepository.findPersonByEmailAsync(loginDto);
+            var person = await _loginRepository.findPersonByEmailAsync(loginDto.Email);
             if (person == null) return LoginStatus.USER_NOT_EXISTS;
 
             if (BCrypt.Net.BCrypt.Verify(loginDto.Password, person.Password)) return LoginStatus.USER_EXISTS;

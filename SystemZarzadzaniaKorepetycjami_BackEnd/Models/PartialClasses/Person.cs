@@ -109,7 +109,7 @@ public partial class Person
     public void SetJoiningDate(DateOnly joiningDate)
     {
         if (joiningDate > DateOnly.FromDateTime(DateTime.Now))
-            throw new ArgumentException("JoiningDate cannot be in the future.");
+            throw new ArgumentException("JoiningDate cannot be from the future.");
 
         JoiningDate = joiningDate;
     }

@@ -31,6 +31,9 @@ public class PersonController : ControllerBase
             case RegisterStarus.DATEBASE_ERROR:
                 return StatusCode(StatusCodes.Status500InternalServerError, "Database Error");
                 break;
+            case RegisterStarus.EMAIL_NOT_UNIQUE:
+                return StatusCode(StatusCodes.Status409Conflict, "Not unique email");
+                break;
             default:
                 return StatusCode(StatusCodes.Status500InternalServerError, "Database Error");
         }

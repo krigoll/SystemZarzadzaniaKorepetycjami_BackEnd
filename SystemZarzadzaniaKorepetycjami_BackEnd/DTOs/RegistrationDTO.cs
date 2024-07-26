@@ -9,4 +9,6 @@ public class RegistrationDTO
     public string Password { get; set; }
     public string PhoneNumber { get; set; }
     public byte[] Image { get; set; }
+    public bool IsStudent { get; set; }
+    public bool IsTeacher { get; set; }
 }

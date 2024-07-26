@@ -71,8 +71,6 @@ public SZKContext(DbContextOptions<SZKContext> options) : base(options)
                 entity.HasKey(e => e.IdLesson)
                     .HasName("Lesson_pk");
 
-                entity.Property(e => e.IdLesson).ValueGeneratedNever();
-
                 entity.HasOne(d => d.IdLessonStatusNavigation)
                     .WithMany(p => p.Lesson)
                     .HasForeignKey(d => d.IdLessonStatus)
@@ -105,8 +103,6 @@ public SZKContext(DbContextOptions<SZKContext> options) : base(options)
 
                 entity.ToTable("Lesson_Status");
 
-                entity.Property(e => e.IdLessonStatus).ValueGeneratedNever();
-
                 entity.Property(e => e.Status)
                     .IsRequired()
                     .HasMaxLength(50)
@@ -118,8 +114,6 @@ public SZKContext(DbContextOptions<SZKContext> options) : base(options)
                 entity.HasKey(e => e.IdMark)
                     .HasName("Mark_pk");
 
-                entity.Property(e => e.IdMark).ValueGeneratedNever();
-
                 entity.Property(e => e.Description)
                     .IsRequired()
                     .HasMaxLength(100)
@@ -130,8 +124,6 @@ public SZKContext(DbContextOptions<SZKContext> options) : base(options)
             {
                 entity.HasKey(e => e.IdMessage)
                     .HasName("Message_pk");
-
-                entity.Property(e => e.IdMessage).ValueGeneratedNever();
 
                 entity.Property(e => e.Content)
                     .IsRequired()
@@ -158,8 +150,6 @@ public SZKContext(DbContextOptions<SZKContext> options) : base(options)
                 entity.HasKey(e => e.IdOpinion)
                     .HasName("Opinion_pk");
 
-                entity.Property(e => e.IdOpinion).ValueGeneratedNever();
-
                 entity.Property(e => e.Content)
                     .IsRequired()
                     .HasMaxLength(500)
@@ -182,8 +172,6 @@ public SZKContext(DbContextOptions<SZKContext> options) : base(options)
             {
                 entity.HasKey(e => e.IdPerson)
                     .HasName("Person_pk");
-
-                entity.Property(e => e.IdPerson).ValueGeneratedNever();
 
                 entity.Property(e => e.Email)
                     .IsRequired()
@@ -217,8 +205,6 @@ public SZKContext(DbContextOptions<SZKContext> options) : base(options)
             {
                 entity.HasKey(e => e.IdReport)
                     .HasName("Report_pk");
-
-                entity.Property(e => e.IdReport).ValueGeneratedNever();
 
                 entity.Property(e => e.Content)
                     .IsRequired()
@@ -260,8 +246,6 @@ public SZKContext(DbContextOptions<SZKContext> options) : base(options)
 
                 entity.ToTable("Student_Answer");
 
-                entity.Property(e => e.IdStudentAnswer).ValueGeneratedNever();
-
                 entity.Property(e => e.Answer)
                     .IsRequired()
                     .HasColumnType("text");
@@ -290,8 +274,6 @@ public SZKContext(DbContextOptions<SZKContext> options) : base(options)
                 entity.HasKey(e => e.IdSubject)
                     .HasName("Subject_pk");
 
-                entity.Property(e => e.IdSubject).ValueGeneratedNever();
-
                 entity.Property(e => e.Name)
                     .IsRequired()
                     .HasMaxLength(50)
@@ -304,8 +286,6 @@ public SZKContext(DbContextOptions<SZKContext> options) : base(options)
                     .HasName("Subject_Category_pk");
 
                 entity.ToTable("Subject_Category");
-
-                entity.Property(e => e.IdSubjectCategory).ValueGeneratedNever();
 
                 entity.Property(e => e.Name)
                     .IsRequired()
@@ -326,8 +306,6 @@ public SZKContext(DbContextOptions<SZKContext> options) : base(options)
 
                 entity.ToTable("Subject_Level");
 
-                entity.Property(e => e.IdSubjectLevel).ValueGeneratedNever();
-
                 entity.Property(e => e.Name)
                     .IsRequired()
                     .HasMaxLength(50)
@@ -344,8 +322,6 @@ public SZKContext(DbContextOptions<SZKContext> options) : base(options)
             {
                 entity.HasKey(e => e.IdTask)
                     .HasName("Task_pk");
-
-                entity.Property(e => e.IdTask).ValueGeneratedNever();
 
                 entity.Property(e => e.Answer)
                     .HasMaxLength(50)
@@ -376,8 +352,6 @@ public SZKContext(DbContextOptions<SZKContext> options) : base(options)
 
                 entity.ToTable("Task_Type");
 
-                entity.Property(e => e.IdTaskType).ValueGeneratedNever();
-
                 entity.Property(e => e.Name)
                     .IsRequired()
                     .HasMaxLength(50)
@@ -402,8 +376,6 @@ public SZKContext(DbContextOptions<SZKContext> options) : base(options)
             {
                 entity.ToTable("Teacher_Salary");
 
-                entity.Property(e => e.TeacherSalaryId).ValueGeneratedNever();
-
                 entity.Property(e => e.HourlyRate).HasColumnType("numeric(7, 2)");
 
                 entity.HasOne(d => d.IdSubjectNavigation)
@@ -423,8 +395,6 @@ public SZKContext(DbContextOptions<SZKContext> options) : base(options)
             {
                 entity.HasKey(e => e.IdTest)
                     .HasName("Test_pk");
-
-                entity.Property(e => e.IdTest).ValueGeneratedNever();
 
                 entity.HasOne(d => d.IdTeacherNavigation)
                     .WithMany(p => p.Test)
@@ -452,8 +422,6 @@ public SZKContext(DbContextOptions<SZKContext> options) : base(options)
                     .HasName("Test_For_Student_pk");
 
                 entity.ToTable("Test_For_Student");
-
-                entity.Property(e => e.IdTestForStudent).ValueGeneratedNever();
 
                 entity.HasOne(d => d.IdStudentNavigation)
                     .WithMany(p => p.TestForStudent)
