@@ -3,7 +3,6 @@ using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.Data;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using SystemZarzadzaniaKorepetycjami_BackEnd.DTOs;
@@ -25,7 +24,7 @@ public class LoginController : ControllerBase
 
 
     [HttpPost("login")]
-    public IActionResult Login(LoginRequest request)
+    public IActionResult Login(LoginDTO request)
     {
         //   Check login and password
         //   Fetch data from database
