@@ -18,6 +18,8 @@ public class LoginService : ILoginService
     {
         try
         {
+            int workFactor = 12;
+            loginDto.Password = BCrypt.Net.BCrypt.HashPassword(loginDto.Password, workFactor);
             var person = await _loginRepository.findPersonByEmailAndPasswordAsync(loginDto);
             return person == null ? LoginStatus.USER_NOT_EXISTS : LoginStatus.USER_EXISTS;
         }

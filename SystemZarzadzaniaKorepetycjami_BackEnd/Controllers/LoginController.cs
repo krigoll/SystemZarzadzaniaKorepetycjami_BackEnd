@@ -42,9 +42,9 @@ public class LoginController : ControllerBase
         if (loginStatus.Result == LoginStatus.DATABASE_ERROR)
             return StatusCode(StatusCodes.Status500InternalServerError, "Database Error");
 
-        var claims = new Claim[]
+        var claims = new Claim[] // TODO
         {
-            new(ClaimTypes.Name, "jan123"),
+            new(ClaimTypes.Name, "jan123"), 
             new("Custom", "SomeData"),
             new Claim(ClaimTypes.Role, "admin")
         };

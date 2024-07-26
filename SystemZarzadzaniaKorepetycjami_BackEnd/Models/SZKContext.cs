@@ -197,6 +197,11 @@ public SZKContext(DbContextOptions<SZKContext> options) : base(options)
                     .HasMaxLength(50)
                     .IsUnicode(false);
 
+                entity.Property(e => e.Password)
+                    .IsRequired()
+                    .HasMaxLength(60)
+                    .IsUnicode(false);
+
                 entity.Property(e => e.PhoneNumber)
                     .IsRequired()
                     .HasMaxLength(20)
