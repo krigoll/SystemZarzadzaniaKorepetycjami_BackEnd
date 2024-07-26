@@ -5,5 +5,5 @@ namespace SystemZarzadzaniaKorepetycjami_BackEnd.Repositories.Interfaces;
 
 public interface ILoginRepository
 {
-    public Task<Person?> findPersonByEmailAndPasswordAsync(LoginDTO loginDto);
+    public Task<Person?> findPersonByEmailAsync(LoginDTO loginDto);
 }

@@ -14,8 +14,8 @@ public class LoginRepository : ILoginRepository
         this._context = context;
     }
 
-    public async Task<Person?> findPersonByEmailAndPasswordAsync(LoginDTO loginDto)
+    public async Task<Person?> findPersonByEmailAsync(LoginDTO loginDto)
     {
-        return await _context.Person.FirstOrDefaultAsync(c => c.Email == loginDto.Email && c.Password == loginDto.Password);
+        return await _context.Person.FirstOrDefaultAsync(c => c.Email == loginDto.Email);
     }
 }

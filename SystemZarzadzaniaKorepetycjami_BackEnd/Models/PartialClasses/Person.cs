@@ -5,7 +5,7 @@ namespace SystemZarzadzaniaKorepetycjami_BackEnd.Models;
 
 public partial class Person
 {
-    public Person(string name, string surname, DateOnly birthDate, string email, string password, string phoneNumber,
+    public Person(string name, string surname, string birthDate, string email, string password, string phoneNumber,
         byte[] image)
     {
         SetName(name);
@@ -32,12 +32,13 @@ public partial class Person
         Surname = surname;
     }
 
-    public void SetBirthDate(DateOnly birthDate)
+    public void SetBirthDate(string birthDate)
     {
-        if (birthDate > DateOnly.FromDateTime(DateTime.Now))
+        var b = DateOnly.Parse(birthDate);
+        if (b > DateOnly.FromDateTime(DateTime.Now))
             throw new ArgumentException("BirthDate cannot be in the future.");
 
-        BirthDate = birthDate;
+        BirthDate = b;
     }
 
     public void SetEmail(string email)
