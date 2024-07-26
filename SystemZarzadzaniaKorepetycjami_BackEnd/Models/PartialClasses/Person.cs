@@ -1,15 +1,18 @@
 ﻿using System.Net.Mail;
+using System.Text.RegularExpressions;
 
 namespace SystemZarzadzaniaKorepetycjami_BackEnd.Models;
 
 public partial class Person
 {
-    public Person(string name, string surname, DateOnly birthDate, string email, string phoneNumber, byte[] image)
+    public Person(string name, string surname, DateOnly birthDate, string email, string password, string phoneNumber,
+        byte[] image)
     {
         SetName(name);
         SetSurname(surname);
         SetBirthDate(birthDate);
         SetEmail(email);
+        SetPassword(password);
         SetPhoneNumber(phoneNumber);
         SetImage(image);
         SetJoiningDate(DateOnly.FromDateTime(DateTime.Now));
@@ -56,6 +59,32 @@ public partial class Person
         {
             return false;
         }
+    }
+
+    public void SetPassword(string password)
+    {
+        if (string.IsNullOrWhiteSpace(password) || !IsValidPassword(password))
+            throw new ArgumentException("Invalid email address.");
+
+        var workFactor = 12;
+        Password = BCrypt.Net.BCrypt.HashPassword(password, workFactor);
+    }
+
+    private bool IsValidPassword(string password)
+    {
+        if (password.Length < 8 || password.Length > 50)
+            return false;
+
+        if (!Regex.IsMatch(password, "[a-z]"))
+            return false;
+
+        if (!Regex.IsMatch(password, "[A-Z]"))
+            return false;
+
+        if (!Regex.IsMatch(password, "[0-9]"))
+            return false;
+
+        return true;
     }
 
     public void SetPhoneNumber(string phoneNumber)

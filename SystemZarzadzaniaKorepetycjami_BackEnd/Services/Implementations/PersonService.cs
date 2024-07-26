@@ -20,7 +20,7 @@ public class PersonService : IPersonService
         try
         {
             var newPerson = new Person(registrationDto.Name, registrationDto.Surname, registrationDto.BirthDate,
-                registrationDto.Email, registrationDto.PhoneNumber, registrationDto.Image);
+                registrationDto.Email, registrationDto.Password, registrationDto.PhoneNumber, registrationDto.Image);
             if (await _personRepository.AddPerson(newPerson)) return RegisterStarus.REGISTERED_USER;
 
             return RegisterStarus.DATEBASE_ERROR;
