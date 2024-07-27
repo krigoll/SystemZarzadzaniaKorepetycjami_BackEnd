@@ -48,9 +48,9 @@ public class PersonService : IPersonService
                 return RegisterStarus.DATEBASE_ERROR;
             }
 
-            if (registrationDto.IsStudent) _studentRepository.AddStudent(new Student(newPersonId));
+            if (registrationDto.IsStudent) await _studentRepository.AddStudent(new Student(newPersonId));
 
-            if (registrationDto.IsTeacher) _teacherRepository.AddTeacher(new Teacher(newPersonId));
+            if (registrationDto.IsTeacher) await _teacherRepository.AddTeacher(new Teacher(newPersonId));
 
             return RegisterStarus.REGISTERED_USER;
         }

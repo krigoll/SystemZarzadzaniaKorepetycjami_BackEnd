@@ -1,5 +1,6 @@
 ﻿using SystemZarzadzaniaKorepetycjami_BackEnd.Models;
 using SystemZarzadzaniaKorepetycjami_BackEnd.Repositories.Interfaces;
+using Task = System.Threading.Tasks.Task;
 
 namespace SystemZarzadzaniaKorepetycjami_BackEnd.Repositories.Implementations
 {
@@ -12,7 +13,7 @@ namespace SystemZarzadzaniaKorepetycjami_BackEnd.Repositories.Implementations
             _context = context;
         }
 
-        public async void AddStudent(Student student)
+        public async Task AddStudent(Student student)
         {
             await _context.Student.AddAsync(student);
             await _context.SaveChangesAsync();
