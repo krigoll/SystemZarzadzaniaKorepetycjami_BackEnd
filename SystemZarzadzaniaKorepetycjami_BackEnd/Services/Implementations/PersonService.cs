@@ -8,12 +8,13 @@ namespace SystemZarzadzaniaKorepetycjami_BackEnd.Services.Implementations;
 
 public class PersonService : IPersonService
 {
-    private readonly IPersonRepository _personRepository;
     private readonly ILoginRepository _loginRepository;
+    private readonly IPersonRepository _personRepository;
     private readonly IStudentRepository _studentRepository;
     private readonly ITeacherRepository _teacherRepository;
 
-    public PersonService(IPersonRepository personRepository, ILoginRepository loginRepository, IStudentRepository studentRepository, ITeacherRepository teacherRepository)
+    public PersonService(IPersonRepository personRepository, ILoginRepository loginRepository,
+        IStudentRepository studentRepository, ITeacherRepository teacherRepository)
     {
         _personRepository = personRepository;
         _loginRepository = loginRepository;
@@ -30,26 +31,28 @@ public class PersonService : IPersonService
             {
                 return RegisterStarus.EMAIL_NOT_UNIQUE;
             }
-            var newPerson = new Person(registrationDto.Name, registrationDto.Surname, registrationDto.BirthDate,
-                registrationDto.Email, registrationDto.Password, registrationDto.PhoneNumber, registrationDto.Image);
-            if (await _personRepository.AddPerson(newPerson))
+
+            var newPerson = new Person(
+                registrationDto.Name,
+                registrationDto.Surname,
+                registrationDto.BirthDate,
+                registrationDto.Email,
+                registrationDto.Password,
+                registrationDto.PhoneNumber,
+                registrationDto.Image
+            );
+
+            var newPersonId = await _personRepository.AddPerson(newPerson);
+            if (newPersonId <= 0)
             {
-                if(registrationDto.IsStudent) 
-                {
-                    _studentRepository.AddStudent(new Student(newPerson.IdPerson));
-                }
-                    
-                if(registrationDto.IsTeacher)
-                {
-                    _teacherRepository.AddTeacher(new Teacher(newPerson.IdPerson));
-                }
-                
-                return RegisterStarus.REGISTERED_USER;
+                return RegisterStarus.DATEBASE_ERROR;
             }
 
-            
+            if (registrationDto.IsStudent) _studentRepository.AddStudent(new Student(newPersonId));
 
-            return RegisterStarus.DATEBASE_ERROR;
+            if (registrationDto.IsTeacher) _teacherRepository.AddTeacher(new Teacher(newPersonId));
+
+            return RegisterStarus.REGISTERED_USER;
         }
         catch (ArgumentException e)
         {

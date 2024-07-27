@@ -12,10 +12,10 @@ public class PersonRepository : IPersonRepository
         _context = context;
     }
 
-    public async Task<bool> AddPerson(Person person)
+    public async Task<int> AddPerson(Person person)
     {
         await _context.Person.AddAsync(person);
-        var affectedRows = _context.SaveChanges();
-        return affectedRows > 0;
+        await _context.SaveChangesAsync();
+        return person.IdPerson;
     }
 }

@@ -10,11 +10,12 @@ namespace SystemZarzadzaniaKorepetycjami_BackEnd.Repositories.Implementations
         public TeacherRepository(SZKContext context)
         {
             _context = context;
-        }    
+        }
 
         public async void AddTeacher(Teacher teacher)
         {
             await _context.Teacher.AddAsync(teacher);
+            await _context.SaveChangesAsync();
         }
     }
 }
