@@ -16,7 +16,7 @@ public class PersonController : ControllerBase
         _personService = personService;
     }
 
-    [HttpPost("registration")] //hasła nie dodales ja
+    [HttpPost("registration")]
     public async Task<IActionResult> Registration(RegistrationDTO registrationDto)
     {
         var registrationStatus = await _personService.RegistrationPerson(registrationDto);
