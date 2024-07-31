@@ -1,5 +1,4 @@
 using Microsoft.EntityFrameworkCore;
-using SystemZarzadzaniaKorepetycjami_BackEnd.DTOs;
 using SystemZarzadzaniaKorepetycjami_BackEnd.Models;
 using SystemZarzadzaniaKorepetycjami_BackEnd.Repositories.Interfaces;
 
@@ -14,7 +13,7 @@ namespace SystemZarzadzaniaKorepetycjami_BackEnd.Repositories.Implementations
             _context = context;
         }
 
-        public async Task<SubjectLevelDto> GetSubjectLevelBySubjectCategoryNameAndSubjectNameAsync(
+        public async Task<int> GetSubjectLevelIdBySubjectCategoryNameAndSubjectNameAsync(
             string subjectLevelName, string subjectCategoryName, string subjectName)
         {
             var subjectLevel = await _context.SubjectLevel
@@ -25,22 +24,7 @@ namespace SystemZarzadzaniaKorepetycjami_BackEnd.Repositories.Implementations
                     sl.IdSubjectCategoryNavigation.Name == subjectCategoryName &&
                     sl.IdSubjectCategoryNavigation.IdSubjectNavigation.Name == subjectName);
 
-            if (subjectLevel == null) return null;
-
-            var subjectLevelDto = new SubjectLevelDto
-            {
-                Name = subjectLevel.Name,
-                SubjectCategory = new SubjectCategoryDto
-                {
-                    Name = subjectLevel.IdSubjectCategoryNavigation.Name,
-                    Subject = new SubjectDto
-                    {
-                        Name = subjectLevel.IdSubjectCategoryNavigation.IdSubjectNavigation.Name
-                    }
-                }
-            };
-
-            return subjectLevelDto;
+            return subjectLevel.IdSubjectLevel;
         }
     }
 }

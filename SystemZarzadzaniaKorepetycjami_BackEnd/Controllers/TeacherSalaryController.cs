@@ -34,11 +34,4 @@ public class TeacherSalaryController : ControllerBase
                 return StatusCode(StatusCodes.Status500InternalServerError, "Database Error");
         }
     }
-
-    [HttpPost("test")]
-    public async Task<IActionResult> GetSubjectLvl(TeacherSalaryDTO teacherSalaryDTO)
-    {
-        var teacherSalaryStatus = await _teacherSalaryServiceService.getSubjectLvl(teacherSalaryDTO);
-        return Ok(teacherSalaryStatus);
-    }
 }
