@@ -5,5 +5,5 @@ namespace SystemZarzadzaniaKorepetycjami_BackEnd.Services.Interfaces;
 
 public interface IPersonService
 {
-    public Task<RegisterStarus> RegistrationPerson(RegistrationDTO registrationDto);
+    public Task<RegisterStatus> RegistrationPerson(RegistrationDTO registrationDto);
 }

@@ -22,14 +22,14 @@ public class PersonService : IPersonService
         _teacherRepository = teacherRepository;
     }
 
-    public async Task<RegisterStarus> RegistrationPerson(RegistrationDTO registrationDto)
+    public async Task<RegisterStatus> RegistrationPerson(RegistrationDTO registrationDto)
     {
         try
         {
             var isPersonExists = await _loginRepository.findPersonByEmailAsync(registrationDto.Email);
             if (isPersonExists != null)
             {
-                return RegisterStarus.EMAIL_NOT_UNIQUE;
+                return RegisterStatus.EMAIL_NOT_UNIQUE;
             }
 
             var newPerson = new Person(
@@ -45,22 +45,22 @@ public class PersonService : IPersonService
             var newPersonId = await _personRepository.AddPerson(newPerson);
             if (newPersonId <= 0)
             {
-                return RegisterStarus.DATEBASE_ERROR;
+                return RegisterStatus.DATEBASE_ERROR;
             }
 
             if (registrationDto.IsStudent) await _studentRepository.AddStudent(new Student(newPersonId));
 
             if (registrationDto.IsTeacher) await _teacherRepository.AddTeacher(new Teacher(newPersonId));
 
-            return RegisterStarus.REGISTERED_USER;
+            return RegisterStatus.REGISTERED_USER;
         }
         catch (ArgumentException e)
         {
-            return RegisterStarus.INVALID_USER;
+            return RegisterStatus.INVALID_USER;
         }
         catch (Exception e)
         {
-            return RegisterStarus.DATEBASE_ERROR;
+            return RegisterStatus.DATEBASE_ERROR;
         }
     }
 }

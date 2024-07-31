@@ -22,16 +22,16 @@ public class PersonController : ControllerBase
         var registrationStatus = await _personService.RegistrationPerson(registrationDto);
         switch (registrationStatus)
         {
-            case RegisterStarus.INVALID_USER:
+            case RegisterStatus.INVALID_USER:
                 return StatusCode(StatusCodes.Status400BadRequest, "Invalid User");
                 break;
-            case RegisterStarus.REGISTERED_USER:
+            case RegisterStatus.REGISTERED_USER:
                 return Ok();
                 break;
-            case RegisterStarus.DATEBASE_ERROR:
+            case RegisterStatus.DATEBASE_ERROR:
                 return StatusCode(StatusCodes.Status500InternalServerError, "Database Error");
                 break;
-            case RegisterStarus.EMAIL_NOT_UNIQUE:
+            case RegisterStatus.EMAIL_NOT_UNIQUE:
                 return StatusCode(StatusCodes.Status409Conflict, "Not unique email");
                 break;
             default:

@@ -1,6 +1,6 @@
 ﻿namespace SystemZarzadzaniaKorepetycjami_BackEnd.Enums;
 
-public enum RegisterStarus
+public enum RegisterStatus
 {
     INVALID_USER,
     REGISTERED_USER,
