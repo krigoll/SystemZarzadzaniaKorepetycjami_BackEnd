@@ -1,6 +1,4 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
-using SystemZarzadzaniaKorepetycjami_BackEnd.DTOs;
+﻿using Microsoft.AspNetCore.Mvc;
 using SystemZarzadzaniaKorepetycjami_BackEnd.Enums;
 using SystemZarzadzaniaKorepetycjami_BackEnd.Services.Interfaces;
 
@@ -35,5 +33,12 @@ public class TeacherSalaryController : ControllerBase
             default:
                 return StatusCode(StatusCodes.Status500InternalServerError, "Database Error");
         }
+    }
+
+    [HttpPost("test")]
+    public async Task<IActionResult> GetSubjectLvl(TeacherSalaryDTO teacherSalaryDTO)
+    {
+        var teacherSalaryStatus = await _teacherSalaryServiceService.getSubjectLvl(teacherSalaryDTO);
+        return Ok(teacherSalaryStatus);
     }
 }

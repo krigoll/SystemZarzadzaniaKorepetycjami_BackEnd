@@ -9,8 +9,8 @@ namespace SystemZarzadzaniaKorepetycjami_BackEnd.Services.Implementations;
 public class TeacherSalaryService : ITeacherSalaryService
 {
     private readonly IPersonRepository _personRepository;
-    private readonly ITeacherSalaryRepository _teacherSalaryRepository;
     private readonly ISubjectLevelRepository _subjectLevelRepository;
+    private readonly ITeacherSalaryRepository _teacherSalaryRepository;
 
     public TeacherSalaryService(IPersonRepository personRepository, ITeacherSalaryRepository teacherSalaryRepository,
         ISubjectLevelRepository subjectLevelRepository)
@@ -25,16 +25,20 @@ public class TeacherSalaryService : ITeacherSalaryService
         try
         {
             var person = await _personRepository.FindPersonByEmailAsync(teacherSalaryDTO.First().PersonEmail);
+            if (person == null || person.Teacher == null) return TeacherSalaryStatus.INVALID_TEACHER_SALARY;
+
             List<TeacherSalary> teacherSalaryList = new List<TeacherSalary>();
             foreach (var dto in teacherSalaryDTO)
             {
-                var subjectLevel = await _subjectLevelRepository.GetSubjectLevelBySubjectCategoryNameAndSubjectNameAsync(
-                dto.Subject_LevelName,
-                dto.Subject_Category_Name,
-                dto.SubjectName
-            );
-                teacherSalaryList.Add(new TeacherSalary(dto.HourlyRate, person.Teacher.IdTeacher, subjectLevel.IdSubjectLevel));
+                var subjectLevel =
+                    await _subjectLevelRepository.GetSubjectLevelBySubjectCategoryNameAndSubjectNameAsync(
+                        dto.Subject_LevelName,
+                        dto.Subject_Category_Name,
+                        dto.SubjectName
+                    );
+//                teacherSalaryList.Add(new TeacherSalary(dto.HourlyRate, person.Teacher.IdTeacher, subjectLevel.IdSubjectLevel));
             }
+
             await _teacherSalaryRepository.AddTeacherSalaryAsync(teacherSalaryList);
             return TeacherSalaryStatus.VALID_TEACHER_SALARY;
         }
@@ -49,4 +53,13 @@ public class TeacherSalaryService : ITeacherSalaryService
         }
     }
 
+    public async Task<SubjectLevelDto> getSubjectLvl(TeacherSalaryDTO teacherSalaryDTO)
+    {
+        var subjectLevel = await _subjectLevelRepository.GetSubjectLevelBySubjectCategoryNameAndSubjectNameAsync(
+            teacherSalaryDTO.Subject_LevelName,
+            teacherSalaryDTO.Subject_Category_Name,
+            teacherSalaryDTO.SubjectName
+        );
+        return subjectLevel;
+    }
 }

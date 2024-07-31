@@ -1,4 +1,5 @@
 using System.Text;
+using System.Text.Json.Serialization;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -76,6 +77,9 @@ builder.Services.AddScoped<ISubjectService, SubjectService>();
 builder.Services.AddScoped<ITeacherSalaryRepository, TeacherSalaryRepository>();
 builder.Services.AddScoped<ITeacherSalaryService, TeacherSalaryService>();
 builder.Services.AddScoped<ISubjectLevelRepository, SubjectLevelRepository>();
+
+builder.Services.AddControllers()
+    .AddJsonOptions(options => { options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.Preserve; });
 
 builder.Services.AddDbContext<SZKContext>(options =>
 {

@@ -1,8 +1,9 @@
-using SystemZarzadzaniaKorepetycjami_BackEnd.Models;
+using SystemZarzadzaniaKorepetycjami_BackEnd.DTOs;
 
 namespace SystemZarzadzaniaKorepetycjami_BackEnd.Repositories.Interfaces;
 
 public interface ISubjectLevelRepository
 {
-    public Task<SubjectLevel> GetSubjectLevelBySubjectCategoryNameAndSubjectNameAsync(String subjectLevelName, String subjectCategoryName, String subjectName);
+    public Task<SubjectLevelDto> GetSubjectLevelBySubjectCategoryNameAndSubjectNameAsync(string subjectLevelName,
+        string subjectCategoryName, string subjectName);
 }
