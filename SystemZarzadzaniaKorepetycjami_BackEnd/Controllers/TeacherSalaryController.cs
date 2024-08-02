@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using SystemZarzadzaniaKorepetycjami_BackEnd.Enums;
 using SystemZarzadzaniaKorepetycjami_BackEnd.Services.Interfaces;
 
@@ -16,6 +17,7 @@ public class TeacherSalaryController : ControllerBase
     }
 
     [HttpPost("setTeacherSalary")]
+    [Authorize]
     public async Task<IActionResult> SetTeacherSalarysAsync(List<TeacherSalaryDTO> teacherSalaryDTO)
     {
         var teacherSalaryStatus = await _teacherSalaryServiceService.setTeacherSalaryAsync(teacherSalaryDTO);
