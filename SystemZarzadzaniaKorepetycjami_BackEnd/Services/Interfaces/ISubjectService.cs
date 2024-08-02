@@ -1,7 +1,9 @@
-﻿namespace SystemZarzadzaniaKorepetycjami_BackEnd.Services.Interfaces
+﻿using SystemZarzadzaniaKorepetycjami_BackEnd.DTOs;
+
+namespace SystemZarzadzaniaKorepetycjami_BackEnd.Services.Interfaces
 {
     public interface ISubjectService
     {
-        public Task<List<String>> getAllSubjects();
+        public Task<List<SubjectDTO>> getAllSubjects();
     }
 }

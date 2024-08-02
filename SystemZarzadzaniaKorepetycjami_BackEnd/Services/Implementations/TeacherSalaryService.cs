@@ -8,15 +8,12 @@ namespace SystemZarzadzaniaKorepetycjami_BackEnd.Services.Implementations;
 public class TeacherSalaryService : ITeacherSalaryService
 {
     private readonly IPersonRepository _personRepository;
-    private readonly ISubjectLevelRepository _subjectLevelRepository;
     private readonly ITeacherSalaryRepository _teacherSalaryRepository;
 
-    public TeacherSalaryService(IPersonRepository personRepository, ITeacherSalaryRepository teacherSalaryRepository,
-        ISubjectLevelRepository subjectLevelRepository)
+    public TeacherSalaryService(IPersonRepository personRepository, ITeacherSalaryRepository teacherSalaryRepository)
     {
         _personRepository = personRepository;
         _teacherSalaryRepository = teacherSalaryRepository;
-        _subjectLevelRepository = subjectLevelRepository;
     }
 
     public async Task<TeacherSalaryStatus> setTeacherSalaryAsync(List<TeacherSalaryDTO> teacherSalaryDTO)
@@ -29,13 +26,7 @@ public class TeacherSalaryService : ITeacherSalaryService
             List<TeacherSalary> teacherSalaryList = new List<TeacherSalary>();
             foreach (var dto in teacherSalaryDTO)
             {
-                var subjectLevelId =
-                    await _subjectLevelRepository.GetSubjectLevelIdBySubjectCategoryNameAndSubjectNameAsync(
-                        dto.Subject_LevelName,
-                        dto.Subject_Category_Name,
-                        dto.SubjectName
-                    );
-                teacherSalaryList.Add(new TeacherSalary(dto.HourlyRate, person.IdPerson, subjectLevelId));
+                teacherSalaryList.Add(new TeacherSalary(dto.HourlyRate, person.IdPerson, dto.Subject_LevelId));
             }
 
             await _teacherSalaryRepository.AddTeacherSalaryAsync(teacherSalaryList);

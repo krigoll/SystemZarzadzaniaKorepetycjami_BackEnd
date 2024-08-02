@@ -1,4 +1,5 @@
-﻿using SystemZarzadzaniaKorepetycjami_BackEnd.Repositories.Interfaces;
+﻿using SystemZarzadzaniaKorepetycjami_BackEnd.DTOs;
+using SystemZarzadzaniaKorepetycjami_BackEnd.Repositories.Interfaces;
 using SystemZarzadzaniaKorepetycjami_BackEnd.Services.Interfaces;
 
 namespace SystemZarzadzaniaKorepetycjami_BackEnd.Services.Implementations
@@ -12,7 +13,7 @@ namespace SystemZarzadzaniaKorepetycjami_BackEnd.Services.Implementations
         {
             _subjectRepository = subjectRepository;
         }
-        public async Task<List<string>> getAllSubjects()
+        public async Task<List<SubjectDTO>> getAllSubjects()
         {
             return await _subjectRepository.GetAllFullSubjects();
         }

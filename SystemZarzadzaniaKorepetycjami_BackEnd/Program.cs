@@ -76,7 +76,6 @@ builder.Services.AddScoped<ISubjectRepository, SubjectRepository>();
 builder.Services.AddScoped<ISubjectService, SubjectService>();
 builder.Services.AddScoped<ITeacherSalaryRepository, TeacherSalaryRepository>();
 builder.Services.AddScoped<ITeacherSalaryService, TeacherSalaryService>();
-builder.Services.AddScoped<ISubjectLevelRepository, SubjectLevelRepository>();
 
 builder.Services.AddControllers()
     .AddJsonOptions(options => { options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.Preserve; });
