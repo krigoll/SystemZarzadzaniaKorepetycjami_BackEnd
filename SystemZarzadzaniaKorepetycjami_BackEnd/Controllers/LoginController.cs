@@ -16,37 +16,34 @@ namespace SystemZarzadzaniaKorepetycjami_BackEnd.Controllers;
 public class LoginController : ControllerBase
 {
     private readonly ILoginService _loginService;
+    private readonly IPersonService _personService;
 
-    public LoginController(ILoginService loginService)
+    public LoginController(ILoginService loginService, IPersonService personService)
     {
         _loginService = loginService;
+        _personService = personService;
     }
 
 
     [HttpPost("login")]
-    public IActionResult Login(LoginDTO request)
+    public async Task<IActionResult> Login(LoginDTO request)
     {
-        //   Check login and password
-        //   Fetch data from database
-        // var hasher = new PasswordHasher<LoginRequest>();
-        // if (hasher.VerifyHashedPassword(request, "sss", request.Password)==PasswordVerificationResult.Failed)
-        // {
-        //     //... 401
-        // }
-        var loginStatus = _loginService.LoginUserByEmailAndPasswordAsync(new LoginDTO
+        var loginStatus = await _loginService.LoginUserByEmailAndPasswordAsync(new LoginDTO
             { Email = request.Email, Password = request.Password });
 
-        if (loginStatus.Result == LoginStatus.USER_NOT_EXISTS)
+        if (loginStatus == LoginStatus.USER_NOT_EXISTS)
             return StatusCode(StatusCodes.Status401Unauthorized, "Unauthorized");
 
-        if (loginStatus.Result == LoginStatus.DATABASE_ERROR)
+        if (loginStatus == LoginStatus.DATABASE_ERROR)
             return StatusCode(StatusCodes.Status500InternalServerError, "Database Error");
 
-        var claims = new Claim[] // TODO
+        var personRole = await _personService.GetPersonRoleAsync(request.Email);
+
+        var claims = new Claim[]
         {
-            new(ClaimTypes.Name, "jan123"), 
-            new("Custom", "SomeData"),
-            new Claim(ClaimTypes.Role, "admin")
+            new("isAdmin", personRole.isAdmin.ToString()),
+            new("isTeacher", personRole.isTeacher.ToString()),
+            new("isStudent", personRole.isStudent.ToString())
         };
 
         var builder = WebApplication.CreateBuilder();
@@ -62,7 +59,7 @@ public class LoginController : ControllerBase
         var refreshToken = "";
         using (var genNum = RandomNumberGenerator.Create())
         {
-            var r = new byte[1024];
+            var r = new byte[32];
             genNum.GetBytes(r);
             refreshToken = Convert.ToBase64String(r);
         }

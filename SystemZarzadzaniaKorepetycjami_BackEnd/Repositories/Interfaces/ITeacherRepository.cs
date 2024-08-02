@@ -6,5 +6,6 @@ namespace SystemZarzadzaniaKorepetycjami_BackEnd.Repositories.Interfaces
     public interface ITeacherRepository
     {
         public Task AddTeacher(Teacher Teacher);
+        public Task<bool> isTeacherByEmail(string email);
     }
 }

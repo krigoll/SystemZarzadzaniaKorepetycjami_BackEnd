@@ -8,18 +8,20 @@ namespace SystemZarzadzaniaKorepetycjami_BackEnd.Services.Implementations;
 
 public class PersonService : IPersonService
 {
+    private readonly IAdminRepository _adminRepository;
     private readonly ILoginRepository _loginRepository;
     private readonly IPersonRepository _personRepository;
     private readonly IStudentRepository _studentRepository;
     private readonly ITeacherRepository _teacherRepository;
 
     public PersonService(IPersonRepository personRepository, ILoginRepository loginRepository,
-        IStudentRepository studentRepository, ITeacherRepository teacherRepository)
+        IStudentRepository studentRepository, ITeacherRepository teacherRepository, IAdminRepository adminRepository)
     {
         _personRepository = personRepository;
         _loginRepository = loginRepository;
         _studentRepository = studentRepository;
         _teacherRepository = teacherRepository;
+        _adminRepository = adminRepository;
     }
 
     public async Task<RegisterStatus> RegistrationPerson(RegistrationDTO registrationDto)
@@ -62,5 +64,15 @@ public class PersonService : IPersonService
         {
             return RegisterStatus.DATEBASE_ERROR;
         }
+    }
+
+    public async Task<PersonRoleDTO> GetPersonRoleAsync(string email)
+    {
+        return new PersonRoleDTO
+        {
+            isAdmin = await _adminRepository.isAdministratorByEmail(email),
+            isStudent = await _studentRepository.isPersonByEmail(email),
+            isTeacher = await _teacherRepository.isTeacherByEmail(email)
+        };
     }
 }
