@@ -79,6 +79,8 @@ public class PersonService : IPersonService
     public async Task<PersonProfileDTO> GetPersonProfileByEmailAsync(string email)
     {
         var person = await _personRepository.FindPersonByEmailAsync(email);
+        if (person == null) return null;
+
         var personRoles = await GetPersonRoleAsync(email);
         return new PersonProfileDTO
         {

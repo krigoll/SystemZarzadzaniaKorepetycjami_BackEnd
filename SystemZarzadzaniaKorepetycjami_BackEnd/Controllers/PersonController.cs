@@ -65,16 +65,18 @@ public class PersonController : ControllerBase
     }
 
     [HttpGet("getUser")]
-    [Authorize]
     public async Task<IActionResult> GetUserInformationAsync(string email)
     {
         try
         {
             var personProfileDto = await _personService.GetPersonProfileByEmailAsync(email);
-            return Ok(personProfileDto);
+            return personProfileDto == null
+                ? StatusCode(StatusCodes.Status400BadRequest, "Invalid Email")
+                : Ok(personProfileDto);
         }
         catch (Exception e)
         {
+            Console.WriteLine(e);
             return StatusCode(StatusCodes.Status500InternalServerError, "Database Error");
         }
     }
