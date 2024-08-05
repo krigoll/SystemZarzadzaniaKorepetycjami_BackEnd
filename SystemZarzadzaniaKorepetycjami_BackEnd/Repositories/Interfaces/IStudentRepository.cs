@@ -7,4 +7,5 @@ public interface IStudentRepository
 {
     public Task AddStudent(Student student);
     public Task<bool> isPersonByEmail(string email);
+    public Task RemoveStudentAsync(Student student);
 }

@@ -24,4 +24,9 @@ public class PersonRepository : IPersonRepository
     {
         return await _context.Person.FirstOrDefaultAsync(p => p.Email == email);
     }
+
+    public async Task<Person> FindUserByIdAsync(int idPerson)
+    {
+        return await _context.Person.FirstOrDefaultAsync(p => p.IdPerson == idPerson);
+    }
 }

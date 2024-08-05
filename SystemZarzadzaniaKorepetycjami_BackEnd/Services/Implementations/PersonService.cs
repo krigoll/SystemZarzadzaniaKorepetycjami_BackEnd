@@ -75,4 +75,67 @@ public class PersonService : IPersonService
             isTeacher = await _teacherRepository.isTeacherByEmail(email)
         };
     }
+
+    public async Task<PersonProfileDTO> GetPersonProfileByEmailAsync(string email)
+    {
+        var person = await _personRepository.FindPersonByEmailAsync(email);
+        var personRoles = await GetPersonRoleAsync(email);
+        return new PersonProfileDTO
+        {
+            IdPerson = person.IdPerson,
+            Name = person.Name,
+            Surname = person.Surname,
+            BirthDate = person.BirthDate.ToString(),
+            Email = person.Email,
+            PhoneNumber = person.PhoneNumber,
+            JoiningDate = person.JoiningDate,
+            Image = person.Image,
+            IsStudent = personRoles.isStudent,
+            IsTeacher = personRoles.isTeacher,
+            IsAdmin = personRoles.isAdmin
+        };
+    }
+
+    public async Task<UpdateUserStatus> UpdateUserAsync(int idPerson, PersonProfileDTO personProfileDto)
+    {
+        try
+        {
+            var person = await _personRepository.FindUserByIdAsync(idPerson);
+
+            var isPersonExists = await _loginRepository.findPersonByEmailAsync(personProfileDto.Email);
+            if (isPersonExists != null && personProfileDto.Email != person.Email)
+                return UpdateUserStatus.EMAIL_NOT_UNIQUE;
+
+            var personRoles = await GetPersonRoleAsync(person.Email);
+            person.SetName(personProfileDto.Name);
+            person.SetSurname(personProfileDto.Surname);
+            person.SetBirthDate(personProfileDto.BirthDate);
+            person.SetEmail(personProfileDto.Email);
+            person.SetPhoneNumber(personProfileDto.PhoneNumber);
+            person.SetImage(personProfileDto.Image);
+
+            if (personProfileDto.IsStudent && !personRoles.isStudent)
+                await _studentRepository.RemoveStudentAsync(new Student(idPerson));
+
+            if (!personProfileDto.IsStudent && personRoles.isStudent)
+                await _studentRepository.AddStudent(new Student(idPerson));
+
+            if (personProfileDto.IsTeacher && !personRoles.isTeacher)
+                await _teacherRepository.RemoveTeacherAsync(new Teacher(idPerson));
+
+            if (personProfileDto.IsTeacher && !personRoles.isTeacher)
+                await _teacherRepository.AddTeacher(new Teacher(idPerson));
+
+            return UpdateUserStatus.UPDATED_USER;
+        }
+        catch (ArgumentException e)
+        {
+            return UpdateUserStatus.INVALID_USER;
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            return UpdateUserStatus.DATEBASE_ERROR;
+        }
+    }
 }
