@@ -34,6 +34,8 @@ public class PersonService : IPersonService
                 return RegisterStatus.EMAIL_NOT_UNIQUE;
             }
 
+            
+            
             var newPerson = new Person(
                 registrationDto.Name,
                 registrationDto.Surname,
@@ -41,7 +43,7 @@ public class PersonService : IPersonService
                 registrationDto.Email,
                 registrationDto.Password,
                 registrationDto.PhoneNumber,
-                registrationDto.Image
+                byteImage
             );
 
             var newPersonId = await _personRepository.AddPerson(newPerson);
@@ -107,22 +109,21 @@ public class PersonService : IPersonService
             var isPersonExists = await _loginRepository.findPersonByEmailAsync(personProfileDto.Email);
             if (isPersonExists != null && personProfileDto.Email != person.Email)
                 return UpdateUserStatus.EMAIL_NOT_UNIQUE;
-
-            var personRoles = await GetPersonRoleAsync(person.Email);
+            
             person.SetName(personProfileDto.Name);
             person.SetSurname(personProfileDto.Surname);
-            person.SetBirthDate(personProfileDto.BirthDate);
             person.SetEmail(personProfileDto.Email);
             person.SetPhoneNumber(personProfileDto.PhoneNumber);
             person.SetImage(personProfileDto.Image);
-
-            if (personProfileDto.IsStudent && !personRoles.isStudent)
-                await _studentRepository.RemoveStudentAsync(new Student(idPerson));
+            var personRoles = await GetPersonRoleAsync(person.Email);
 
             if (!personProfileDto.IsStudent && personRoles.isStudent)
+                await _studentRepository.RemoveStudentAsync(new Student(idPerson));
+
+            if (personProfileDto.IsStudent && !personRoles.isStudent)
                 await _studentRepository.AddStudent(new Student(idPerson));
 
-            if (personProfileDto.IsTeacher && !personRoles.isTeacher)
+            if (!personProfileDto.IsTeacher && personRoles.isTeacher)
                 await _teacherRepository.RemoveTeacherAsync(new Teacher(idPerson));
 
             if (personProfileDto.IsTeacher && !personRoles.isTeacher)
