@@ -43,7 +43,7 @@ public class PersonService : IPersonService
                 registrationDto.Email,
                 registrationDto.Password,
                 registrationDto.PhoneNumber,
-                byteImage
+                registrationDto.Image // TODO
             );
 
             var newPersonId = await _personRepository.AddPerson(newPerson);
@@ -100,7 +100,7 @@ public class PersonService : IPersonService
         };
     }
 
-    public async Task<UpdateUserStatus> UpdateUserAsync(int idPerson, PersonProfileDTO personProfileDto)
+    public async Task<UpdateUserStatus> UpdateUserAsync(int idPerson, PersonEditProfileDTO personProfileDto)
     {
         try
         {
@@ -110,13 +110,14 @@ public class PersonService : IPersonService
             if (isPersonExists != null && personProfileDto.Email != person.Email)
                 return UpdateUserStatus.EMAIL_NOT_UNIQUE;
             
+            var personRoles = await GetPersonRoleAsync(person.Email);
             person.SetName(personProfileDto.Name);
             person.SetSurname(personProfileDto.Surname);
             person.SetEmail(personProfileDto.Email);
             person.SetPhoneNumber(personProfileDto.PhoneNumber);
             person.SetImage(personProfileDto.Image);
-            var personRoles = await GetPersonRoleAsync(person.Email);
-
+            
+        
             if (!personProfileDto.IsStudent && personRoles.isStudent)
                 await _studentRepository.RemoveStudentAsync(new Student(idPerson));
 
@@ -128,6 +129,8 @@ public class PersonService : IPersonService
 
             if (personProfileDto.IsTeacher && !personRoles.isTeacher)
                 await _teacherRepository.AddTeacher(new Teacher(idPerson));
+
+            await _personRepository.UpdateUserAsync(person);
 
             return UpdateUserStatus.UPDATED_USER;
         }

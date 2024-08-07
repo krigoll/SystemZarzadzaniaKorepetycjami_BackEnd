@@ -10,5 +10,5 @@ public interface IPersonService
 
     public Task<PersonProfileDTO> GetPersonProfileByEmailAsync(string email);
 
-    public Task<UpdateUserStatus> UpdateUserAsync(int idPerson, PersonProfileDTO personProfileDto);
+    public Task<UpdateUserStatus> UpdateUserAsync(int idPerson, PersonEditProfileDTO personProfileDto);
 }

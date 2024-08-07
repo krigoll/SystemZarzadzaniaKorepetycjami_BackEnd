@@ -42,7 +42,7 @@ public class PersonController : ControllerBase
 
     [HttpPut("{id}/update")]
     [Authorize]
-    public async Task<IActionResult> UpdateUserAsync(int id, [FromBody] PersonProfileDTO personProfileDto)
+    public async Task<IActionResult> UpdateUserAsync(int id, [FromBody] PersonEditProfileDTO personProfileDto)
     {
         var registrationStatus = await _personService.UpdateUserAsync(id, personProfileDto);
         switch (registrationStatus)
@@ -65,6 +65,7 @@ public class PersonController : ControllerBase
     }
 
     [HttpGet("getUser")]
+    [Authorize]
     public async Task<IActionResult> GetUserInformationAsync(string email)
     {
         try
