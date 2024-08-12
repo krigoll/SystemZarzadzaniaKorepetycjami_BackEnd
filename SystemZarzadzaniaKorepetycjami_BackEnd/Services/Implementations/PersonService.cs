@@ -34,8 +34,9 @@ public class PersonService : IPersonService
                 return RegisterStatus.EMAIL_NOT_UNIQUE;
             }
 
-            
-            
+            var bytesImage = Convert.FromBase64String(registrationDto.Image);
+
+
             var newPerson = new Person(
                 registrationDto.Name,
                 registrationDto.Surname,
@@ -43,7 +44,7 @@ public class PersonService : IPersonService
                 registrationDto.Email,
                 registrationDto.Password,
                 registrationDto.PhoneNumber,
-                registrationDto.Image // TODO
+                bytesImage
             );
 
             var newPersonId = await _personRepository.AddPerson(newPerson);
@@ -93,7 +94,7 @@ public class PersonService : IPersonService
             Email = person.Email,
             PhoneNumber = person.PhoneNumber,
             JoiningDate = person.JoiningDate,
-            Image = person.Image,
+            Image = Convert.ToBase64String(person.Image),
             IsStudent = personRoles.isStudent,
             IsTeacher = personRoles.isTeacher,
             IsAdmin = personRoles.isAdmin
@@ -109,15 +110,16 @@ public class PersonService : IPersonService
             var isPersonExists = await _loginRepository.findPersonByEmailAsync(personProfileDto.Email);
             if (isPersonExists != null && personProfileDto.Email != person.Email)
                 return UpdateUserStatus.EMAIL_NOT_UNIQUE;
-            
+
             var personRoles = await GetPersonRoleAsync(person.Email);
+            var bytesImage = Convert.FromBase64String(personProfileDto.Image);
             person.SetName(personProfileDto.Name);
             person.SetSurname(personProfileDto.Surname);
             person.SetEmail(personProfileDto.Email);
             person.SetPhoneNumber(personProfileDto.PhoneNumber);
-            person.SetImage(personProfileDto.Image);
-            
-        
+            person.SetImage(bytesImage);
+
+
             if (!personProfileDto.IsStudent && personRoles.isStudent)
                 await _studentRepository.RemoveStudentAsync(new Student(idPerson));
 
