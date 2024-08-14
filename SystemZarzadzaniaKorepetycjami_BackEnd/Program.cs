@@ -76,6 +76,8 @@ builder.Services.AddScoped<ISubjectService, SubjectService>();
 builder.Services.AddScoped<ITeacherSalaryRepository, TeacherSalaryRepository>();
 builder.Services.AddScoped<ITeacherSalaryService, TeacherSalaryService>();
 builder.Services.AddScoped<IAdminRepository, AdminRepository>();
+builder.Services.AddScoped<ICalendarService, CalendarService>();
+builder.Services.AddScoped<ICalendarRepository, CalendarRepository>();
 
 builder.Services.AddDbContext<SZKContext>(options =>
 {

@@ -42,5 +42,16 @@ namespace SystemZarzadzaniaKorepetycjami_BackEnd.Repositories.Implementations
             _context.Teacher.Remove(teacher);
             await _context.SaveChangesAsync();
         }
+
+        public async Task<Teacher> GetTeacherByEmailAsync(string email)
+        {
+            var person = await _context.Person
+                .Where(p => p.Email == email)
+                .Select(p => new { p.IdPerson })
+                .FirstOrDefaultAsync();
+
+            return await _context.Teacher
+                .FirstOrDefaultAsync(t => t.IdTeacher == person.IdPerson);
+        }
     }
 }
