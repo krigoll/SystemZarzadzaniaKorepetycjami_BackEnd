@@ -4,5 +4,5 @@ public class CalendarDTO
 {
     public DateTime StartingDate { get; set; }
     public int NumberOfLessons { get; set; }
-    public int BreakeTime { get; set; }
+    public int BreakTime { get; set; }
 }

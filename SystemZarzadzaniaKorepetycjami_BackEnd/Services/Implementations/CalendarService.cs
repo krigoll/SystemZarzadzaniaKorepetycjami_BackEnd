@@ -44,7 +44,7 @@ public class CalendarService : ICalendarService
                 {
                     StartingDate = targetTime,
                     NumberOfLessons = 0,
-                    BreakeTime = 0
+                    BreakTime = 0
                 });
         }
 

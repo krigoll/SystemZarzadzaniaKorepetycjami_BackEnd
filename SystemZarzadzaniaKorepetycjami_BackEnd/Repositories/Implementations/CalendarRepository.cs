@@ -23,7 +23,7 @@ public class CalendarRepository : ICalendarRepository
             {
                 StartingDate = c.Date,
                 NumberOfLessons = c.NumberOfLessons,
-                BreakeTime = c.BreakTime
+                BreakTime = c.BreakTime
             })
             .ToListAsync();
         return calendars;
