@@ -39,15 +39,14 @@ public class CalendarContriller : ControllerBase
         try
         {
             var resoult = await _calendarService.CreateAndUpdateCalerndarsByEmail(email, calendars);
-            if(resoult)
+            if (resoult)
                 return Ok();
             return StatusCode(StatusCodes.Status400BadRequest, "Invalid Email");
         }
-        catch(Exception e)
+        catch (Exception e)
         {
-            Consile.WriteLine(e);
+            Console.WriteLine(e);
             return StatusCode(StatusCodes.Status500InternalServerError, "Nie działa");
         }
-        
     }
 }
