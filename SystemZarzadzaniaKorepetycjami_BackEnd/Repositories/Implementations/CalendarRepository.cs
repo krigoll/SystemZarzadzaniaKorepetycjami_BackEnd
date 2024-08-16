@@ -19,10 +19,10 @@ public class CalendarRepository : ICalendarRepository
         DateTime to)
     {
         var calendars = await _context.Calendar
-            .Where(c => c.IdTeacher == teacher.IdTeacher && c.Date >= from && c.Date <= to)
+            .Where(c => c.IdTeacher == teacher.IdTeacher && c.StartingDate >= from && c.StartingDate <= to)
             .Select(c => new CalendarDTO
             {
-                StartingDate = c.Date,
+                StartingDate = c.StartingDate,
                 NumberOfLessons = c.NumberOfLessons,
                 BreakTime = c.BreakTime
             })
@@ -34,7 +34,7 @@ public class CalendarRepository : ICalendarRepository
     {
         foreach (var calendar in calendars)
         {
-            var cal = await _context.Calendar.FirstOrDefaultAsync(c => c.IdTeacher == teacher.IdTeacher && c.Date == calendar.StartingDate);
+            var cal = await _context.Calendar.FirstOrDefaultAsync(c => c.IdTeacher == teacher.IdTeacher && c.StartingDate == calendar.StartingDate);
             if (cal == null) 
             {
                 Calendar newCalendar = new Calendar(teacher.IdTeacher, calendar.StartingDate, calendar.NumberOfLessons, calendar.BreakTime);

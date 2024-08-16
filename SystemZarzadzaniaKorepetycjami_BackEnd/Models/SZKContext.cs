@@ -54,10 +54,10 @@ public SZKContext(DbContextOptions<SZKContext> options) : base(options)
 
             modelBuilder.Entity<Calendar>(entity =>
             {
-                entity.HasKey(e => new { e.IdTeacher, e.Date })
+                entity.HasKey(e => new { e.IdTeacher, e.StartingDate })
                     .HasName("Calendar_pk");
 
-                entity.Property(e => e.Date).HasColumnType("datetime");
+                entity.Property(e => e.StartingDate).HasColumnType("datetime");
 
                 entity.HasOne(d => d.IdTeacherNavigation)
                     .WithMany(p => p.Calendar)
