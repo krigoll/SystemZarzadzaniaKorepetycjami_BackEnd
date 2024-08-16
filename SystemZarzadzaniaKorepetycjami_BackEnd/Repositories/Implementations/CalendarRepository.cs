@@ -18,7 +18,7 @@ public class CalendarRepository : ICalendarRepository
     public async Task<List<CalendarDTO>> GetCalendarsByTeacherAndRangeFromToAsync(Teacher teacher, DateTime from,
         DateTime to)
     {
-        var calendars = await _context.Calendar
+        return await _context.Calendar
             .Where(c => c.IdTeacher == teacher.IdTeacher && c.StartingDate >= from && c.StartingDate <= to)
             .Select(c => new CalendarDTO
             {
@@ -27,25 +27,28 @@ public class CalendarRepository : ICalendarRepository
                 BreakTime = c.BreakTime
             })
             .ToListAsync();
-        return calendars;
     }
 
     public async Task CreateAndUpdateCalerndarsByTeacher(Teacher teacher, List<CalendarDTO> calendars)
     {
         foreach (var calendar in calendars)
         {
-            var cal = await _context.Calendar.FirstOrDefaultAsync(c => c.IdTeacher == teacher.IdTeacher && c.StartingDate == calendar.StartingDate);
-            if (cal == null) 
+            var cal = await _context.Calendar.FirstOrDefaultAsync(c =>
+                c.IdTeacher == teacher.IdTeacher && c.StartingDate == calendar.StartingDate);
+            if (cal == null)
             {
-                Calendar newCalendar = new Calendar(teacher.IdTeacher, calendar.StartingDate, calendar.NumberOfLessons, calendar.BreakTime);
+                var newCalendar = new Calendar(teacher.IdTeacher, calendar.StartingDate, calendar.NumberOfLessons,
+                    calendar.BreakTime);
                 await _context.Calendar.AddAsync(newCalendar);
-            } else 
+            }
+            else
             {
-                cal.setNumberOfLessons(calendar.NumberOfLessons);
-                cal.setBreakTime(calendar.BreakTime);
+                cal.SetNumberOfLessons(calendar.NumberOfLessons);
+                cal.SetBreakTime(calendar.BreakTime);
                 _context.Calendar.Update(cal);
-            }   
+            }
         }
+
         await _context.SaveChangesAsync();
     }
 }

@@ -2,25 +2,25 @@
 
 public partial class Calendar
 {
-    public Calendar(int idTeacher, DateTime date, int numberOfLessons, int breakTime)
+    public Calendar(int idTeacher, DateTime startingDate, int numberOfLessons, int breakTime)
     {
         IdTeacher = idTeacher;
-        StartingDate = date;
-        NumberOfLessons = numberOfLessons;
-        BreakTime = breakTime;
+        StartingDate = startingDate;
+        SetNumberOfLessons(numberOfLessons);
+        SetBreakTime(breakTime);
     }
 
-    public void setNumberOfLessons(int numberOfLessons)
+    public void SetNumberOfLessons(int numberOfLessons)
     {
         if (numberOfLessons < 0)
-            throw new ArgumentException();
+            throw new ArgumentException("Can not be on minus");
         this.NumberOfLessons = numberOfLessons;
     }
 
-    public void setBreakTime(int breakTime)
+    public void SetBreakTime(int breakTime)
     {
         if (breakTime < 0)
-            throw new ArgumentException();
+            throw new ArgumentException("Can not be on minus");
         this.BreakTime = breakTime;
     }
 }

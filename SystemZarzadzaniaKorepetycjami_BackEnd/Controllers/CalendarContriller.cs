@@ -29,7 +29,7 @@ public class CalendarContriller : ControllerBase
         catch (Exception e)
         {
             Console.WriteLine(e);
-            return StatusCode(StatusCodes.Status500InternalServerError, "Nie działa");
+            return StatusCode(StatusCodes.Status500InternalServerError, e);
         }
     }
 
