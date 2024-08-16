@@ -2,6 +2,7 @@
 using SystemZarzadzaniaKorepetycjami_BackEnd.DTOs;
 using SystemZarzadzaniaKorepetycjami_BackEnd.Models;
 using SystemZarzadzaniaKorepetycjami_BackEnd.Repositories.Interfaces;
+using Task = System.Threading.Tasks.Task;
 
 namespace SystemZarzadzaniaKorepetycjami_BackEnd.Repositories.Implementations;
 
@@ -27,5 +28,24 @@ public class CalendarRepository : ICalendarRepository
             })
             .ToListAsync();
         return calendars;
+    }
+
+    public async Task CreateAndUpdateCalerndarsByTeacher(Teacher teacher, List<CalendarDTO> calendars)
+    {
+        foreach (var calendar in calendars)
+        {
+            var cal = await _context.Calendar.FirstOrDefaultAsync(c => c.IdTeacher == teacher.IdTeacher && c.Date == calendar.StartingDate);
+            if (cal == null) 
+            {
+                Calendar newCalendar = new Calendar(teacher.IdTeacher, calendar.StartingDate, calendar.NumberOfLessons, calendar.BreakTime);
+                await _context.Calendar.AddAsync(newCalendar);
+            } else 
+            {
+                cal.setNumberOfLessons(calendar.NumberOfLessons);
+                cal.setBreakTime(calendar.BreakTime);
+                _context.Calendar.Update(cal);
+            }   
+        }
+        await _context.SaveChangesAsync();
     }
 }

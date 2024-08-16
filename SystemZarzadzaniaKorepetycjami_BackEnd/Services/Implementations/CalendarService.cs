@@ -61,4 +61,12 @@ public class CalendarService : ICalendarService
 
         return (startOfWeek.ToDateTime(TimeOnly.MinValue), endOfWeek.ToDateTime(TimeOnly.MinValue));
     }
+
+    public async Task<bool> CreateAndUpdateCalerndarsByEmail(string email, List<CalendarDTO> calendars)
+    {
+        var teacher = await _teacherRepository.GetTeacherByEmailAsync(email);
+        if (teacher == null) return false;
+        await _calendarRepository.CreateAndUpdateCalerndarsByTeacher(teacher,calendars);
+        return true;
+    }
 }
