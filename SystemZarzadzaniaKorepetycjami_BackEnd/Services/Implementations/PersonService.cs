@@ -34,8 +34,7 @@ public class PersonService : IPersonService
                 return RegisterStatus.EMAIL_NOT_UNIQUE;
             }
 
-            var bytesImage = Convert.FromBase64String(registrationDto.Image);
-
+            var bytesImage = registrationDto.Image == null ? null : Convert.FromBase64String(registrationDto.Image);
 
             var newPerson = new Person(
                 registrationDto.Name,
@@ -61,6 +60,7 @@ public class PersonService : IPersonService
         }
         catch (ArgumentException e)
         {
+            Console.WriteLine(e);
             return RegisterStatus.INVALID_USER;
         }
         catch (Exception e)
