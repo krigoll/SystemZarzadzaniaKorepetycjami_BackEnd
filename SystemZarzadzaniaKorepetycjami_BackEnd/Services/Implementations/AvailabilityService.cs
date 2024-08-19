@@ -1,4 +1,5 @@
 using SystemZarzadzaniaKorepetycjami_BackEnd.DTOs;
+using SystemZarzadzaniaKorepetycjami_BackEnd.Enums;
 using SystemZarzadzaniaKorepetycjami_BackEnd.Repositories.Interfaces;
 using SystemZarzadzaniaKorepetycjami_BackEnd.Services.Interfaces;
 
@@ -15,30 +16,54 @@ public class AvailabilityService : IAvailabilityService
         _teacherRepository = teacherRepository;
     }
 
-    public async Task<List<AvailabilityDTO>> GetTeacherAvailabilityByEamilAsync(string email)
+    public async Task<List<AvailabilityDTO>> GetTeacherAvailabilityByEmailAsync(string email)
     {
         var teacher = await _teacherRepository.GetTeacherByEmailAsync(email);
-        if (teacher == null){
-            return null;
-        }
-        var availabilitys = await _availabilityRepository.GetTeacherAvailabilityByTeacherAsync(teacher);
-        var newAvailabilitysToReturn = new List<AvailabilityDTO>();
-        for (var i = 0; i < availabilitys.Count; i++)
+        if (teacher == null) return null;
+
+        var availabilities = await _availabilityRepository.GetTeacherAvailabilityByTeacherAsync(teacher);
+        var newAvailabilitiesToReturn = new List<AvailabilityDTO>();
+        for (var i = 0; i < 7; i++)
         {
-            var result = availabilitys.FirstOrDefault(a => a.IdDayOfTheWeek == i+1);
+            var result = availabilities.FirstOrDefault(a => a.IdDayOfTheWeek == i + 1);
             if (result != null)
-                newAvailabilitysToReturn.Add(new AvailabilityDTO{
-                    IdDayOfTheWeek = i+1,
-                    StartTime = result.StartTime,
-                    EndTime = result.EndTime,
+                newAvailabilitiesToReturn.Add(new AvailabilityDTO
+                {
+                    IdDayOfTheWeek = i + 1,
+                    StartTime = result.StartTime.ToString(),
+                    EndTime = result.EndTime.ToString()
                 });
             else
-                newAvailabilitysToReturn.Add(new AvailabilityDTO{
-                    IdDayOfTheWeek = i+1,
+                newAvailabilitiesToReturn.Add(new AvailabilityDTO
+                {
+                    IdDayOfTheWeek = i + 1,
                     StartTime = null,
                     EndTime = null,
                 });
         }
-        return newAvailabilitysToReturn;
+
+        return newAvailabilitiesToReturn;
+    }
+
+    public async Task<SetAvailabilityStatus> CreateAndUpdateAvailabilityByEmail(string email,
+        List<AvailabilityDTO> availabilities)
+    {
+        var teacher = await _teacherRepository.GetTeacherByEmailAsync(email);
+        if (teacher == null) return SetAvailabilityStatus.INVALID_EMAIL;
+
+        try
+        {
+            await _availabilityRepository.CreateAndUpdateAvailabilitiesByTeacher(teacher, availabilities);
+            return SetAvailabilityStatus.OK;
+        }
+        catch (ArgumentException e)
+        {
+            Console.WriteLine(e);
+            return SetAvailabilityStatus.INVALID_TIME;
+        }
+        catch (Exception e)
+        {
+            return SetAvailabilityStatus.DATABASE_ERROR;
+        }
     }
 }
