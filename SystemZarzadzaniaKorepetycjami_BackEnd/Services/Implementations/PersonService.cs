@@ -34,6 +34,9 @@ public class PersonService : IPersonService
                 return RegisterStatus.EMAIL_NOT_UNIQUE;
             }
 
+            if (!await _personRepository.IsPhoneNumberUniqueAsync(registrationDto.PhoneNumber))
+                return RegisterStatus.PHONE_NUMBER_NOT_UNIQUE;
+
             var bytesImage = registrationDto.Image == null ? null : Convert.FromBase64String(registrationDto.Image);
 
             var newPerson = new Person(
@@ -94,7 +97,7 @@ public class PersonService : IPersonService
             Email = person.Email,
             PhoneNumber = person.PhoneNumber,
             JoiningDate = person.JoiningDate,
-            Image = Convert.ToBase64String(person.Image),
+            Image = person.Image == null ? null : Convert.ToBase64String(person.Image),
             IsStudent = personRoles.isStudent,
             IsTeacher = personRoles.isTeacher,
             IsAdmin = personRoles.isAdmin
@@ -111,8 +114,12 @@ public class PersonService : IPersonService
             if (isPersonExists != null && personProfileDto.Email != person.Email)
                 return UpdateUserStatus.EMAIL_NOT_UNIQUE;
 
+            if (person.PhoneNumber != personProfileDto.PhoneNumber)
+                if (!await _personRepository.IsPhoneNumberUniqueAsync(personProfileDto.PhoneNumber))
+                    return UpdateUserStatus.PHONE_NUMBER_NOT_UNIQUE;
+
             var personRoles = await GetPersonRoleAsync(person.Email);
-            var bytesImage = Convert.FromBase64String(personProfileDto.Image);
+            var bytesImage = personProfileDto.Image == null ? null : Convert.FromBase64String(personProfileDto.Image);
             person.SetName(personProfileDto.Name);
             person.SetSurname(personProfileDto.Surname);
             person.SetEmail(personProfileDto.Email);

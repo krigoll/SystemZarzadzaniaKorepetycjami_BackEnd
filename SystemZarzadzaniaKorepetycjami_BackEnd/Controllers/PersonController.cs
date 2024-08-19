@@ -35,6 +35,9 @@ public class PersonController : ControllerBase
             case RegisterStatus.EMAIL_NOT_UNIQUE:
                 return StatusCode(StatusCodes.Status409Conflict, "Not unique email");
                 break;
+            case RegisterStatus.PHONE_NUMBER_NOT_UNIQUE:
+                return StatusCode(StatusCodes.Status409Conflict, "Not unique phone number");
+                break;
             default:
                 return StatusCode(StatusCodes.Status500InternalServerError, "Database Error");
         }
@@ -58,6 +61,9 @@ public class PersonController : ControllerBase
                 break;
             case UpdateUserStatus.EMAIL_NOT_UNIQUE:
                 return StatusCode(StatusCodes.Status409Conflict, "Not unique email");
+                break;
+            case UpdateUserStatus.PHONE_NUMBER_NOT_UNIQUE:
+                return StatusCode(StatusCodes.Status409Conflict, "Not unique phone number");
                 break;
             default:
                 return StatusCode(StatusCodes.Status500InternalServerError, "Database Error");

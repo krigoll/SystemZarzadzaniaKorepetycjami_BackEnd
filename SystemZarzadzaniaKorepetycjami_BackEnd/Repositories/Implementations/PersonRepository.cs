@@ -31,8 +31,15 @@ public class PersonRepository : IPersonRepository
         return await _context.Person.FirstOrDefaultAsync(p => p.IdPerson == idPerson);
     }
 
-    public async Task UpdateUserAsync(Person person){
+    public async Task UpdateUserAsync(Person person)
+    {
         _context.Person.Update(person);
         await _context.SaveChangesAsync();
+    }
+
+    public async Task<bool> IsPhoneNumberUniqueAsync(string phoneNumber)
+    {
+        var person = await _context.Person.FirstOrDefaultAsync(p => p.PhoneNumber == phoneNumber);
+        return person == null;
     }
 }

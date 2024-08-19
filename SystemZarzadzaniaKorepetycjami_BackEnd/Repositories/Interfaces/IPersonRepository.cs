@@ -9,4 +9,5 @@ public interface IPersonRepository
     public Task<Person> FindPersonByEmailAsync(String email);
     public Task<Person> FindUserByIdAsync(int idPerson);
     public Task UpdateUserAsync(Person person);
+    public Task<bool> IsPhoneNumberUniqueAsync(string phoneNumber);
 }
