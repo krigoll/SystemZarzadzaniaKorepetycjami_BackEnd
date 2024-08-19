@@ -80,9 +80,73 @@ public class LoginController : ControllerBase
         return Ok(hashedPassword);
     }
 
-    [HttpPost("api/refresh")]
-    public IActionResult RefreshToken()
+
+    [HttpPost("refresh")]
+    public IActionResult RefreshToken([FromBody] string refreshToken)
     {
-        return Ok();
+        if (string.IsNullOrEmpty(refreshToken))
+        {
+            return BadRequest("Invalid refresh token");
+        }
+
+        var validToken = ValidateRefreshToken(refreshToken);
+        if (validToken == null)
+        {
+            return Unauthorized("Invalid refresh token");
+        }
+
+        var claims = new Claim[]
+        {
+            new Claim("isAdmin", validToken.Claims.FirstOrDefault(c => c.Type == "isAdmin")?.Value ?? "false"),
+            new Claim("isTeacher", validToken.Claims.FirstOrDefault(c => c.Type == "isTeacher")?.Value ?? "false"),
+            new Claim("isStudent", validToken.Claims.FirstOrDefault(c => c.Type == "isStudent")?.Value ?? "false")
+        };
+
+        var builder = WebApplication.CreateBuilder();
+        var config = builder.Configuration;
+        var secret = config["Jwt:Secret"];
+        var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secret));
+        var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+
+        var newAccessToken = new JwtSecurityTokenHandler().WriteToken(new JwtSecurityToken(
+            issuer: "https://localhost:5001",
+            audience: "https://localhost:5001",
+            claims: claims,
+            expires: DateTime.UtcNow.AddMinutes(5),
+            signingCredentials: creds
+        ));
+
+        var newRefreshToken = GenerateRefreshToken();
+
+        return Ok(new
+        {
+            token = newAccessToken,
+            refreshToken = newRefreshToken
+        });
+    }
+
+
+    private ClaimsPrincipal ValidateRefreshToken(string refreshToken)
+    {
+        var claims = new[]
+        {
+            new Claim("isAdmin", "true"),
+            new Claim("isTeacher", "true"),
+            new Claim("isStudent", "true")
+        };
+
+        var identity = new ClaimsIdentity(claims, "custom");
+
+        return new ClaimsPrincipal(identity);
+    }
+
+    private string GenerateRefreshToken()
+    {
+        using (var genNum = RandomNumberGenerator.Create())
+        {
+            var r = new byte[32];
+            genNum.GetBytes(r);
+            return Convert.ToBase64String(r);
+        }
     }
 }
