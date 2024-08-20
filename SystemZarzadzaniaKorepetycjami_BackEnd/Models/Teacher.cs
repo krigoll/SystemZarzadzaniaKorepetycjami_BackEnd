@@ -7,7 +7,7 @@ public partial class Teacher
 {
     private Teacher()
     {
-        Calendar = new HashSet<Calendar>();
+        Availability = new HashSet<Availability>();
         Lesson = new HashSet<Lesson>();
         Opinion = new HashSet<Opinion>();
         TeacherSalary = new HashSet<TeacherSalary>();
@@ -17,7 +17,7 @@ public partial class Teacher
     public int IdTeacher { get; private set; }
 
             public virtual Person IdTeacherNavigation { get; private set; }
-            public virtual ICollection<Calendar> Calendar { get; private set; }
+            public virtual ICollection<Availability> Availability { get; private set; }
             public virtual ICollection<Lesson> Lesson { get; private set; }
             public virtual ICollection<Opinion> Opinion { get; private set; }
             public virtual ICollection<TeacherSalary> TeacherSalary { get; private set; }

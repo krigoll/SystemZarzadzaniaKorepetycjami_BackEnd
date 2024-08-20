@@ -32,5 +32,11 @@ namespace SystemZarzadzaniaKorepetycjami_BackEnd.Repositories.Implementations
             return await _context.Student
                 .AnyAsync(s => s.IdStudent == person.IdPerson);
         }
+
+        public async Task RemoveStudentAsync(Student student)
+        {
+            _context.Student.Remove(student);
+            await _context.SaveChangesAsync();
+        }
     }
 }

@@ -5,7 +5,7 @@ namespace SystemZarzadzaniaKorepetycjami_BackEnd.Models
 {
 public partial class TeacherSalary
 {
-    public int TeacherSalaryId { get; private set; }
+    public int IdTeacherSalary { get; private set; }
     public decimal HourlyRate { get; private set; }
     public int IdTeacher { get; private set; }
     public int IdSubject { get; private set; }

@@ -34,6 +34,11 @@ public class PersonService : IPersonService
                 return RegisterStatus.EMAIL_NOT_UNIQUE;
             }
 
+            if (!await _personRepository.IsPhoneNumberUniqueAsync(registrationDto.PhoneNumber))
+                return RegisterStatus.PHONE_NUMBER_NOT_UNIQUE;
+
+            var bytesImage = registrationDto.Image == null ? null : Convert.FromBase64String(registrationDto.Image);
+
             var newPerson = new Person(
                 registrationDto.Name,
                 registrationDto.Surname,
@@ -41,7 +46,7 @@ public class PersonService : IPersonService
                 registrationDto.Email,
                 registrationDto.Password,
                 registrationDto.PhoneNumber,
-                registrationDto.Image
+                bytesImage
             );
 
             var newPersonId = await _personRepository.AddPerson(newPerson);
@@ -58,6 +63,7 @@ public class PersonService : IPersonService
         }
         catch (ArgumentException e)
         {
+            Console.WriteLine(e);
             return RegisterStatus.INVALID_USER;
         }
         catch (Exception e)
@@ -74,5 +80,77 @@ public class PersonService : IPersonService
             isStudent = await _studentRepository.isPersonByEmail(email),
             isTeacher = await _teacherRepository.isTeacherByEmail(email)
         };
+    }
+
+    public async Task<PersonProfileDTO> GetPersonProfileByEmailAsync(string email)
+    {
+        var person = await _personRepository.FindPersonByEmailAsync(email);
+        if (person == null) return null;
+
+        var personRoles = await GetPersonRoleAsync(email);
+        return new PersonProfileDTO
+        {
+            IdPerson = person.IdPerson,
+            Name = person.Name,
+            Surname = person.Surname,
+            BirthDate = person.BirthDate.ToString(),
+            Email = person.Email,
+            PhoneNumber = person.PhoneNumber,
+            JoiningDate = person.JoiningDate,
+            Image = person.Image == null ? null : Convert.ToBase64String(person.Image),
+            IsStudent = personRoles.isStudent,
+            IsTeacher = personRoles.isTeacher,
+            IsAdmin = personRoles.isAdmin
+        };
+    }
+
+    public async Task<UpdateUserStatus> UpdateUserAsync(int idPerson, PersonEditProfileDTO personProfileDto)
+    {
+        try
+        {
+            var person = await _personRepository.FindUserByIdAsync(idPerson);
+
+            var isPersonExists = await _loginRepository.findPersonByEmailAsync(personProfileDto.Email);
+            if (isPersonExists != null && personProfileDto.Email != person.Email)
+                return UpdateUserStatus.EMAIL_NOT_UNIQUE;
+
+            if (person.PhoneNumber != personProfileDto.PhoneNumber)
+                if (!await _personRepository.IsPhoneNumberUniqueAsync(personProfileDto.PhoneNumber))
+                    return UpdateUserStatus.PHONE_NUMBER_NOT_UNIQUE;
+
+            var personRoles = await GetPersonRoleAsync(person.Email);
+            var bytesImage = personProfileDto.Image == null ? null : Convert.FromBase64String(personProfileDto.Image);
+            person.SetName(personProfileDto.Name);
+            person.SetSurname(personProfileDto.Surname);
+            person.SetEmail(personProfileDto.Email);
+            person.SetPhoneNumber(personProfileDto.PhoneNumber);
+            person.SetImage(bytesImage);
+
+
+            if (!personProfileDto.IsStudent && personRoles.isStudent)
+                await _studentRepository.RemoveStudentAsync(new Student(idPerson));
+
+            if (personProfileDto.IsStudent && !personRoles.isStudent)
+                await _studentRepository.AddStudent(new Student(idPerson));
+
+            if (!personProfileDto.IsTeacher && personRoles.isTeacher)
+                await _teacherRepository.RemoveTeacherAsync(new Teacher(idPerson));
+
+            if (personProfileDto.IsTeacher && !personRoles.isTeacher)
+                await _teacherRepository.AddTeacher(new Teacher(idPerson));
+
+            await _personRepository.UpdateUserAsync(person);
+
+            return UpdateUserStatus.UPDATED_USER;
+        }
+        catch (ArgumentException e)
+        {
+            return UpdateUserStatus.INVALID_USER;
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            return UpdateUserStatus.DATEBASE_ERROR;
+        }
     }
 }

@@ -8,7 +8,8 @@ namespace SystemZarzadzaniaKorepetycjami_BackEnd.Models
 public partial class SZKContext : DbContext
 {
     public virtual DbSet<Administrator> Administrator { get; set; }
-    public virtual DbSet<Calendar> Calendar { get; set; }
+    public virtual DbSet<Availability> Availability { get; set; }
+    public virtual DbSet<DayOfTheWeek> DayOfTheWeek { get; set; }
     public virtual DbSet<Lesson> Lesson { get; set; }
     public virtual DbSet<LessonStatus> LessonStatus { get; set; }
     public virtual DbSet<Mark> Mark { get; set; }
@@ -52,18 +53,39 @@ public SZKContext(DbContextOptions<SZKContext> options) : base(options)
                     .HasConstraintName("Administrator_Person");
             });
 
-            modelBuilder.Entity<Calendar>(entity =>
+            modelBuilder.Entity<Availability>(entity =>
             {
-                entity.HasKey(e => new { e.IdTeacher, e.Date })
-                    .HasName("Calendar_pk");
+                entity.HasKey(e => new { e.IdTeacher, e.IdDayOfTheWeek })
+                    .HasName("Availability_pk");
 
-                entity.Property(e => e.Date).HasColumnType("datetime");
+                entity.Property(e => e.EndTime).HasPrecision(0);
+
+                entity.Property(e => e.StartTime).HasPrecision(0);
+
+                entity.HasOne(d => d.IdDayOfTheWeekNavigation)
+                    .WithMany(p => p.Availability)
+                    .HasForeignKey(d => d.IdDayOfTheWeek)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("Calendar_Day_Of_The_Weak");
 
                 entity.HasOne(d => d.IdTeacherNavigation)
-                    .WithMany(p => p.Calendar)
+                    .WithMany(p => p.Availability)
                     .HasForeignKey(d => d.IdTeacher)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("Calendar_Teacher");
+            });
+
+            modelBuilder.Entity<DayOfTheWeek>(entity =>
+            {
+                entity.HasKey(e => e.IdDayOfTheWeek)
+                    .HasName("Day_Of_The_Week_pk");
+
+                entity.ToTable("Day_Of_The_Week");
+
+                entity.Property(e => e.Name)
+                    .IsRequired()
+                    .HasMaxLength(15)
+                    .IsUnicode(false);
             });
 
             modelBuilder.Entity<Lesson>(entity =>
@@ -374,6 +396,9 @@ public SZKContext(DbContextOptions<SZKContext> options) : base(options)
 
             modelBuilder.Entity<TeacherSalary>(entity =>
             {
+                entity.HasKey(e => e.IdTeacherSalary)
+                    .HasName("Teacher_Salary_pk");
+
                 entity.ToTable("Teacher_Salary");
 
                 entity.Property(e => e.HourlyRate).HasColumnType("numeric(7, 2)");

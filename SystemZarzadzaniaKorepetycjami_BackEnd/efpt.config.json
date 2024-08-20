@@ -19,7 +19,11 @@
          "ObjectType": 0
       },
       {
-         "Name": "[dbo].[Calendar]",
+         "Name": "[dbo].[Availability]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Day_Of_The_Week]",
          "ObjectType": 0
       },
       {

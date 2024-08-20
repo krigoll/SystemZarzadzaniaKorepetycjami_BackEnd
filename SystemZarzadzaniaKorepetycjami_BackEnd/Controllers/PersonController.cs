@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using SystemZarzadzaniaKorepetycjami_BackEnd.DTOs;
 using SystemZarzadzaniaKorepetycjami_BackEnd.Enums;
 using SystemZarzadzaniaKorepetycjami_BackEnd.Services.Interfaces;
@@ -34,8 +35,56 @@ public class PersonController : ControllerBase
             case RegisterStatus.EMAIL_NOT_UNIQUE:
                 return StatusCode(StatusCodes.Status409Conflict, "Not unique email");
                 break;
+            case RegisterStatus.PHONE_NUMBER_NOT_UNIQUE:
+                return StatusCode(StatusCodes.Status409Conflict, "Not unique phone number");
+                break;
             default:
                 return StatusCode(StatusCodes.Status500InternalServerError, "Database Error");
+        }
+    }
+
+    [HttpPut("{id}/update")]
+    [Authorize]
+    public async Task<IActionResult> UpdateUserAsync(int id, [FromBody] PersonEditProfileDTO personProfileDto)
+    {
+        var registrationStatus = await _personService.UpdateUserAsync(id, personProfileDto);
+        switch (registrationStatus)
+        {
+            case UpdateUserStatus.INVALID_USER:
+                return StatusCode(StatusCodes.Status400BadRequest, "Invalid User");
+                break;
+            case UpdateUserStatus.UPDATED_USER:
+                return Ok();
+                break;
+            case UpdateUserStatus.DATEBASE_ERROR:
+                return StatusCode(StatusCodes.Status500InternalServerError, "Database Error");
+                break;
+            case UpdateUserStatus.EMAIL_NOT_UNIQUE:
+                return StatusCode(StatusCodes.Status409Conflict, "Not unique email");
+                break;
+            case UpdateUserStatus.PHONE_NUMBER_NOT_UNIQUE:
+                return StatusCode(StatusCodes.Status409Conflict, "Not unique phone number");
+                break;
+            default:
+                return StatusCode(StatusCodes.Status500InternalServerError, "Database Error");
+        }
+    }
+
+    [HttpGet("getUser")]
+    [Authorize]
+    public async Task<IActionResult> GetUserInformationAsync(string email)
+    {
+        try
+        {
+            var personProfileDto = await _personService.GetPersonProfileByEmailAsync(email);
+            return personProfileDto == null
+                ? StatusCode(StatusCodes.Status400BadRequest, "Invalid Email")
+                : Ok(personProfileDto);
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            return StatusCode(StatusCodes.Status500InternalServerError, "Database Error");
         }
     }
 }

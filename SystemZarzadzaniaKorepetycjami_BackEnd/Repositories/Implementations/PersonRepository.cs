@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using SystemZarzadzaniaKorepetycjami_BackEnd.Models;
 using SystemZarzadzaniaKorepetycjami_BackEnd.Repositories.Interfaces;
+using Task = System.Threading.Tasks.Task;
 
 namespace SystemZarzadzaniaKorepetycjami_BackEnd.Repositories.Implementations;
 
@@ -23,5 +24,22 @@ public class PersonRepository : IPersonRepository
     public async Task<Person> FindPersonByEmailAsync(String email)
     {
         return await _context.Person.FirstOrDefaultAsync(p => p.Email == email);
+    }
+
+    public async Task<Person> FindUserByIdAsync(int idPerson)
+    {
+        return await _context.Person.FirstOrDefaultAsync(p => p.IdPerson == idPerson);
+    }
+
+    public async Task UpdateUserAsync(Person person)
+    {
+        _context.Person.Update(person);
+        await _context.SaveChangesAsync();
+    }
+
+    public async Task<bool> IsPhoneNumberUniqueAsync(string phoneNumber)
+    {
+        var person = await _context.Person.FirstOrDefaultAsync(p => p.PhoneNumber == phoneNumber);
+        return person == null;
     }
 }
