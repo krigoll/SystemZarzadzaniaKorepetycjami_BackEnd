@@ -9,18 +9,18 @@ namespace SystemZarzadzaniaKorepetycjami_BackEnd.Controllers;
 [Route("api/teacherSalary")]
 public class TeacherSalaryController : ControllerBase
 {
-    private readonly ITeacherSalaryService _teacherSalaryServiceService;
+    private readonly ITeacherSalaryService _teacherSalaryService;
 
-    public TeacherSalaryController(ITeacherSalaryService teacherSalaryServiceService)
+    public TeacherSalaryController(ITeacherSalaryService teacherSalaryService)
     {
-        _teacherSalaryServiceService = teacherSalaryServiceService;
+        _teacherSalaryService = teacherSalaryService;
     }
 
     [HttpPost("setTeacherSalary")]
     [Authorize]
     public async Task<IActionResult> SetTeacherSalarysAsync(List<TeacherSalaryDTO> teacherSalaryDTO)
     {
-        var teacherSalaryStatus = await _teacherSalaryServiceService.setTeacherSalaryAsync(teacherSalaryDTO);
+        var teacherSalaryStatus = await _teacherSalaryService.setTeacherSalaryAsync(teacherSalaryDTO);
         switch (teacherSalaryStatus)
         {
             case TeacherSalaryStatus.INVALID_TEACHER_SALARY:

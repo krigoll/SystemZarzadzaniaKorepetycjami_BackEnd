@@ -53,5 +53,24 @@ namespace SystemZarzadzaniaKorepetycjami_BackEnd.Repositories.Implementations
             return await _context.Teacher
                 .FirstOrDefaultAsync(t => t.IdTeacher == person.IdPerson);
         }
+
+        public async Task<List<TeacherDTO>> GetTeachersBySubjectCategoryAsync(int subjectCategoryId)
+        {
+            var teachers = await (from teacher in _context.Teacher
+                              join person in _context.Person on teacher.IdTeacher equals person.IdPerson
+                              join salary in _context.TeacherSalary on teacher.IdTeacher equals salary.IdTeacher
+                              join subject in _context.Subject on salary.IdSubject equals subject.IdSubject
+                              join subjectCategory in _context.SubjectCategory on subject.IdSubject equals subjectCategory.IdSubject
+                              where subjectCategory.IdSubjectCategory == subjectCategoryId
+                              select new TeacherDTO
+                              {
+                                  IdPerson = person.IdPerson,
+                                  Name = person.Name,
+                                  Surname = person.Surname,
+                                  HourlyRate = salary.HourlyRate
+                              }).ToListAsync();
+
+            return teachers;
+        }
     }
 }

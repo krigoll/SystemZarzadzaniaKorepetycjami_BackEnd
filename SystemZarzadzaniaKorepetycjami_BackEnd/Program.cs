@@ -80,6 +80,7 @@ builder.Services.AddScoped<IAdminRepository, AdminRepository>();
 //builder.Services.AddScoped<ICalendarRepository, CalendarRepository>();
 builder.Services.AddScoped<IAvailabilityRepository, AvailabilityRepository>();
 builder.Services.AddScoped<IAvailabilityService, AvailabilityService>();
+builder.Services.AddScoped<ITeacherService, TeacherService>();
 
 builder.Services.AddDbContext<SZKContext>(options =>
 {

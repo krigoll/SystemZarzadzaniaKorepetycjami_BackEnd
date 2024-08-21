@@ -53,7 +53,7 @@ public class LoginController : ControllerBase
         var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
         var options = new JwtSecurityToken("https://localhost:5001", "https://localhost:5001",
-            claims, expires: DateTime.UtcNow.AddMinutes(5),
+            claims, expires: DateTime.UtcNow.AddMinutes(15),
             signingCredentials: creds);
 
         var refreshToken = "";
