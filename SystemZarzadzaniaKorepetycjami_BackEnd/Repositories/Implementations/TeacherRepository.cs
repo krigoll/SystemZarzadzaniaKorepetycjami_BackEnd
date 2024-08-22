@@ -67,7 +67,8 @@ namespace SystemZarzadzaniaKorepetycjami_BackEnd.Repositories.Implementations
                                   IdPerson = person.IdPerson,
                                   Name = person.Name,
                                   Surname = person.Surname,
-                                  HourlyRate = salary.HourlyRate
+                                  HourlyRate = salary.HourlyRate,
+                                  Image = person.Image == null ? null : Convert.ToBase64String(person.Image)
                               }).ToListAsync();
 
             return teachers;
