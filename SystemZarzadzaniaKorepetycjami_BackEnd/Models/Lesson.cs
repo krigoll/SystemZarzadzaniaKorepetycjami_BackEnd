@@ -1,19 +1,18 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace SystemZarzadzaniaKorepetycjami_BackEnd.Models
+﻿namespace SystemZarzadzaniaKorepetycjami_BackEnd.Models
 {
-public partial class Lesson
-{
-    public int IdLesson { get; private set; }
-    public int IdStudent { get; private set; }
-    public int IdTeacher { get; private set; }
-    public int IdSubjectLevel { get; private set; }
-    public int IdLessonStatus { get; private set; }
+    public class Lesson
+    {
+        public int IdLesson { get; }
+        public int IdStudent { get; }
+        public int IdTeacher { get; }
+        public int IdSubjectLevel { get; }
+        public int IdLessonStatus { get; }
+        public DateTime StartDate { get; }
+        public int DurationInMinutes { get; }
 
-            public virtual LessonStatus IdLessonStatusNavigation { get; private set; }
-            public virtual Student IdStudentNavigation { get; private set; }
-            public virtual SubjectLevel IdSubjectLevelNavigation { get; private set; }
-            public virtual Teacher IdTeacherNavigation { get; private set; }
-}
+        public virtual LessonStatus IdLessonStatusNavigation { get; }
+        public virtual Student IdStudentNavigation { get; }
+        public virtual SubjectLevel IdSubjectLevelNavigation { get; }
+        public virtual Teacher IdTeacherNavigation { get; }
+    }
 }

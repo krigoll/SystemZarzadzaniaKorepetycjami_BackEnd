@@ -1,41 +1,39 @@
-﻿using System;
-using System.Collections.Generic;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata;
+﻿using Microsoft.EntityFrameworkCore;
 
 namespace SystemZarzadzaniaKorepetycjami_BackEnd.Models
 {
-public partial class SZKContext : DbContext
-{
-    public virtual DbSet<Administrator> Administrator { get; set; }
-    public virtual DbSet<Availability> Availability { get; set; }
-    public virtual DbSet<DayOfTheWeek> DayOfTheWeek { get; set; }
-    public virtual DbSet<Lesson> Lesson { get; set; }
-    public virtual DbSet<LessonStatus> LessonStatus { get; set; }
-    public virtual DbSet<Mark> Mark { get; set; }
-    public virtual DbSet<Message> Message { get; set; }
-    public virtual DbSet<Opinion> Opinion { get; set; }
-    public virtual DbSet<Person> Person { get; set; }
-    public virtual DbSet<Report> Report { get; set; }
-    public virtual DbSet<Student> Student { get; set; }
-    public virtual DbSet<StudentAnswer> StudentAnswer { get; set; }
-    public virtual DbSet<Subject> Subject { get; set; }
-    public virtual DbSet<SubjectCategory> SubjectCategory { get; set; }
-    public virtual DbSet<SubjectLevel> SubjectLevel { get; set; }
-    public virtual DbSet<Task> Task { get; set; }
-    public virtual DbSet<TaskType> TaskType { get; set; }
-    public virtual DbSet<Teacher> Teacher { get; set; }
-    public virtual DbSet<TeacherSalary> TeacherSalary { get; set; }
-    public virtual DbSet<Test> Test { get; set; }
-    public virtual DbSet<TestForStudent> TestForStudent { get; set; }
+    public partial class SZKContext : DbContext
+    {
+        public SZKContext()
+        {
+        }
 
-public SZKContext()
-{
-}
+        public SZKContext(DbContextOptions<SZKContext> options) : base(options)
+        {
+        }
 
-public SZKContext(DbContextOptions<SZKContext> options) : base(options)
-{
-}
+        public virtual DbSet<Administrator> Administrator { get; set; }
+        public virtual DbSet<Availability> Availability { get; set; }
+        public virtual DbSet<DayOfTheWeek> DayOfTheWeek { get; set; }
+        public virtual DbSet<Lesson> Lesson { get; set; }
+        public virtual DbSet<LessonStatus> LessonStatus { get; set; }
+        public virtual DbSet<Mark> Mark { get; set; }
+        public virtual DbSet<Message> Message { get; set; }
+        public virtual DbSet<Opinion> Opinion { get; set; }
+        public virtual DbSet<Person> Person { get; set; }
+        public virtual DbSet<RefreshTokens> RefreshTokens { get; set; }
+        public virtual DbSet<Report> Report { get; set; }
+        public virtual DbSet<Student> Student { get; set; }
+        public virtual DbSet<StudentAnswer> StudentAnswer { get; set; }
+        public virtual DbSet<Subject> Subject { get; set; }
+        public virtual DbSet<SubjectCategory> SubjectCategory { get; set; }
+        public virtual DbSet<SubjectLevel> SubjectLevel { get; set; }
+        public virtual DbSet<Task> Task { get; set; }
+        public virtual DbSet<TaskType> TaskType { get; set; }
+        public virtual DbSet<Teacher> Teacher { get; set; }
+        public virtual DbSet<TeacherSalary> TeacherSalary { get; set; }
+        public virtual DbSet<Test> Test { get; set; }
+        public virtual DbSet<TestForStudent> TestForStudent { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -92,6 +90,8 @@ public SZKContext(DbContextOptions<SZKContext> options) : base(options)
             {
                 entity.HasKey(e => e.IdLesson)
                     .HasName("Lesson_pk");
+
+                entity.Property(e => e.StartDate).HasColumnType("datetime");
 
                 entity.HasOne(d => d.IdLessonStatusNavigation)
                     .WithMany(p => p.Lesson)
@@ -221,6 +221,31 @@ public SZKContext(DbContextOptions<SZKContext> options) : base(options)
                     .IsRequired()
                     .HasMaxLength(50)
                     .IsUnicode(false);
+            });
+
+            modelBuilder.Entity<RefreshTokens>(entity =>
+            {
+                entity.HasKey(e => e.IdJwt)
+                    .HasName("Refresh_Tokens_pk");
+
+                entity.ToTable("Refresh_Tokens");
+
+                entity.Property(e => e.IdJwt).HasColumnName("IdJWT");
+
+                entity.Property(e => e.CreatedDate).HasColumnType("datetime");
+
+                entity.Property(e => e.ExpiryDate).HasColumnType("datetime");
+
+                entity.Property(e => e.Token)
+                    .IsRequired()
+                    .HasMaxLength(256)
+                    .IsUnicode(false);
+
+                entity.HasOne(d => d.IdPersonNavigation)
+                    .WithMany(p => p.RefreshTokens)
+                    .HasForeignKey(d => d.IdPerson)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("JWT_Person");
             });
 
             modelBuilder.Entity<Report>(entity =>
@@ -431,8 +456,10 @@ public SZKContext(DbContextOptions<SZKContext> options) : base(options)
                     .WithMany(p => p.IdTest)
                     .UsingEntity<Dictionary<string, object>>(
                         "TaskOnTest",
-                        l => l.HasOne<Task>().WithMany().HasForeignKey("IdTask").OnDelete(DeleteBehavior.ClientSetNull).HasConstraintName("Task_On_Test_Task"),
-                        r => r.HasOne<Test>().WithMany().HasForeignKey("IdTest").OnDelete(DeleteBehavior.ClientSetNull).HasConstraintName("Task_On_Test_Test"),
+                        l => l.HasOne<Task>().WithMany().HasForeignKey("IdTask").OnDelete(DeleteBehavior.ClientSetNull)
+                            .HasConstraintName("Task_On_Test_Task"),
+                        r => r.HasOne<Test>().WithMany().HasForeignKey("IdTest").OnDelete(DeleteBehavior.ClientSetNull)
+                            .HasConstraintName("Task_On_Test_Test"),
                         j =>
                         {
                             j.HasKey("IdTest", "IdTask").HasName("Task_On_Test_pk");
@@ -465,5 +492,5 @@ public SZKContext(DbContextOptions<SZKContext> options) : base(options)
         }
 
         partial void OnModelCreatingPartial(ModelBuilder modelBuilder);
-}
+    }
 }
