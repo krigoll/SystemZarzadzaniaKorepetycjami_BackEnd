@@ -33,12 +33,12 @@ public class LoginController : ControllerBase
     [HttpPost("refresh")]
     public async Task<IActionResult> RefreshToken([FromBody] string refreshToken)
     {
-        var (newAccessToken, newRefreshToken) = await _loginService.RefreshTokenAsync(refreshToken);
+        var newAccessToken = await _loginService.RefreshTokenAsync(refreshToken);
 
         if (newAccessToken == null)
             return Unauthorized("Invalid refresh token");
 
-        return Ok(new { token = newAccessToken, refreshToken = newRefreshToken });
+        return Ok(new { token = newAccessToken });
     }
 
     [HttpPost]

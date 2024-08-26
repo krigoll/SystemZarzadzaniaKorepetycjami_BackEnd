@@ -41,4 +41,17 @@ public class RefreshTokenRepository : IRefreshTokenRepository
 
         await _context.SaveChangesAsync();
     }
+
+    public async Task<string> GetUserEmailByRefreshTokenAsync(string refreshToken)
+    {
+        var token = await _context.RefreshTokens.SingleOrDefaultAsync(rt => rt.Token == refreshToken);
+        var person = await _context.Person.SingleOrDefaultAsync(p => p.IdPerson == token.IdPerson);
+        return person.Email;
+    }
+
+    public async Task<RefreshTokens> GetRefreshTokenByEmailAsync(string email)
+    {
+        var person = await _context.Person.SingleOrDefaultAsync(p => p.Email == email);
+        return await _context.RefreshTokens.SingleOrDefaultAsync(rt => rt.IdPerson == person.IdPerson);
+    }
 }

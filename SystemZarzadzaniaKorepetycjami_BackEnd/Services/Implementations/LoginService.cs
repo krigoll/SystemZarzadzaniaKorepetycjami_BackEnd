@@ -38,34 +38,41 @@ public class LoginService : ILoginService
         var personRole = await _personService.GetPersonRoleAsync(request.Email);
         var claims = GetClaims(personRole);
         var token = GenerateJwtToken(claims);
-        var refreshToken = GenerateRefreshToken();
-
-        // Store the refresh token in the database
-        await _refreshTokenRepository.StoreRefreshTokenAsync(request.Email, refreshToken);
+        var storedToken = await _refreshTokenRepository.GetRefreshTokenByEmailAsync(request.Email);
+        var refreshToken = "";
+        if (storedToken == null)
+        {
+            refreshToken = GenerateRefreshToken();
+            await _refreshTokenRepository.StoreRefreshTokenAsync(request.Email, refreshToken);
+        }
+        else if (storedToken.ExpiryDate < DateTime.UtcNow)
+        {
+            refreshToken = GenerateRefreshToken();
+            await _refreshTokenRepository.ReplaceRefreshTokenAsync(storedToken.Token, refreshToken);
+        }
+        else
+        {
+            refreshToken = storedToken.Token;
+        }
 
         return (LoginStatus.USER_EXISTS, token, refreshToken);
     }
 
-    public async Task<(string, string)> RefreshTokenAsync(string refreshToken)
+    public async Task<string> RefreshTokenAsync(string refreshToken)
     {
         var storedToken = await _refreshTokenRepository.GetRefreshTokenAsync(refreshToken);
 
         if (storedToken == null || storedToken.ExpiryDate < DateTime.UtcNow)
-            return (null, null);
+            return null;
 
-        var validToken = ValidateRefreshToken(storedToken.Token);
+        var validToken = await ValidateRefreshToken(storedToken.Token);
 
         if (validToken == null)
-            return (null, null);
+            return null;
 
         var claims = validToken.Claims;
         var newAccessToken = GenerateJwtToken(claims);
-        var newRefreshToken = GenerateRefreshToken();
-
-        // Replace the old refresh token with the new one in the database
-        await _refreshTokenRepository.ReplaceRefreshTokenAsync(storedToken.Token, newRefreshToken);
-
-        return (newAccessToken, newRefreshToken);
+        return newAccessToken;
     }
 
     public string HashPassword(LoginDTO request)
@@ -102,7 +109,7 @@ public class LoginService : ILoginService
             "https://localhost:5001",
             "https://localhost:5001",
             claims,
-            expires: DateTime.UtcNow.AddMinutes(15),
+            expires: DateTime.UtcNow.AddMinutes(1),
             signingCredentials: creds);
 
         return new JwtSecurityTokenHandler().WriteToken(token);
@@ -118,16 +125,15 @@ public class LoginService : ILoginService
         }
     }
 
-    private ClaimsPrincipal ValidateRefreshToken(string refreshToken)
+    private async Task<ClaimsPrincipal> ValidateRefreshToken(string refreshToken)
     {
-        // Assume token validation logic or database check
-        var claims = new[]
-        {
-            new Claim("isAdmin", "true"),
-            new Claim("isTeacher", "true"),
-            new Claim("isStudent", "true")
-        };
+        var personEmail = await _refreshTokenRepository.GetUserEmailByRefreshTokenAsync(refreshToken);
+        if (personEmail == null) return null;
 
+        var personRole = await _personService.GetPersonRoleAsync(personEmail);
+        if (personRole == null) return null;
+
+        var claims = GetClaims(personRole);
         var identity = new ClaimsIdentity(claims, "custom");
         return new ClaimsPrincipal(identity);
     }
