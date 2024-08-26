@@ -34,6 +34,24 @@ public class AvailabilityController : ControllerBase
         }
     }
 
+    [HttpGet("byId")]
+    public async Task<IActionResult> GetAvailabilityById(int teacherId)
+    {
+        try
+        {
+            var availabilitys =
+                await _availabilityService.GetTeacherAvailabilityByIdAsync(teacherId);
+            return availabilitys == null
+                ? StatusCode(StatusCodes.Status400BadRequest, "Invalid Email")
+                : Ok(availabilitys);
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            return StatusCode(StatusCodes.Status500InternalServerError, e);
+        }
+    }
+
     [HttpPost]
     public async Task<IActionResult> CreateAndUpdateAvailabilitiesByEmail(string email,
         List<AvailabilityDTO> availabilities)

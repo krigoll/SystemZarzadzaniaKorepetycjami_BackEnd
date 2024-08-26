@@ -71,5 +71,11 @@ namespace SystemZarzadzaniaKorepetycjami_BackEnd.Repositories.Implementations
 
             return teachers;
         }
+
+        public async Task<Teacher> GetTeacherByIdAsync(int teacherId)
+        {
+            return await _context.Teacher
+                .FirstOrDefaultAsync(t => t.IdTeacher == teacherId);
+        }
     }
 }
