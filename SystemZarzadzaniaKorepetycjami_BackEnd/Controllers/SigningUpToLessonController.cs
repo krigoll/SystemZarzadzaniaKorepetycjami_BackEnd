@@ -27,25 +27,25 @@ public class SingUpToLesson : ControllerBase
     [HttpPost]
     public async Task<IActionResult> SingUp(SingUpToLessonDTO singUpToLessonDTO)
     {
-        var singUpToLessonStatus = await _singUpToLessonService.SingUpToLessonAndSendMessageAsync(singUpToLessonDTO);
+        var singUpToLessonStatus = await _singUpToLessonService.SingUpToLessonAsync(singUpToLessonDTO);
         switch (singUpToLessonStatus)
         {
-            case SingUpToLessonStaus.INVALID_EMAIL:
+            case SingUpToLessonStatus.INVALID_EMAIL:
                 return StatusCode(StatusCodes.Status400BadRequest, "Invalid User");
                 break;
-            case SingUpToLessonStaus.INVALID_SUBJECT:
+            case SingUpToLessonStatus.INVALID_SUBJECT:
                 return StatusCode(StatusCodes.Status400BadRequest, "Invalid Subject");
                 break;
-            case SingUpToLessonStaus.OK:
+            case SingUpToLessonStatus.OK:
                 return Ok();
                 break;
-            case SingUpToLessonStaus.DATABASE_ERROR:
+            case SingUpToLessonStatus.DATABASE_ERROR:
                 return StatusCode(StatusCodes.Status500InternalServerError, "Database Error");
                 break;
-            case SingUpToLessonStaus.INVALID_LESSON:
+            case SingUpToLessonStatus.INVALID_LESSON:
                 return StatusCode(StatusCodes.Status400BadRequest, "Invalid Lesson"); 
                 break;    
-            case SingUpToLessonStaus.CONFLICT_LESSON:
+            case SingUpToLessonStatus.CONFLICT_LESSON:
                 return StatusCode(StatusCodes.Status409Conflict, "Conflict with another lesson"); 
                 break;  
             default:

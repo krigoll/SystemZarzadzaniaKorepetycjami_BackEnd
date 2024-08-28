@@ -51,10 +51,10 @@
          "ObjectType": 0
       },
       {
-        "Name": "[dbo].[Refresh_Tokens]",
-        "ObjectType": 0
+         "Name": "[dbo].[Refresh_Tokens]",
+         "ObjectType": 0
       },
-     {
+      {
          "Name": "[dbo].[Report]",
          "ObjectType": 0
       },
