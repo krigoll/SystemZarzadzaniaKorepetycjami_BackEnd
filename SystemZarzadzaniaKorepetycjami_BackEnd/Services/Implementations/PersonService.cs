@@ -77,7 +77,7 @@ public class PersonService : IPersonService
         return new PersonRoleDTO
         {
             isAdmin = await _adminRepository.isAdministratorByEmail(email),
-            isStudent = await _studentRepository.isPersonByEmail(email),
+            isStudent = await _studentRepository.isStudentByEmail(email),
             isTeacher = await _teacherRepository.isTeacherByEmail(email)
         };
     }
@@ -108,7 +108,7 @@ public class PersonService : IPersonService
     {
         try
         {
-            var person = await _personRepository.FindUserByIdAsync(idPerson);
+            var person = await _personRepository.FindPersonByIdAsync(idPerson);
 
             var isPersonExists = await _loginRepository.findPersonByEmailAsync(personProfileDto.Email);
             if (isPersonExists != null && personProfileDto.Email != person.Email)

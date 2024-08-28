@@ -5,5 +5,5 @@ namespace SystemZarzadzaniaKorepetycjami_BackEnd.Services.Interfaces;
 
 public interface ISingUpToLessonService
 {
-    public Task<SingUpToLessonStaus> SingUpToLessonAndSendMessageAsync(SingUpToLessonDTO singUpToLessonDTO);
+    public Task<SingUpToLessonStaus> SingUpToLessonAsync(SingUpToLessonDTO singUpToLessonDTO);
 }

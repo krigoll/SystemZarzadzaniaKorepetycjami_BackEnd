@@ -1,71 +1,72 @@
-// using SystemZarzadzaniaKorepetycjami_BackEnd.DTOs;
-// using SystemZarzadzaniaKorepetycjami_BackEnd.Repositories.Interfaces;
-// using SystemZarzadzaniaKorepetycjami_BackEnd.Services.Interfaces;
-//
-// namespace SystemZarzadzaniaKorepetycjami_BackEnd.Services.Implementations
-// {
-//     public class SingUpToLessonService : ISingUpToLessonService
-//     {
-//
-//         private readonly IPersonRepository _personRepository;
-//         private readonly ISubjectLevelRepository _subjectLevelRepository;
-//         private readonly ILessonRepository _lessonRepository;
-//         private readonly IMessageRepository _messageRepository;
-//
-//         public SingUpToLessonService(IPersonRepository personRepository, ISubjectLevelRepository subjectLevelRepository, ILessonRepository lessonRepository, IMessageRepository messageRepository)
-//         {
-//             _personRepository = personRepository;
-//             _subjectLevelRepository = subjectLevelRepository;
-//             _lessonRepository = lessonRepository;
-//             _messageRepository = messageRepository
-//         }
-//
-//         public async Task<SingUpToLessonStaus> SingUpToLessonAndSendMessageAsync(SingUpToLessonDTO singUpToLessonDTO);
-//         {
-//             try 
-//             {
-//                 var student = await _personRepository.FindPersonByEmailAsync(singUpToLessonDTO.StudentEmail);
-//                 var teacher = await _teacherRepository.FindUserByIdAsync(singUpToLessonDTO.TeacherId);
-//                 if (student == null || teacher == null)
-//                 {
-//                     return SingUpToLessonStaus.INVALID_EMAIL;
-//                 }
-//                 if (!(await _teacherRepository.isTeacherByEmail(teacher.email)))
-//                 {
-//                     return SingUpToLessonStaus.INVALID_EMAIL;
-//                 }//jeszcze student czy student
-//                 var subjectNotExists = await _subjectLevelRepository.IsSubjectLevelExistsBySubjectLevelIdAsync(singUpToLessonDTO.SubjectLevelId);
-//                 if (subjectNotExists) 
-//                 {
-//                     return SingUpToLessonStaus.INVALID_SUBJECT;
-//                 }
-//                 var lesson = new lesson(student.IdPerson, teacher.IdPerson, singUpToLessonDTO.SubjectLevelId, 1, singUpToLessonDTO.StartDate, singUpToLessonDTO.DurationInMinutes);
-//                 var isConflictWithAnotherLesson = await _lessonRepository.IsLessonConflictlessAsync(lesson);
-//                 if (isConflictWithAnotherLesson)
-//                 {
-//                     return SingUpToLessonStaus.CONFLICT_LESSON;
-//                 }
-//                 await _lessonRepository.AddLessonAsync(lesson);
-//                 var systemMessage = new Message(student.IdPerson, teacher.IdPerson, DataTime.Now(), "Nowa rejestracja!");
-//                 await _messageRepository.SendMessageAsync(systemMessage);
-//                 if (singUpToLessonDTO.MessageContent != null)
-//                 {
-//                     var studentMessage = new Message(student.IdPerson, teacher.IdPerson, DataTime.Now(), singUpToLessonDTO.MessageContent);
-//                     await _messageRepository.SendMessageAsync(systemMessage);
-//                 }
-//                 return SingUpToLessonStaus.OK;  
-//             }
-//             catch (ArgumentException e)
-//             {
-//                 Console.WriteLine(e);
-//                 return SingUpToLessonStaus.INVALID_LESSON;
-//             }
-//             catch (Exception e)
-//             {
-//                 Console.WriteLine(e);
-//                 return SingUpToLessonStaus.DATABASE_ERROR;
-//             }
-//         }
-//     }
-// }
+using SystemZarzadzaniaKorepetycjami_BackEnd.DTOs;
+using SystemZarzadzaniaKorepetycjami_BackEnd.Enums;
+using SystemZarzadzaniaKorepetycjami_BackEnd.Models;
+using SystemZarzadzaniaKorepetycjami_BackEnd.Repositories.Interfaces;
+using SystemZarzadzaniaKorepetycjami_BackEnd.Services.Interfaces;
+
+namespace SystemZarzadzaniaKorepetycjami_BackEnd.Services.Implementations
+{
+    public class SingUpToLessonService : ISingUpToLessonService
+    {
+
+        private readonly IPersonRepository _personRepository;
+        private readonly ISubjectLevelRepository _subjectLevelRepository;
+        private readonly ILessonRepository _lessonRepository;
+        private readonly ITeacherRepository _teacherRepository;
+        private readonly IStudentRepository _studentRepository;
+
+        public SingUpToLessonService(IPersonRepository personRepository, ISubjectLevelRepository subjectLevelRepository, ILessonRepository lessonRepository, IStudentRepository studentRepository, ITeacherRepository teacherRepository)
+        {
+            _personRepository = personRepository;
+            _subjectLevelRepository = subjectLevelRepository;
+            _lessonRepository = lessonRepository;
+            _studentRepository = studentRepository;
+            _teacherRepository = teacherRepository;
+        }
+
+        public async Task<SingUpToLessonStatus> SingUpToLessonAsync(SingUpToLessonDTO singUpToLessonDTO)
+        {
+            try 
+            {
+                var student = await _personRepository.FindPersonByEmailAsync(singUpToLessonDTO.StudentEmail);
+                var teacher = await _personRepository.FindPersonByIdAsync(singUpToLessonDTO.TeacherId);
+                if (student == null || teacher == null)
+                {
+                    return SingUpToLessonStatus.INVALID_EMAIL;
+                }
+                if (!(await _teacherRepository.isTeacherByEmail(teacher.Email)))
+                {
+                    return SingUpToLessonStatus.INVALID_EMAIL;
+                }
+                if (!(await _studentRepository.isStudentByEmail(student.Email)))
+                {
+                    return SingUpToLessonStatus.INVALID_EMAIL;
+                }
+                var subjectNotExists = await _subjectLevelRepository.IsSubjectLevelExistsBySubjectLevelIdAsync(singUpToLessonDTO.SubjectLevelId);
+                if (subjectNotExists) 
+                {
+                    return SingUpToLessonStatus.INVALID_SUBJECT;
+                }
+                var lesson = new Lesson(student.IdPerson, teacher.IdPerson, singUpToLessonDTO.SubjectLevelId, 1, singUpToLessonDTO.StartDate, singUpToLessonDTO.StartTime, singUpToLessonDTO.DurationInMinutes);
+                var isConflictWithAnotherLesson = await _lessonRepository.IsLessonConflictlessAsync(lesson);
+                if (isConflictWithAnotherLesson)
+                {
+                    return SingUpToLessonStatus.CONFLICT_LESSON;
+                }
+                await _lessonRepository.AddLessonAsync(lesson);
+                return SingUpToLessonStatus.OK;  
+            }
+            catch (ArgumentException e)
+            {
+                Console.WriteLine(e);
+                return SingUpToLessonStatus.INVALID_LESSON;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                return SingUpToLessonStatus.DATABASE_ERROR;
+            }
+        }
+    }
+}
 

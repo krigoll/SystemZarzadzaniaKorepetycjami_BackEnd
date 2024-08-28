@@ -20,7 +20,7 @@ namespace SystemZarzadzaniaKorepetycjami_BackEnd.Repositories.Implementations
             await _context.SaveChangesAsync();
         }
 
-        public async Task<bool> isPersonByEmail(string email)
+        public async Task<bool> isStudentByEmail(string email)
         {
             var person = await _context.Person
                 .Where(p => p.Email == email)

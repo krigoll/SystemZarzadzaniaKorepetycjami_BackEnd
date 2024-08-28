@@ -1,6 +1,6 @@
 ﻿namespace SystemZarzadzaniaKorepetycjami_BackEnd.Models
 {
-    public class Lesson
+    public partial class Lesson
     {
         public int IdLesson { get; }
         public int IdStudent { get; }

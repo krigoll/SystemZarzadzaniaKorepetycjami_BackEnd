@@ -1,6 +1,6 @@
 namespace SystemZarzadzaniaKorepetycjami_BackEnd.Enums;
 
-public enum SingUpToLessonStaus
+public enum SingUpToLessonStatus
 {
     OK,
     INVALID_EMAIL,
