@@ -109,7 +109,7 @@ public class LoginService : ILoginService
             "https://localhost:5001",
             "https://localhost:5001",
             claims,
-            expires: DateTime.UtcNow.AddMinutes(1),
+            expires: DateTime.UtcNow.AddMinutes(15),
             signingCredentials: creds);
 
         return new JwtSecurityTokenHandler().WriteToken(token);
