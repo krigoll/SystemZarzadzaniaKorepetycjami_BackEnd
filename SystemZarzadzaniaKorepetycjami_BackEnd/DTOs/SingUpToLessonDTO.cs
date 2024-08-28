@@ -8,5 +8,4 @@ public class SingUpToLessonDTO
     public string StartDate {get; set;}
     public string StartTime {get; set;}
     public int DurationInMinutes {get; set;}
-    public string MessageContent {get; set;}
 } 
