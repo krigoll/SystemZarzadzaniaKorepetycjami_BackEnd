@@ -1,3 +1,4 @@
+using System.Globalization;
 using SystemZarzadzaniaKorepetycjami_BackEnd.DTOs;
 using SystemZarzadzaniaKorepetycjami_BackEnd.Enums;
 using SystemZarzadzaniaKorepetycjami_BackEnd.Models;
@@ -8,14 +9,16 @@ namespace SystemZarzadzaniaKorepetycjami_BackEnd.Services.Implementations
 {
     public class SingUpToLessonService : ISingUpToLessonService
     {
+        private readonly ILessonRepository _lessonRepository;
 
         private readonly IPersonRepository _personRepository;
-        private readonly ISubjectLevelRepository _subjectLevelRepository;
-        private readonly ILessonRepository _lessonRepository;
-        private readonly ITeacherRepository _teacherRepository;
         private readonly IStudentRepository _studentRepository;
+        private readonly ISubjectLevelRepository _subjectLevelRepository;
+        private readonly ITeacherRepository _teacherRepository;
 
-        public SingUpToLessonService(IPersonRepository personRepository, ISubjectLevelRepository subjectLevelRepository, ILessonRepository lessonRepository, IStudentRepository studentRepository, ITeacherRepository teacherRepository)
+        public SingUpToLessonService(IPersonRepository personRepository, ISubjectLevelRepository subjectLevelRepository,
+            ILessonRepository lessonRepository, IStudentRepository studentRepository,
+            ITeacherRepository teacherRepository)
         {
             _personRepository = personRepository;
             _subjectLevelRepository = subjectLevelRepository;
@@ -26,7 +29,7 @@ namespace SystemZarzadzaniaKorepetycjami_BackEnd.Services.Implementations
 
         public async Task<SingUpToLessonStatus> SingUpToLessonAsync(SingUpToLessonDTO singUpToLessonDTO)
         {
-            try 
+            try
             {
                 var student = await _personRepository.FindPersonByEmailAsync(singUpToLessonDTO.StudentEmail);
                 var teacher = await _personRepository.FindPersonByIdAsync(singUpToLessonDTO.TeacherId);
@@ -34,27 +37,37 @@ namespace SystemZarzadzaniaKorepetycjami_BackEnd.Services.Implementations
                 {
                     return SingUpToLessonStatus.INVALID_EMAIL;
                 }
+
                 if (!(await _teacherRepository.isTeacherByEmail(teacher.Email)))
                 {
                     return SingUpToLessonStatus.INVALID_EMAIL;
                 }
+
                 if (!(await _studentRepository.isStudentByEmail(student.Email)))
                 {
                     return SingUpToLessonStatus.INVALID_EMAIL;
                 }
-                var subjectNotExists = await _subjectLevelRepository.IsSubjectLevelExistsBySubjectLevelIdAsync(singUpToLessonDTO.SubjectLevelId);
-                if (subjectNotExists) 
+
+                var subjectNotExists =
+                    await _subjectLevelRepository.IsSubjectLevelExistsBySubjectLevelIdAsync(singUpToLessonDTO
+                        .SubjectLevelId);
+                if (subjectNotExists)
                 {
                     return SingUpToLessonStatus.INVALID_SUBJECT;
                 }
-                var lesson = new Lesson(student.IdPerson, teacher.IdPerson, singUpToLessonDTO.SubjectLevelId, 1, singUpToLessonDTO.StartDate, singUpToLessonDTO.StartTime, singUpToLessonDTO.DurationInMinutes);
-                var isConflictWithAnotherLesson = await _lessonRepository.IsLessonConflictlessAsync(lesson);
-                if (isConflictWithAnotherLesson)
+
+                var startDate = DateTime.ParseExact($"{singUpToLessonDTO.StartDate} {singUpToLessonDTO.StartTime}",
+                    "yyyy-MM-dd HH:mm", CultureInfo.InvariantCulture);
+                var lesson = new Lesson(student.IdPerson, teacher.IdPerson, singUpToLessonDTO.SubjectLevelId, 1,
+                    startDate, singUpToLessonDTO.DurationInMinutes);
+                var isLessonConflictlessAsync = await _lessonRepository.IsLessonConflictlessAsync(lesson);
+                if (!isLessonConflictlessAsync)
                 {
                     return SingUpToLessonStatus.CONFLICT_LESSON;
                 }
+
                 await _lessonRepository.AddLessonAsync(lesson);
-                return SingUpToLessonStatus.OK;  
+                return SingUpToLessonStatus.OK;
             }
             catch (ArgumentException e)
             {
@@ -69,4 +82,3 @@ namespace SystemZarzadzaniaKorepetycjami_BackEnd.Services.Implementations
         }
     }
 }
-

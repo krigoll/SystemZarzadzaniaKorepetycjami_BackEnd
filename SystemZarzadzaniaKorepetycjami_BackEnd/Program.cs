@@ -76,13 +76,14 @@ builder.Services.AddScoped<ISubjectService, SubjectService>();
 builder.Services.AddScoped<ITeacherSalaryRepository, TeacherSalaryRepository>();
 builder.Services.AddScoped<ITeacherSalaryService, TeacherSalaryService>();
 builder.Services.AddScoped<IAdminRepository, AdminRepository>();
-//builder.Services.AddScoped<ICalendarService, CalendarService>();
-//builder.Services.AddScoped<ICalendarRepository, CalendarRepository>();
 builder.Services.AddScoped<IAvailabilityRepository, AvailabilityRepository>();
 builder.Services.AddScoped<IAvailabilityService, AvailabilityService>();
 builder.Services.AddScoped<ITeacherService, TeacherService>();
 builder.Services.AddScoped<IRefreshTokenRepository, RefreshTokenRepository>();
 builder.Services.AddScoped<ILessonRepository, LessonRepository>();
+builder.Services.AddScoped<ISubjectLevelRepository, SubjectLevelRepository>();
+builder.Services.AddScoped<ISingUpToLessonService, SingUpToLessonService>();
+
 
 builder.Services.AddDbContext<SZKContext>(options =>
 {
