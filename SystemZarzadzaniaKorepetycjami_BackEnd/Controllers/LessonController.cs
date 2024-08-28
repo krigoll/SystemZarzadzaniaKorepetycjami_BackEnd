@@ -4,7 +4,7 @@ using SystemZarzadzaniaKorepetycjami_BackEnd.Services.Interfaces;
 namespace SystemZarzadzaniaKorepetycjami_BackEnd.Controllers;
 
 [ApiController]
-[Route("api/availability")]
+[Route("api/lesson")]
 public class LessonController : ControllerBase
 {
     private readonly ILessonService _lessonService;
