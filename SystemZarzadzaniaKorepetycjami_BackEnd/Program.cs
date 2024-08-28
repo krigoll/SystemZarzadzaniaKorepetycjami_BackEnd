@@ -83,6 +83,7 @@ builder.Services.AddScoped<IRefreshTokenRepository, RefreshTokenRepository>();
 builder.Services.AddScoped<ILessonRepository, LessonRepository>();
 builder.Services.AddScoped<ISubjectLevelRepository, SubjectLevelRepository>();
 builder.Services.AddScoped<ISingUpToLessonService, SingUpToLessonService>();
+builder.Services.AddScoped<ILessonService, LessonService>();
 
 
 builder.Services.AddDbContext<SZKContext>(options =>
