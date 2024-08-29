@@ -7,7 +7,5 @@ public interface IAvailabilityService
 {
     public Task<List<AvailabilityDTO>> GetTeacherAvailabilityByEmailAsync(string email);
     public Task<List<AvailabilityDTO>> GetTeacherAvailabilityByIdAsync(int teacherId);
-
-    public Task<SetAvailabilityStatus>
-        CreateAndUpdateAvailabilityByEmail(string email, List<AvailabilityDTO> calendars);
+    public Task<SetAvailabilityStatus> CreateAndUpdateAvailabilityByEmail(string email, List<AvailabilityDTO> calendars);
 }
