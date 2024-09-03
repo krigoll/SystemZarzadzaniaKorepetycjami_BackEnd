@@ -31,4 +31,22 @@ public class LessonController : ControllerBase
             return StatusCode(StatusCodes.Status500InternalServerError, e);
         }
     }
+
+    [HttpPut("{lessonId}/accept")]
+    public async Task<IActionResult> AcceptLessonByLessonIdAsync(int lessonId)
+    {
+        var accepted = await _lessonService.AcceptLessonByIdAsync(lessonId);
+        if(accepted)
+            return Ok();
+        return StatusCode(StatusCodes.Status400BadRequest, "Invalid Lesson Id"); 
+    }
+
+    [HttpPut("{lessonId}/reject")]
+    public async Task<IActionResult> RejectLessonByLessonIdAsync(int lessonId)
+    {
+        var accepted = await _lessonService.RejectLessonByIdAsync(lessonId);
+        if(accepted)
+            return Ok();
+        return StatusCode(StatusCodes.Status400BadRequest, "Invalid Lesson Id"); 
+    }
 }

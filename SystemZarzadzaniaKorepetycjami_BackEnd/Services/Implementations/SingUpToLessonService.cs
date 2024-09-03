@@ -58,7 +58,8 @@ namespace SystemZarzadzaniaKorepetycjami_BackEnd.Services.Implementations
 
                 var startDate = DateTime.ParseExact($"{singUpToLessonDTO.StartDate} {singUpToLessonDTO.StartTime}",
                     "yyyy-MM-dd HH:mm", CultureInfo.InvariantCulture);
-                var lesson = new Lesson(student.IdPerson, teacher.IdPerson, singUpToLessonDTO.SubjectLevelId, 1,
+                var lessonStatusId = 1;    
+                var lesson = new Lesson(student.IdPerson, teacher.IdPerson, singUpToLessonDTO.SubjectLevelId, lessonStatusId,
                     startDate, singUpToLessonDTO.DurationInMinutes);
                 var isLessonConflictlessAsync = await _lessonRepository.IsLessonConflictlessAsync(lesson);
                 if (!isLessonConflictlessAsync)

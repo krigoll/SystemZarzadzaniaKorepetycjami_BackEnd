@@ -55,5 +55,15 @@ namespace SystemZarzadzaniaKorepetycjami_BackEnd.Repositories.Implementations
 
             return lessons;
         }
+
+        public async Task<bool> changeLessonStatus(int lessonId, int lessonStatusId)
+        {
+            var lesson = await _context.Lesson.FirstOrDefaultAsync(l => l.IdLesson==lessonId);
+            if (lesson == null)
+                return false;
+            lesson.SetIdLessonStatus(lessonStatusId);
+            await _context.SaveChangesAsync();
+            return true;
+        }
     }
 }

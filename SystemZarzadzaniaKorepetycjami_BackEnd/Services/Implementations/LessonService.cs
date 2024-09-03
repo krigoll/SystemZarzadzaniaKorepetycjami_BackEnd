@@ -22,4 +22,14 @@ public class LessonService : ILessonService
 
         return await _lessonRepository.getAllReservedLessonsByTeacherAsync(teacher);
     }
+
+    public async Task<bool> AcceptLessonByIdAsync(int lessonId)
+    {
+        return await _lessonRepository.changeLessonStatus(lessonId,2);
+    }
+
+    public async Task<bool> RejectLessonByIdAsync(int lessonId)
+    {
+        return await _lessonRepository.changeLessonStatus(lessonId,3);
+    }
 }

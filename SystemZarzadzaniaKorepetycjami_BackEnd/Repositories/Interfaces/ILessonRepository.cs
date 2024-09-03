@@ -9,5 +9,6 @@ namespace SystemZarzadzaniaKorepetycjami_BackEnd.Repositories.Interfaces
         public Task<bool> IsLessonConflictlessAsync(Lesson lesson);
         public Task AddLessonAsync(Lesson lesson);
         public Task<List<LessonDTO>> getAllReservedLessonsByTeacherAsync(Teacher teacher);
+        public Task<bool> changeLessonStatus(int lessonId, int lessonStatusId);
     }
 }
