@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using SystemZarzadzaniaKorepetycjami_BackEnd.Services.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 
 namespace SystemZarzadzaniaKorepetycjami_BackEnd.Controllers;
 
@@ -15,6 +16,7 @@ public class LessonController : ControllerBase
     }
 
     [HttpGet]
+    [Authorize]
     public async Task<IActionResult> GetReservedLessonsByTeacherEmail(string email)
     {
         try
@@ -33,6 +35,7 @@ public class LessonController : ControllerBase
     }
 
     [HttpPut("{lessonId}/accept")]
+    [Authorize]
     public async Task<IActionResult> AcceptLessonByLessonIdAsync(int lessonId)
     {
         var accepted = await _lessonService.AcceptLessonByIdAsync(lessonId);
@@ -42,6 +45,7 @@ public class LessonController : ControllerBase
     }
 
     [HttpPut("{lessonId}/reject")]
+    [Authorize]
     public async Task<IActionResult> RejectLessonByLessonIdAsync(int lessonId)
     {
         var accepted = await _lessonService.RejectLessonByIdAsync(lessonId);

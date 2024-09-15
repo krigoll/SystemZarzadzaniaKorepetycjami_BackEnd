@@ -9,6 +9,7 @@ using Newtonsoft.Json;
 using SystemZarzadzaniaKorepetycjami_BackEnd.DTOs;
 using SystemZarzadzaniaKorepetycjami_BackEnd.Enums;
 using SystemZarzadzaniaKorepetycjami_BackEnd.Services.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 
 namespace SystemZarzadzaniaKorepetycjami_BackEnd.Controllers;
 
@@ -26,6 +27,7 @@ public class SingUpToLesson : ControllerBase
 
 
     [HttpPost]
+    [Authorize]
     public async Task<IActionResult> SingUp(SingUpToLessonDTO singUpToLessonDTO)
     {
         var singUpToLessonStatus = await _singUpToLessonService.SingUpToLessonAsync(singUpToLessonDTO);

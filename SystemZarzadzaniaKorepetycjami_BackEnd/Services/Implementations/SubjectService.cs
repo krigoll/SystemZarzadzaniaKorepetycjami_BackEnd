@@ -8,14 +8,25 @@ namespace SystemZarzadzaniaKorepetycjami_BackEnd.Services.Implementations
     {
 
         private readonly ISubjectRepository _subjectRepository;
+        private readonly ITeacherRepository _teacherRepository;
+        private readonly IPersonRepository _personRepository;
 
-        public SubjectService(ISubjectRepository subjectRepository)
+        public SubjectService(ISubjectRepository subjectRepository,ITeacherRepository teacherRepository, IPersonRepository personRepository)
         {
             _subjectRepository = subjectRepository;
+            _teacherRepository = teacherRepository;
+            _personRepository = personRepository;
         }
-        public async Task<List<SubjectDTO>> getAllSubjects()
+        public async Task<List<SubjectDTO>> GetAllSubjectsAsync()
         {
             return await _subjectRepository.GetAllFullSubjects();
+        }
+        public async Task<List<SubjectTeacherDTO>> GetAllSubjectsEditAsync(string email)
+        {
+            if (await _teacherRepository.isTeacherByEmail(email))
+                return null;
+            var person = await _personRepository.FindPersonByEmailAsync(email);
+            return await _subjectRepository.GetAllFullSubjectsByTeacherId(person.IdPerson);
         }
     }
 }

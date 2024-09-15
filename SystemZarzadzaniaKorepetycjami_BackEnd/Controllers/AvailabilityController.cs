@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using SystemZarzadzaniaKorepetycjami_BackEnd.DTOs;
 using SystemZarzadzaniaKorepetycjami_BackEnd.Enums;
 using SystemZarzadzaniaKorepetycjami_BackEnd.Services.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 
 namespace SystemZarzadzaniaKorepetycjami_BackEnd.Controllers;
 
@@ -17,6 +18,7 @@ public class AvailabilityController : ControllerBase
     }
 
     [HttpGet]
+    [Authorize]
     public async Task<IActionResult> GetAvailabilityByEmail(string email)
     {
         try
@@ -35,6 +37,7 @@ public class AvailabilityController : ControllerBase
     }
 
     [HttpGet("byId")]
+    [Authorize]
     public async Task<IActionResult> GetAvailabilityById(int teacherId)
     {
         try
@@ -53,6 +56,7 @@ public class AvailabilityController : ControllerBase
     }
 
     [HttpPost]
+    [Authorize]
     public async Task<IActionResult> CreateAndUpdateAvailabilitiesByEmail(string email,
         List<AvailabilityDTO> availabilities)
     {

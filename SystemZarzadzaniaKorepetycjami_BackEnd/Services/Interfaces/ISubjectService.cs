@@ -4,6 +4,7 @@ namespace SystemZarzadzaniaKorepetycjami_BackEnd.Services.Interfaces
 {
     public interface ISubjectService
     {
-        public Task<List<SubjectDTO>> getAllSubjects();
+        public Task<List<SubjectDTO>> GetAllSubjectsAsync();
+        public Task<List<SubjectTeacherDTO>> GetAllSubjectsEditAsync(string email);
     }
 }

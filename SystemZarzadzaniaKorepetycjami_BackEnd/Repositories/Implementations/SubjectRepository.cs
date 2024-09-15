@@ -31,7 +31,30 @@ namespace SystemZarzadzaniaKorepetycjami_BackEnd.Repositories.Implementations
             })
             .ToList();
 
-            return formattedResult; 
+            return formattedResult;
         }
+
+        public async Task<List<SubjectTeacherDTO>> GetAllFullSubjectsByTeacherId(int teacherId)
+        {
+            var result = await _context.Subject
+                .Include(s => s.SubjectCategory)
+                .ThenInclude(sc => sc.SubjectLevel)
+                .SelectMany(s => s.SubjectCategory, (s, sc) => new { s.Name, SubjectCategory = sc })
+                .SelectMany(sc => sc.SubjectCategory.SubjectLevel, (sc, sl) => new { Subject = sc.Name, Category = sc.SubjectCategory.Name, Level = sl.Name, SubjectId = sc.SubjectCategory.IdSubject, LevelId = sl.IdSubjectLevel })
+                .GroupJoin(_context.TeacherSalary.Where(ts => ts.IdTeacher == teacherId),
+                    subject => subject.SubjectId,
+                    salary => salary.IdSubject,
+                    (subject, salaries) => new { subject, Salary = salaries.FirstOrDefault() })
+                .Select(x => new SubjectTeacherDTO
+                {
+                    SubjectFullName = $"{x.subject.Subject}, {x.subject.Category}, {x.subject.Level}",
+                    SubjectLevelId = x.subject.LevelId,
+                    Price = x.Salary != null ? x.Salary.HourlyRate : 0
+                })
+                .ToListAsync();
+
+            return result;
+        }
+
     }
 }

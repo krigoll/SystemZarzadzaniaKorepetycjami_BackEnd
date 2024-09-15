@@ -17,6 +17,7 @@ public class TeacherController : ControllerBase
     }
 
     [HttpGet]
+    [Authorize]
     public async Task<IActionResult> GetTeachersBySubjectCategoryAsync(int subjectCategoryId)
     {
         try

@@ -23,8 +23,23 @@ public class SubjectController : ControllerBase
     {
         try
         {
-            var subjects = await _subjectService.getAllSubjects();
+            var subjects = await _subjectService.GetAllSubjectsAsync();
             return Ok(subjects);
+        }
+        catch (Exception ex) 
+        {
+            return StatusCode(StatusCodes.Status500InternalServerError, "Internal server error");
+        }
+    }
+
+    [HttpGet("getAllSubjects/")]
+    [Authorize]
+    public async Task<IActionResult> GetAllSubjectsEdit(string email)
+    {
+        try
+        {
+            var subjects = await _subjectService.GetAllSubjectsEditAsync(email);
+            return subjects == null ? StatusCode(StatusCodes.Status400BadRequest, "Invalid Teacher Email") : Ok(subjects);
         }
         catch (Exception ex) 
         {
