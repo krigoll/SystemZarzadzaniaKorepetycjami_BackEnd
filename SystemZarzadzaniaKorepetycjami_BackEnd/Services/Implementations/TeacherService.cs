@@ -1,5 +1,3 @@
-using SystemZarzadzaniaKorepetycjami_BackEnd.Enums;
-using SystemZarzadzaniaKorepetycjami_BackEnd.Models;
 using SystemZarzadzaniaKorepetycjami_BackEnd.Repositories.Interfaces;
 using SystemZarzadzaniaKorepetycjami_BackEnd.Services.Interfaces;
 

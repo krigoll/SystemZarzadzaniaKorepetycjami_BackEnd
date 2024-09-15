@@ -1,7 +1,5 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using SystemZarzadzaniaKorepetycjami_BackEnd.DTOs;
-using SystemZarzadzaniaKorepetycjami_BackEnd.Enums;
 using SystemZarzadzaniaKorepetycjami_BackEnd.Services.Interfaces;
 
 namespace SystemZarzadzaniaKorepetycjami_BackEnd.Controllers;
@@ -26,22 +24,24 @@ public class SubjectController : ControllerBase
             var subjects = await _subjectService.GetAllSubjectsAsync();
             return Ok(subjects);
         }
-        catch (Exception ex) 
+        catch (Exception ex)
         {
             return StatusCode(StatusCodes.Status500InternalServerError, "Internal server error");
         }
     }
 
-    [HttpGet("getAllSubjects/")]
+    [HttpGet("getAllSubjectsByEmail/{email}")]
     [Authorize]
     public async Task<IActionResult> GetAllSubjectsEdit(string email)
     {
         try
         {
             var subjects = await _subjectService.GetAllSubjectsEditAsync(email);
-            return subjects == null ? StatusCode(StatusCodes.Status400BadRequest, "Invalid Teacher Email") : Ok(subjects);
+            return subjects == null
+                ? StatusCode(StatusCodes.Status400BadRequest, "Invalid Teacher Email")
+                : Ok(subjects);
         }
-        catch (Exception ex) 
+        catch (Exception ex)
         {
             return StatusCode(StatusCodes.Status500InternalServerError, "Internal server error");
         }
