@@ -24,9 +24,11 @@ namespace SystemZarzadzaniaKorepetycjami_BackEnd.Services.Implementations
         public async Task<List<SubjectTeacherDTO>> GetAllSubjectsEditAsync(string email)
         {
             if (await _teacherRepository.isTeacherByEmail(email))
-                return null;
-            var person = await _personRepository.FindPersonByEmailAsync(email);
-            return await _subjectRepository.GetAllFullSubjectsByTeacherId(person.IdPerson);
+            {
+                var person = await _personRepository.FindPersonByEmailAsync(email);
+                return await _subjectRepository.GetAllFullSubjectsByTeacherId(person.IdPerson);
+            }
+            return null;
         }
     }
 }
