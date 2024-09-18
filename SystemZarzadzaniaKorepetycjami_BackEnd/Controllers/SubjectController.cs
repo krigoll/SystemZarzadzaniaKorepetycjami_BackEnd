@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using SystemZarzadzaniaKorepetycjami_BackEnd.Services.Interfaces;
 
 namespace SystemZarzadzaniaKorepetycjami_BackEnd.Controllers;
@@ -16,7 +15,7 @@ public class SubjectController : ControllerBase
     }
 
     [HttpGet("getAllSubjects")]
-    [Authorize]
+    //[Authorize]
     public async Task<IActionResult> GetAllSubjects()
     {
         try
@@ -30,8 +29,8 @@ public class SubjectController : ControllerBase
         }
     }
 
-    [HttpGet("getAllSubjectsByEmail/{email}")]
-    [Authorize]
+    [HttpGet("getAllSubjectsByEmail")]
+    //[Authorize]
     public async Task<IActionResult> GetAllSubjectsEdit(string email)
     {
         try

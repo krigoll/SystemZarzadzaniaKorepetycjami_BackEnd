@@ -32,36 +32,38 @@ namespace SystemZarzadzaniaKorepetycjami_BackEnd.Repositories.Implementations
             await _context.SaveChangesAsync();
         }
 
-        public async Task CreateUpdateDeleteTeacherSalaryByPersonAsync(List<TeacherSalaryDTO> teacherSalaryDTO, Person person)
+        public async Task CreateUpdateDeleteTeacherSalaryByPersonAsync(List<TeacherSalaryDTO> teacherSalaryDTO,
+            Person person)
         {
-        foreach (var teacherSalary in teacherSalaryDTO)
-        {
-            var ts = await _context.TeacherSalary.FirstOrDefaultAsync(t =>
-                t.IdTeacher == person.IdPerson && t.IdSubject == teacherSalary.Subject_LevelId);
-            if (ts == null)
+            Console.WriteLine(teacherSalaryDTO.Count);
+            foreach (var teacherSalary in teacherSalaryDTO)
             {
-                if (teacherSalary.HourlyRate > 0)
+                var ts = await _context.TeacherSalary.FirstOrDefaultAsync(t =>
+                    t.IdTeacher == person.IdPerson && t.IdSubject == teacherSalary.Subject_LevelId);
+                if (ts == null)
                 {
-                    var newTeacherSalary = new TeacherSalary(teacherSalary.HourlyRate, person.IdPerson,teacherSalary.Subject_LevelId);
-                    await _context.TeacherSalary.AddAsync(newTeacherSalary); 
-                }   
-            }
-            else
-            {
-                if (teacherSalary.HourlyRate > 0)
-                {
-                    ts.SetHourlyRate(teacherSalary.HourlyRate);
-                    _context.TeacherSalary.Update(ts);
+                    if (teacherSalary.HourlyRate > 0)
+                    {
+                        var newTeacherSalary = new TeacherSalary(teacherSalary.HourlyRate, person.IdPerson,
+                            teacherSalary.Subject_LevelId);
+                        await _context.TeacherSalary.AddAsync(newTeacherSalary);
+                    }
                 }
                 else
                 {
-                    _context.TeacherSalary.Remove(ts);
+                    if (teacherSalary.HourlyRate > 0)
+                    {
+                        ts.SetHourlyRate(teacherSalary.HourlyRate);
+                        _context.TeacherSalary.Update(ts);
+                    }
+                    else
+                    {
+                        _context.TeacherSalary.Remove(ts);
+                    }
                 }
             }
-        }
 
-        await _context.SaveChangesAsync(); 
+            await _context.SaveChangesAsync();
         }
-
     }
 }
