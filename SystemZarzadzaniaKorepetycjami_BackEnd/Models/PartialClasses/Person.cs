@@ -16,6 +16,7 @@ public partial class Person
         SetPhoneNumber(phoneNumber);
         SetImage(image);
         SetJoiningDate(DateOnly.FromDateTime(DateTime.Now));
+        SetIsDeleted(false);
     }
 
     public void SetName(string name)
@@ -112,5 +113,10 @@ public partial class Person
             throw new ArgumentException("JoiningDate cannot be from the future.");
 
         JoiningDate = joiningDate;
+    }
+
+    public void SetIsDeleted(bool isDeleted)
+    {
+        IsDeleted = isDeleted;
     }
 }

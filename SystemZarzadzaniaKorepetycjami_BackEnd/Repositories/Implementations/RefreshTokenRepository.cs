@@ -16,7 +16,7 @@ public class RefreshTokenRepository : IRefreshTokenRepository
 
     public async Task StoreRefreshTokenAsync(string email, string refreshToken)
     {
-        var person = await _context.Person.SingleOrDefaultAsync(p => p.Email == email);
+        var person = await _context.Person.SingleOrDefaultAsync(p => p.Email == email && !p.IsDeleted);
         if (person == null) return;
 
         var token = new RefreshTokens(person.IdPerson, refreshToken, DateTime.UtcNow.AddDays(7), DateTime.UtcNow);

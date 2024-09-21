@@ -16,7 +16,7 @@ public class AdminRepository : IAdminRepository
     public async Task<bool> isAdministratorByEmail(string email)
     {
         var person = await _context.Person
-            .Where(p => p.Email == email)
+            .Where(p => p.Email == email && !p.IsDeleted)
             .Select(p => new { p.IdPerson })
             .FirstOrDefaultAsync();
 

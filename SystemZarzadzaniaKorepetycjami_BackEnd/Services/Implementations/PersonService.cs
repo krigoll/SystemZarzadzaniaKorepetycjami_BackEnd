@@ -3,6 +3,7 @@ using SystemZarzadzaniaKorepetycjami_BackEnd.Enums;
 using SystemZarzadzaniaKorepetycjami_BackEnd.Models;
 using SystemZarzadzaniaKorepetycjami_BackEnd.Repositories.Interfaces;
 using SystemZarzadzaniaKorepetycjami_BackEnd.Services.Interfaces;
+using Task = System.Threading.Tasks.Task;
 
 namespace SystemZarzadzaniaKorepetycjami_BackEnd.Services.Implementations;
 
@@ -128,13 +129,13 @@ public class PersonService : IPersonService
 
 
             if (!personProfileDto.IsStudent && personRoles.isStudent)
-                await _studentRepository.RemoveStudentAsync(new Student(idPerson));
+                RemoveStudentAsync(new Student(idPerson));
 
             if (personProfileDto.IsStudent && !personRoles.isStudent)
                 await _studentRepository.AddStudent(new Student(idPerson));
 
             if (!personProfileDto.IsTeacher && personRoles.isTeacher)
-                await _teacherRepository.RemoveTeacherAsync(new Teacher(idPerson));
+                RemoveTeacherAsync(new Teacher(idPerson));
 
             if (personProfileDto.IsTeacher && !personRoles.isTeacher)
                 await _teacherRepository.AddTeacher(new Teacher(idPerson));
@@ -152,5 +153,34 @@ public class PersonService : IPersonService
             Console.WriteLine(e);
             return UpdateUserStatus.DATEBASE_ERROR;
         }
+    }
+
+    public async Task DeleteUserByEmailAsync(string email)
+    {
+        var person = await _personRepository.FindPersonByEmailAsync(email);
+        
+        if(person != null) 
+        {
+        var personRoles = await GetPersonRoleAsync(person.Email);
+        if (personRoles.isStudent)
+            RemoveStudentAsync(new Student(person.IdPerson));
+        
+        if (personRoles.isTeacher)
+            RemoveTeacherAsync(new Teacher(person.IdPerson));
+
+        await _personRepository.DeleteUserAsync(person);
+        }
+    }
+
+    public async Task RemoveStudentAsync(Student student)
+    {
+        //dodać całą funkcionalość lekcie anulowanie zmiana statusu, id student null
+        await _studentRepository.RemoveStudentAsync(student);
+    }
+
+    public async Task RemoveTeacherAsync(Teacher teacher)
+    {
+        //dodać całą funkcionalość lekcie anulowanie zmiana statusu, id teacher null
+        await _teacherRepository.RemoveTeacherAsync(teacher);
     }
 }

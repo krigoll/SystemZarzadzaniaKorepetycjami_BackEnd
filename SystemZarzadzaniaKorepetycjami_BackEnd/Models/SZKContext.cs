@@ -205,6 +205,8 @@ public SZKContext(DbContextOptions<SZKContext> options) : base(options)
 
                 entity.Property(e => e.Image).HasColumnType("image");
 
+                entity.Property(e => e.IsDeleted).HasDefaultValue(false);
+
                 entity.Property(e => e.Name)
                     .IsRequired()
                     .HasMaxLength(50)

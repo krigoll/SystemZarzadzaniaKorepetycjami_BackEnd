@@ -87,4 +87,20 @@ public class PersonController : ControllerBase
             return StatusCode(StatusCodes.Status500InternalServerError, "Database Error");
         }
     }
+
+    [HttpDelete("delete")]
+    [Authorize]
+    public async Task<IActionResult> DeleteUserByEmailAsync(string email)
+    {
+        try
+        {
+            await _personService.DeleteUserByEmailAsync(email);
+            return Ok();
+        }
+        catch(Exception e)
+        {
+            Console.WriteLine(e);
+            return StatusCode(StatusCodes.Status500InternalServerError, "Database Error");
+        }
+    }
 }

@@ -50,9 +50,9 @@ namespace SystemZarzadzaniaKorepetycjami_BackEnd.Repositories.Implementations
                     s => s.IdSubject,
                     (sc, s) => new { sc.SubjectLevel, sc.SubjectCategory, Subject = s })
                 .GroupJoin(_context.TeacherSalary.Where(ts => ts.IdTeacher == teacherId),
-                    subject => subject.SubjectLevel.IdSubjectLevel, // Powiązanie SubjectLevel
-                    salary => salary.IdSubject, // Powiązanie z TeacherSalary na podstawie SubjectLevel
-                    (subject, salaries) => new { subject, Salary = salaries.FirstOrDefault() }) // LEFT JOIN
+                    subject => subject.SubjectLevel.IdSubjectLevel, 
+                    salary => salary.IdSubject, 
+                    (subject, salaries) => new { subject, Salary = salaries.FirstOrDefault() }) 
                 .Select(x => new SubjectTeacherDTO
                 {
                     SubjectFullName =

@@ -23,12 +23,12 @@ public class PersonRepository : IPersonRepository
 
     public async Task<Person> FindPersonByEmailAsync(String email)
     {
-        return await _context.Person.FirstOrDefaultAsync(p => p.Email == email);
+        return await _context.Person.FirstOrDefaultAsync(p => p.Email == email && !p.IsDeleted);
     }
 
     public async Task<Person> FindPersonByIdAsync(int idPerson)
     {
-        return await _context.Person.FirstOrDefaultAsync(p => p.IdPerson == idPerson);
+        return await _context.Person.FirstOrDefaultAsync(p => p.IdPerson == idPerson && !p.IsDeleted);
     }
 
     public async Task UpdateUserAsync(Person person)
@@ -39,7 +39,14 @@ public class PersonRepository : IPersonRepository
 
     public async Task<bool> IsPhoneNumberUniqueAsync(string phoneNumber)
     {
-        var person = await _context.Person.FirstOrDefaultAsync(p => p.PhoneNumber == phoneNumber);
+        var person = await _context.Person.FirstOrDefaultAsync(p => p.PhoneNumber == phoneNumber && !p.IsDeleted);
         return person == null;
+    }
+
+    public async Task DeleteUserAsync(Person person)
+    {
+        person.SetIsDeleted(true);
+        _context.Person.Update(person);
+        await _context.SaveChangesAsync();
     }
 }

@@ -22,6 +22,7 @@ public partial class Person
     public string PhoneNumber { get; private set; }
     public byte[] Image { get; private set; }
     public DateOnly JoiningDate { get; private set; }
+    public bool IsDeleted { get; private set; }
 
             public virtual Administrator Administrator { get; private set; }
             public virtual Student Student { get; private set; }

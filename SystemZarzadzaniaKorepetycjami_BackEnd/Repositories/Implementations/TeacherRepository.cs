@@ -23,7 +23,7 @@ namespace SystemZarzadzaniaKorepetycjami_BackEnd.Repositories.Implementations
         public async Task<bool> isTeacherByEmail(string email)
         {
             var person = await _context.Person
-                .Where(p => p.Email == email)
+                .Where(p => p.Email == email && !p.IsDeleted)
                 .Select(p => new { p.IdPerson })
                 .FirstOrDefaultAsync();
 
@@ -46,7 +46,7 @@ namespace SystemZarzadzaniaKorepetycjami_BackEnd.Repositories.Implementations
         public async Task<Teacher> GetTeacherByEmailAsync(string email)
         {
             var person = await _context.Person
-                .Where(p => p.Email == email)
+                .Where(p => p.Email == email && !p.IsDeleted)
                 .Select(p => new { p.IdPerson })
                 .FirstOrDefaultAsync();
 
@@ -59,7 +59,7 @@ namespace SystemZarzadzaniaKorepetycjami_BackEnd.Repositories.Implementations
             var teachers = await (from teacher in _context.Teacher
                 join person in _context.Person on teacher.IdTeacher equals person.IdPerson
                 join salary in _context.TeacherSalary on teacher.IdTeacher equals salary.IdTeacher
-                where salary.IdSubject == subjectLevelId
+                where salary.IdSubject == subjectLevelId && !person.IsDeleted 
                 select new TeacherDTO
                 {
                     IdPerson = person.IdPerson,

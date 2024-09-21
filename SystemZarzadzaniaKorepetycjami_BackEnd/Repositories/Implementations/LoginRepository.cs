@@ -16,6 +16,6 @@ public class LoginRepository : ILoginRepository
 
     public async Task<Person?> findPersonByEmailAsync(String email)
     {
-        return await _context.Person.FirstOrDefaultAsync(c => c.Email == email);
+        return await _context.Person.FirstOrDefaultAsync(c => c.Email == email && !c.IsDeleted);
     }
 }
