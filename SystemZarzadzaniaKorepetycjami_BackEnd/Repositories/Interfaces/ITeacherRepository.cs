@@ -8,7 +8,8 @@ namespace SystemZarzadzaniaKorepetycjami_BackEnd.Repositories.Interfaces
         public Task AddTeacher(Teacher teacher);
         public Task<bool> isTeacherByEmail(string email);
         public Task RemoveTeacherAsync(Teacher teacher);
-        public Task<List<TeacherDTO>> GetTeachersBySubjectCategoryAsync(int subjectCategoryId);
+        public Task<List<TeacherDTO>> GetTeachersBySubjectCategoryAsync(int subjectLevelId, Teacher teacherE);
+        public Task<List<TeacherDTO>> GetTeachersBySubjectCategoryAsync(int subjectLevelId);
         public Task<Teacher> GetTeacherByEmailAsync(string email);
         public Task<Teacher> GetTeacherByIdAsync(int teacherId);
     }

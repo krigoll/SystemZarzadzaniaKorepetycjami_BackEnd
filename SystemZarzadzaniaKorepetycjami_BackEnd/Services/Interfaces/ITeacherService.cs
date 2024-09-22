@@ -4,6 +4,6 @@ namespace SystemZarzadzaniaKorepetycjami_BackEnd.Services.Interfaces
 {
     public interface ITeacherService
     {
-        public Task<List<TeacherDTO>> GetTeachersBySubjectCategoryAsync(int subjectCategoryId);
+        public Task<List<TeacherDTO>> GetTeachersBySubjectCategoryAsync(int subjectLevelId, string email);
     }
 }

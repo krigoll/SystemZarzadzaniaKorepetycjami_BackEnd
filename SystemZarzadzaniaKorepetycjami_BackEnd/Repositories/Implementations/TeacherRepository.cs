@@ -54,12 +54,30 @@ namespace SystemZarzadzaniaKorepetycjami_BackEnd.Repositories.Implementations
                 .FirstOrDefaultAsync(t => t.IdTeacher == person.IdPerson);
         }
 
+        public async Task<List<TeacherDTO>> GetTeachersBySubjectCategoryAsync(int subjectLevelId, Teacher teacherE)
+        {
+            var teachers = await (from teacher in _context.Teacher
+                join person in _context.Person on teacher.IdTeacher equals person.IdPerson
+                join salary in _context.TeacherSalary on teacher.IdTeacher equals salary.IdTeacher
+                where salary.IdSubject == subjectLevelId && !person.IsDeleted && teacher.IdTeacher != teacherE.IdTeacher
+                select new TeacherDTO
+                {
+                    IdPerson = person.IdPerson,
+                    Name = person.Name,
+                    Surname = person.Surname,
+                    HourlyRate = salary.HourlyRate,
+                    Image = person.Image == null ? null : Convert.ToBase64String(person.Image)
+                }).ToListAsync();
+
+            return teachers;
+        }
+
         public async Task<List<TeacherDTO>> GetTeachersBySubjectCategoryAsync(int subjectLevelId)
         {
             var teachers = await (from teacher in _context.Teacher
                 join person in _context.Person on teacher.IdTeacher equals person.IdPerson
                 join salary in _context.TeacherSalary on teacher.IdTeacher equals salary.IdTeacher
-                where salary.IdSubject == subjectLevelId && !person.IsDeleted 
+                where salary.IdSubject == subjectLevelId && !person.IsDeleted
                 select new TeacherDTO
                 {
                     IdPerson = person.IdPerson,

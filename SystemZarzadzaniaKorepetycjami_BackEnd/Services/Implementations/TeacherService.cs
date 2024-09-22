@@ -12,8 +12,11 @@ public class TeacherService : ITeacherService
         _teacherRepository = teacherRepository;
     }
 
-    public async Task<List<TeacherDTO>> GetTeachersBySubjectCategoryAsync(int subjectCategoryId)
+    public async Task<List<TeacherDTO>> GetTeachersBySubjectCategoryAsync(int subjectLevelId, string email)
     {
-        return await _teacherRepository.GetTeachersBySubjectCategoryAsync(subjectCategoryId);
+        var teacher = await _teacherRepository.GetTeacherByEmailAsync(email);
+        if(teacher == null)
+            return await _teacherRepository.GetTeachersBySubjectCategoryAsync(subjectLevelId);
+        return await _teacherRepository.GetTeachersBySubjectCategoryAsync(subjectLevelId, teacher);
     }
 }

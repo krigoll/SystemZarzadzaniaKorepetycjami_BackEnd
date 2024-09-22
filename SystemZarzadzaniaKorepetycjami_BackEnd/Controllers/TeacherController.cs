@@ -18,11 +18,11 @@ public class TeacherController : ControllerBase
 
     [HttpGet]
     [Authorize]
-    public async Task<IActionResult> GetTeachersBySubjectCategoryAsync(int subjectCategoryId)
+    public async Task<IActionResult> GetTeachersBySubjectCategoryAsync(int subjectLevelId, string email)
     {
         try
         {
-            var teachers = await _teacherService.GetTeachersBySubjectCategoryAsync(subjectCategoryId);
+            var teachers = await _teacherService.GetTeachersBySubjectCategoryAsync(subjectLevelId,email);
             return Ok(teachers);
         }
         catch (Exception ex)
