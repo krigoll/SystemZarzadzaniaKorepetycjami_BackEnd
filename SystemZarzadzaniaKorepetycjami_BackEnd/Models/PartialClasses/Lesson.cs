@@ -15,14 +15,14 @@ public partial class Lesson
 
     public void SetIdStudent(int? idStudent)
     {
-        if (idStudent == null || idStudent <= 0)
+        if (idStudent != null && idStudent <= 0)
             throw new ArgumentException("Invalid student ID");
         IdStudent = idStudent;
     }
 
     public void SetIdTeacher(int? idTeacher)
     {
-        if (idTeacher == null || idTeacher <= 0)
+        if (idTeacher != null && idTeacher <= 0)
             throw new ArgumentException("Invalid teacher ID");
         IdTeacher = idTeacher;
     }

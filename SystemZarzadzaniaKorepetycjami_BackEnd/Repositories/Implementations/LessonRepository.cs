@@ -71,7 +71,7 @@ namespace SystemZarzadzaniaKorepetycjami_BackEnd.Repositories.Implementations
             if (student == null) throw new ArgumentNullException(nameof(student));
 
             var lessonsToUpdate = await _context.Lesson
-                .Where(l => l.IdStudent == student.IdStudent && (l.IdLessonStatus == 1 || l.IdLessonStatus == 2))
+                .Where(l => l.IdStudent == student.IdStudent)
                 .ToListAsync();
 
             foreach (var lesson in lessonsToUpdate)
@@ -88,7 +88,7 @@ namespace SystemZarzadzaniaKorepetycjami_BackEnd.Repositories.Implementations
             if (teacher == null) throw new ArgumentNullException(nameof(teacher));
 
             var lessonsToUpdate = await _context.Lesson
-                .Where(l => l.IdTeacher == teacher.IdTeacher && (l.IdLessonStatus == 1 || l.IdLessonStatus == 2))
+                .Where(l => l.IdTeacher == teacher.IdTeacher)
                 .ToListAsync();
 
             foreach (var lesson in lessonsToUpdate)
