@@ -10,5 +10,7 @@ namespace SystemZarzadzaniaKorepetycjami_BackEnd.Repositories.Interfaces
         public Task AddLessonAsync(Lesson lesson);
         public Task<List<LessonDTO>> getAllReservedLessonsByTeacherAsync(Teacher teacher);
         public Task<bool> changeLessonStatus(int lessonId, int lessonStatusId);
+        public Task CancelLessonAndSetStudentNullAsync(Student student);
+        public Task CancelLessonAndSetTeacherNullAsync(Teacher teacher);
     }
 }

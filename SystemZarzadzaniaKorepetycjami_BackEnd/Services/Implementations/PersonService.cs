@@ -10,19 +10,22 @@ namespace SystemZarzadzaniaKorepetycjami_BackEnd.Services.Implementations;
 public class PersonService : IPersonService
 {
     private readonly IAdminRepository _adminRepository;
+    private readonly ILessonRepository _lessonRepository;
     private readonly ILoginRepository _loginRepository;
     private readonly IPersonRepository _personRepository;
     private readonly IStudentRepository _studentRepository;
     private readonly ITeacherRepository _teacherRepository;
 
-    public PersonService(IPersonRepository personRepository, ILoginRepository loginRepository,
-        IStudentRepository studentRepository, ITeacherRepository teacherRepository, IAdminRepository adminRepository)
+    public PersonService(IAdminRepository adminRepository, ILoginRepository loginRepository,
+        IPersonRepository personRepository, IStudentRepository studentRepository, ITeacherRepository teacherRepository,
+        ILessonRepository lessonRepository)
     {
-        _personRepository = personRepository;
+        _adminRepository = adminRepository;
         _loginRepository = loginRepository;
+        _personRepository = personRepository;
         _studentRepository = studentRepository;
         _teacherRepository = teacherRepository;
-        _adminRepository = adminRepository;
+        _lessonRepository = lessonRepository;
     }
 
     public async Task<RegisterStatus> RegistrationPerson(RegistrationDTO registrationDto)
@@ -129,13 +132,13 @@ public class PersonService : IPersonService
 
 
             if (!personProfileDto.IsStudent && personRoles.isStudent)
-                RemoveStudentAsync(new Student(idPerson));
+                await RemoveStudentAsync(new Student(idPerson));
 
             if (personProfileDto.IsStudent && !personRoles.isStudent)
                 await _studentRepository.AddStudent(new Student(idPerson));
 
             if (!personProfileDto.IsTeacher && personRoles.isTeacher)
-                RemoveTeacherAsync(new Teacher(idPerson));
+                await RemoveTeacherAsync(new Teacher(idPerson));
 
             if (personProfileDto.IsTeacher && !personRoles.isTeacher)
                 await _teacherRepository.AddTeacher(new Teacher(idPerson));
@@ -158,29 +161,29 @@ public class PersonService : IPersonService
     public async Task DeleteUserByEmailAsync(string email)
     {
         var person = await _personRepository.FindPersonByEmailAsync(email);
-        
-        if(person != null) 
-        {
-        var personRoles = await GetPersonRoleAsync(person.Email);
-        if (personRoles.isStudent)
-            RemoveStudentAsync(new Student(person.IdPerson));
-        
-        if (personRoles.isTeacher)
-            RemoveTeacherAsync(new Teacher(person.IdPerson));
 
-        await _personRepository.DeleteUserAsync(person);
+        if (person != null)
+        {
+            var personRoles = await GetPersonRoleAsync(person.Email);
+            if (personRoles.isStudent)
+                await RemoveStudentAsync(new Student(person.IdPerson));
+
+            if (personRoles.isTeacher)
+                await RemoveTeacherAsync(new Teacher(person.IdPerson));
+
+            await _personRepository.DeleteUserAsync(person);
         }
     }
 
     public async Task RemoveStudentAsync(Student student)
     {
-        //dodać całą funkcionalość lekcie anulowanie zmiana statusu, id student null
+        await _lessonRepository.CancelLessonAndSetStudentNullAsync(student);
         await _studentRepository.RemoveStudentAsync(student);
     }
 
     public async Task RemoveTeacherAsync(Teacher teacher)
     {
-        //dodać całą funkcionalość lekcie anulowanie zmiana statusu, id teacher null
+        await _lessonRepository.CancelLessonAndSetTeacherNullAsync(teacher);
         await _teacherRepository.RemoveTeacherAsync(teacher);
     }
 }

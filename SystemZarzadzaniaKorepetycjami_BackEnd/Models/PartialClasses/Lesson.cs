@@ -2,7 +2,7 @@
 
 public partial class Lesson
 {
-    public Lesson(int idStudent, int idTeacher, int idSubjectLevel, int idLessonStatus, DateTime startDate,
+    public Lesson(int? idStudent, int? idTeacher, int idSubjectLevel, int idLessonStatus, DateTime startDate,
         int durationInMinutes)
     {
         SetIdStudent(idStudent);
@@ -13,16 +13,16 @@ public partial class Lesson
         SetDurationInMinutes(durationInMinutes);
     }
 
-    public void SetIdStudent(int idStudent)
+    public void SetIdStudent(int? idStudent)
     {
-        if (idStudent <= 0)
+        if (idStudent == null || idStudent <= 0)
             throw new ArgumentException("Invalid student ID");
         IdStudent = idStudent;
     }
 
-    public void SetIdTeacher(int idTeacher)
+    public void SetIdTeacher(int? idTeacher)
     {
-        if (idTeacher <= 0)
+        if (idTeacher == null || idTeacher <= 0)
             throw new ArgumentException("Invalid teacher ID");
         IdTeacher = idTeacher;
     }

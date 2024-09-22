@@ -58,12 +58,46 @@ namespace SystemZarzadzaniaKorepetycjami_BackEnd.Repositories.Implementations
 
         public async Task<bool> changeLessonStatus(int lessonId, int lessonStatusId)
         {
-            var lesson = await _context.Lesson.FirstOrDefaultAsync(l => l.IdLesson==lessonId);
+            var lesson = await _context.Lesson.FirstOrDefaultAsync(l => l.IdLesson == lessonId);
             if (lesson == null)
                 return false;
             lesson.SetIdLessonStatus(lessonStatusId);
             await _context.SaveChangesAsync();
             return true;
+        }
+
+        public async Task CancelLessonAndSetStudentNullAsync(Student student)
+        {
+            if (student == null) throw new ArgumentNullException(nameof(student));
+
+            var lessonsToUpdate = await _context.Lesson
+                .Where(l => l.IdStudent == student.IdStudent && (l.IdLessonStatus == 1 || l.IdLessonStatus == 2))
+                .ToListAsync();
+
+            foreach (var lesson in lessonsToUpdate)
+            {
+                lesson.SetIdStudent(null);
+                lesson.SetIdLessonStatus(4);
+            }
+
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task CancelLessonAndSetTeacherNullAsync(Teacher teacher)
+        {
+            if (teacher == null) throw new ArgumentNullException(nameof(teacher));
+
+            var lessonsToUpdate = await _context.Lesson
+                .Where(l => l.IdTeacher == teacher.IdTeacher && (l.IdLessonStatus == 1 || l.IdLessonStatus == 2))
+                .ToListAsync();
+
+            foreach (var lesson in lessonsToUpdate)
+            {
+                lesson.SetIdTeacher(null);
+                lesson.SetIdLessonStatus(4);
+            }
+
+            await _context.SaveChangesAsync();
         }
     }
 }
