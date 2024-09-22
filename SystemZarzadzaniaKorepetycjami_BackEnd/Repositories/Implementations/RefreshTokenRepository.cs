@@ -51,7 +51,7 @@ public class RefreshTokenRepository : IRefreshTokenRepository
 
     public async Task<RefreshTokens> GetRefreshTokenByEmailAsync(string email)
     {
-        var person = await _context.Person.SingleOrDefaultAsync(p => p.Email == email);
+        var person = await _context.Person.SingleOrDefaultAsync(p => p.Email == email && !p.IsDeleted);
         return await _context.RefreshTokens.SingleOrDefaultAsync(rt => rt.IdPerson == person.IdPerson);
     }
 }
