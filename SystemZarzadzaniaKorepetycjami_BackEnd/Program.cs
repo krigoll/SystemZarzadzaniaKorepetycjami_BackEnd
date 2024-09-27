@@ -83,7 +83,8 @@ builder.Services.AddScoped<ILessonRepository, LessonRepository>();
 builder.Services.AddScoped<ISubjectLevelRepository, SubjectLevelRepository>();
 builder.Services.AddScoped<ISingUpToLessonService, SingUpToLessonService>();
 builder.Services.AddScoped<ILessonService, LessonService>();
-
+builder.Services.AddScoped<ICalendarService, CalendarService>();
+builder.Services.AddScoped<ICalendarRepository, CalendarRepository>();
 
 builder.Services.AddDbContext<SZKContext>(options =>
 {
