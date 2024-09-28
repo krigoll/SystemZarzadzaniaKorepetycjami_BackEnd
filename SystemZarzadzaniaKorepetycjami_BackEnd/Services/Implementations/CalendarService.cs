@@ -1,21 +1,25 @@
 ﻿using SystemZarzadzaniaKorepetycjami_BackEnd.DTOs;
 using SystemZarzadzaniaKorepetycjami_BackEnd.Repositories.Interfaces;
 using SystemZarzadzaniaKorepetycjami_BackEnd.Services.Interfaces;
+
 namespace SystemZarzadzaniaKorepetycjami_BackEnd.Services.Implementations;
+
 public class CalendarService : ICalendarService
 {
     private readonly ICalendarRepository _calendarRepository;
     private readonly IPersonRepository _personRepostiory;
+
     public CalendarService(ICalendarRepository calendarRepository, IPersonRepository personRepostiory)
     {
         _calendarRepository = calendarRepository;
         _personRepostiory = personRepostiory;
     }
-    public async Task<List<List<CalendarDTO>>> GetCalendarsFromTheWeekByDateAndTeacherEmail(DateOnly dateOnly, string email)
+
+    public async Task<List<List<CalendarDTO>>> GetCalendarsFromTheWeekByDateAndTeacherEmail(DateOnly dateOnly,
+        string email)
     {
         (var startOfWeek, var endOfWeek) = GetStartAndEndOfWeek(dateOnly);
 
-        Console.WriteLine(startOfWeek.ToString()," heh ",endOfWeek.ToString());
         if (startOfWeek > endOfWeek)
         {
             return new List<List<CalendarDTO>>();
@@ -27,9 +31,11 @@ public class CalendarService : ICalendarService
             return null;
         }
 
-        var calendars = await _calendarRepository.GetCalendarsByPersonAndRangeFromToAsync(person, startOfWeek, endOfWeek);
+        var calendars =
+            await _calendarRepository.GetCalendarsByPersonAndRangeFromToAsync(person, startOfWeek, endOfWeek);
         return calendars;
     }
+
     public static (DateTime startOfWeek, DateTime endOfWeek) GetStartAndEndOfWeek(DateOnly date)
     {
         var daysToStartOfWeek = (int)date.DayOfWeek - (int)DayOfWeek.Monday;
