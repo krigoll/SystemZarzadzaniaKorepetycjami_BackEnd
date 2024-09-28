@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using System.Globalization;
 using SystemZarzadzaniaKorepetycjami_BackEnd.DTOs;
 using SystemZarzadzaniaKorepetycjami_BackEnd.Models;
 using SystemZarzadzaniaKorepetycjami_BackEnd.Repositories.Interfaces;
@@ -31,7 +32,7 @@ public class CalendarRepository : ICalendarRepository
                 select new CalendarDTO
                 {
                     LessonId = lesson.IdLesson,
-                    DateTime = lesson.StartDate.ToString(),
+                    DateTime = lesson.StartDate.ToString("dd.MM.yyyy HH:mm", new CultureInfo("pl-PL")),
                     SubjectName = $"{subject.Name}, {subjectCategory.Name}, {subjectLevel.Name}",
                     StatusName = lessonStatus.Status
                 }).ToListAsync();
