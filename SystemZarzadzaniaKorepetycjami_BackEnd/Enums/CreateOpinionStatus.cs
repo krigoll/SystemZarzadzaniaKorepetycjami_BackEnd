@@ -1,0 +1,10 @@
+﻿namespace SystemZarzadzaniaKorepetycjami_BackEnd.Enums;
+
+public enum CreateOpinionStatus
+{
+    INVALID_OPINION,
+    OK,
+    INVALID_STUDENT_OR_TEACHER,
+    SERVER_ERROR,
+    CAN_NOT_OPINION_TEACHER_WITCH_NOT_TEACHED_YOU
+}

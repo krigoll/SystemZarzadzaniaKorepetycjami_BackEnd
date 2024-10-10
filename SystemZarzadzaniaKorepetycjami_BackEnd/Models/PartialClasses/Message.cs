@@ -31,7 +31,7 @@ public partial class Message
 
     public void SetContent(string content)
     {
-        if (content != null && (content.Length == 0 || content.Length > 500))
+        if (content == null || content.Length == 0 || content.Length > 500)
             throw new ArgumentException("Invalid Content");
         Content = content;
     }
