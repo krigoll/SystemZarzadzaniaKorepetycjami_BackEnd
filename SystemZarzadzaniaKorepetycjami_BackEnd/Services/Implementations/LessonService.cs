@@ -25,11 +25,16 @@ public class LessonService : ILessonService
 
     public async Task<bool> AcceptLessonByIdAsync(int lessonId)
     {
-        return await _lessonRepository.changeLessonStatus(lessonId,2);
+        return await _lessonRepository.changeLessonStatus(lessonId, 2);
     }
 
     public async Task<bool> RejectLessonByIdAsync(int lessonId)
     {
-        return await _lessonRepository.changeLessonStatus(lessonId,3);
+        return await _lessonRepository.changeLessonStatus(lessonId, 3);
+    }
+
+    public async Task<LessonDatailsDTO> GetLessonDetailsByIdAsync(int lessonId)
+    {
+        return await _lessonRepository.GetLessonDetailsByIdAsync(lessonId);
     }
 }

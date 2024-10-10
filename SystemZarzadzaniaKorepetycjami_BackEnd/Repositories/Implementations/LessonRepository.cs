@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using System.Globalization;
+using Microsoft.EntityFrameworkCore;
 using SystemZarzadzaniaKorepetycjami_BackEnd.DTOs;
 using SystemZarzadzaniaKorepetycjami_BackEnd.Models;
 using SystemZarzadzaniaKorepetycjami_BackEnd.Repositories.Interfaces;
@@ -98,6 +99,42 @@ namespace SystemZarzadzaniaKorepetycjami_BackEnd.Repositories.Implementations
             }
 
             await _context.SaveChangesAsync();
+        }
+
+        public async Task<LessonDatailsDTO> GetLessonDetailsByIdAsync(int lessonId)
+        {
+            var LessonDetail = await (
+                from lesson in _context.Lesson
+                join student in _context.Student
+                    on lesson.IdStudent equals student.IdStudent
+                join personStudent in _context.Person
+                    on student.IdStudent equals personStudent.IdPerson
+                join teacher in _context.Teacher
+                    on lesson.IdTeacher equals teacher.IdTeacher
+                join personTeacher in _context.Person
+                    on teacher.IdTeacher equals personTeacher.IdPerson
+                join lessonStatus in _context.LessonStatus
+                    on lesson.IdLessonStatus equals lessonStatus.IdLessonStatus
+                join subjectLevel in _context.SubjectLevel
+                    on lesson.IdSubjectLevel equals subjectLevel.IdSubjectLevel
+                join subjectCategory in _context.SubjectCategory
+                    on subjectLevel.IdSubjectCategory equals subjectCategory.IdSubjectCategory
+                join subject in _context.Subject
+                    on subjectCategory.IdSubject equals subject.IdSubject
+                where
+                    lesson.IdLesson == lessonId
+                select new LessonDatailsDTO
+                {
+                    IdLesson = lesson.IdLesson,
+                    StartDate = lesson.StartDate.ToString("yyyy-MM-dd HH:mm", new CultureInfo("pl-Pl")),
+                    DurationInMinutes = lesson.DurationInMinutes,
+                    Status = lessonStatus.Status,
+                    SubjectName = $"{subject.Name}, {subjectCategory.Name}, {subjectLevel.Name}",
+                    TeacherName = personTeacher.Name,
+                    TeacherId = teacher.IdTeacher,
+                    StudentName = personStudent.Name
+                }).FirstOrDefaultAsync();
+            return LessonDetail;
         }
     }
 }

@@ -1,6 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using SystemZarzadzaniaKorepetycjami_BackEnd.Services.Interfaces;
-using Microsoft.AspNetCore.Authorization;
 
 namespace SystemZarzadzaniaKorepetycjami_BackEnd.Controllers;
 
@@ -39,9 +39,9 @@ public class LessonController : ControllerBase
     public async Task<IActionResult> AcceptLessonByLessonIdAsync(int lessonId)
     {
         var accepted = await _lessonService.AcceptLessonByIdAsync(lessonId);
-        if(accepted)
+        if (accepted)
             return Ok();
-        return StatusCode(StatusCodes.Status400BadRequest, "Invalid Lesson Id"); 
+        return StatusCode(StatusCodes.Status400BadRequest, "Invalid Lesson Id");
     }
 
     [HttpPut("{lessonId}/reject")]
@@ -49,8 +49,19 @@ public class LessonController : ControllerBase
     public async Task<IActionResult> RejectLessonByLessonIdAsync(int lessonId)
     {
         var accepted = await _lessonService.RejectLessonByIdAsync(lessonId);
-        if(accepted)
+        if (accepted)
             return Ok();
-        return StatusCode(StatusCodes.Status400BadRequest, "Invalid Lesson Id"); 
+        return StatusCode(StatusCodes.Status400BadRequest, "Invalid Lesson Id");
+    }
+
+    [HttpGet("getLessonDetails")]
+    [Authorize]
+    public async Task<IActionResult> GetLessonDetailsByIdAsync(int lessonId)
+    {
+        var LessonDatailsDTO = await _lessonService.GetLessonDetailsByIdAsync(lessonId);
+
+        return LessonDatailsDTO == null
+            ? StatusCode(StatusCodes.Status400BadRequest, "Invalid Lesson Id")
+            : Ok(LessonDatailsDTO);
     }
 }
