@@ -85,6 +85,8 @@ builder.Services.AddScoped<ISingUpToLessonService, SingUpToLessonService>();
 builder.Services.AddScoped<ILessonService, LessonService>();
 builder.Services.AddScoped<ICalendarService, CalendarService>();
 builder.Services.AddScoped<ICalendarRepository, CalendarRepository>();
+builder.Services.AddScoped<IMessageRepository, MessageRepository>();
+builder.Services.AddScoped<IMessageService, MessageService>();
 
 builder.Services.AddDbContext<SZKContext>(options =>
 {
