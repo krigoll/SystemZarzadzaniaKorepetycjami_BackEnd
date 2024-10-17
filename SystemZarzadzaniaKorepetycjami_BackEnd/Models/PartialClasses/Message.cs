@@ -2,10 +2,10 @@
 
 public partial class Message
 {
-    public Message(int sender, int reciver, DateTime date, string content)
+    public Message(int sender, int receiver, DateTime date, string content)
 	{
 		SetSender(sender);
-        SetReceiver(reciver);
+        SetReceiver(receiver);
 		SetDate(date);
 		SetContent(content);
 	}
@@ -17,11 +17,11 @@ public partial class Message
 		Sender = sender;
 	}
 	
-	public void SetReceiver(int recevier)
+	public void SetReceiver(int receiver)
 	{
-		if (recevier <= 0)
+		if (receiver <= 0)
 			throw new ArgumentException("Invalid recevier");
-		Receiver = recevier;
+		Receiver = receiver;
 	}
 	
 	public void SetDate(DateTime date)
