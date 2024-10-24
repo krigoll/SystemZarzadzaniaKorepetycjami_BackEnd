@@ -103,4 +103,12 @@ public class PersonController : ControllerBase
             return StatusCode(StatusCodes.Status500InternalServerError, "Database Error");
         }
     }
+
+    [HttpGet("{search}")]
+    [Authorize]
+    public async Task<IActionResult> FindPersonsByNameOrSurname(string search)
+    {
+        var people = await _personService.FindPersonsByNameOrSurname(search);
+        return ok(people);
+    }
 }

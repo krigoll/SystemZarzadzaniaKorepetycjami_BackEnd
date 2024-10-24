@@ -41,7 +41,7 @@ namespace SystemZarzadzaniaKorepetycjami_BackEnd.Repositories.Implementations
 	    {
 		    var messages = await _context.Message
 			    .Where(m => (m.Sender == user.IdPerson || m.Receiver == corespondent.IdPerson) || (m.Sender == corespondent.IdPerson || m.Receiver == user.IdPerson))
-			    .OrderByDescending(m => m.Date)
+			    .OrderBy(m => m.Date)
 			    .Select(m => new MessageDTO {
 				    SenderId = m.Sender,
 				    ReceiverId = m.Receiver,
