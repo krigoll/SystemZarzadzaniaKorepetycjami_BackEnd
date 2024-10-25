@@ -78,11 +78,14 @@ public class PersonService : IPersonService
 
     public async Task<PersonRoleDTO> GetPersonRoleAsync(string email)
     {
+        var person = await _personRepository.FindPersonByEmailAsync(email);
+
         return new PersonRoleDTO
         {
             isAdmin = await _adminRepository.isAdministratorByEmail(email),
             isStudent = await _studentRepository.isStudentByEmail(email),
-            isTeacher = await _teacherRepository.isTeacherByEmail(email)
+            isTeacher = await _teacherRepository.isTeacherByEmail(email),
+            IdPerson = person.IdPerson
         };
     }
 
@@ -185,5 +188,10 @@ public class PersonService : IPersonService
     {
         await _lessonRepository.CancelLessonAndSetTeacherNullAsync(teacher);
         await _teacherRepository.RemoveTeacherAsync(teacher);
+    }
+
+    public async Task<List<PersonDTO>> FindPersonsByNameOrSurname(string search)
+    {
+        return await _personRepository.FindPersonBySearchAsync(search);
     }
 }

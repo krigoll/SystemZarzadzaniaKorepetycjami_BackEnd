@@ -5,4 +5,5 @@ public class PersonRoleDTO
     public bool isTeacher { get; set; }
     public bool isStudent { get; set; }
     public bool isAdmin { get; set; }
+    public int IdPerson {get; set;}
 }

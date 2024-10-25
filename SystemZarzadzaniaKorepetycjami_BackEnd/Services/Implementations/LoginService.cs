@@ -144,7 +144,8 @@ public class LoginService : ILoginService
         {
             new("isAdmin", personRole.isAdmin.ToString()),
             new("isTeacher", personRole.isTeacher.ToString()),
-            new("isStudent", personRole.isStudent.ToString())
+            new("isStudent", personRole.isStudent.ToString()),
+            new("idPerson", personRole.IdPerson.ToString())
         };
     }
 }

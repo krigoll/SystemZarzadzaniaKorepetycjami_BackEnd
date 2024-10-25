@@ -105,10 +105,10 @@ public class PersonController : ControllerBase
     }
 
     [HttpGet("{search}")]
-    [Authorize]
+    //[Authorize]
     public async Task<IActionResult> FindPersonsByNameOrSurname(string search)
     {
         var people = await _personService.FindPersonsByNameOrSurname(search);
-        return ok(people);
+        return Ok(people);
     }
 }
