@@ -38,5 +38,14 @@ namespace SystemZarzadzaniaKorepetycjami_BackEnd.Repositories.Implementations
             _context.Student.Remove(student);
             await _context.SaveChangesAsync();
         }
+    
+        public async Task<Student> GetStudentByEmailAsync(string email)
+	    {
+		    var person = await _context.Person
+                    .Where(p => p.Email == email && !p.IsDeleted)
+                    .Select(p => new { p.IdPerson })
+                    .FirstOrDefaultAsync();
+		    return await _context.Student.FirstOrDefaultAsync(s => s.IdStudent == person.IdPerson);
+	    }
     }
 }

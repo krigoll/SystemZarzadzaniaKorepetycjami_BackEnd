@@ -136,5 +136,20 @@ namespace SystemZarzadzaniaKorepetycjami_BackEnd.Repositories.Implementations
                 }).FirstOrDefaultAsync();
             return LessonDetail;
         }
+
+        public async Task<bool> AreThisTeacherTeachThisStudentAsync(int idTeacher, int idStudent)
+        {
+            var lessonK = await (
+                from lesson in _context.Lesson
+                join student in _context.Student
+                    on lesson.IdStudent equals student.IdStudent
+                join teacher in _context.Teacher
+                    on lesson.IdTeacher equals teacher.IdTeacher
+                where
+                    student.IdStudent == idStudent && teacher.IdTeacher == idTeacher
+                select lesson
+            ).FirstOrDefaultAsync();
+            return lessonK != null;
+        }
     }
 }
