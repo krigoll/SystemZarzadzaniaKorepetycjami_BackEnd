@@ -43,7 +43,9 @@ namespace SystemZarzadzaniaKorepetycjami_BackEnd.Repositories.Implementations
                 join subjectLevel in _context.SubjectLevel on lesson.IdSubjectLevel equals subjectLevel.IdSubjectLevel
                 join subjectCategory in _context.SubjectCategory on subjectLevel.IdSubjectCategory equals
                     subjectCategory.IdSubjectCategory
-                where lesson.IdTeacher == teacher.IdTeacher && lesson.IdLessonStatus == 1
+                where lesson.IdTeacher == teacher.IdTeacher
+                      && lesson.IdLessonStatus == 1
+                      && lesson.StartDate.AddMinutes(lesson.DurationInMinutes) > DateTime.Now
                 select new LessonDTO
                 {
                     LessonId = lesson.IdLesson,
@@ -53,7 +55,7 @@ namespace SystemZarzadzaniaKorepetycjami_BackEnd.Repositories.Implementations
                     StudentName = person.Name,
                     StudentSurname = person.Surname
                 }).ToListAsync();
-
+            //Dodać w bazie joba który codziennie zmienia status lekcji zarezerwowanych których startdate jest < datetime.now
             return lessons;
         }
 
