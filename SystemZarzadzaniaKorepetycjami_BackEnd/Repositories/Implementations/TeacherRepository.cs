@@ -95,5 +95,30 @@ namespace SystemZarzadzaniaKorepetycjami_BackEnd.Repositories.Implementations
             return await _context.Teacher
                 .FirstOrDefaultAsync(t => t.IdTeacher == teacherId);
         }
+
+        public async Task<List<TeacherDTO>> GetAllTeachersThatTeachStudentByStudentId(int idStudent)
+        {
+            var teachers = await (
+                from lesson in _context.Lesson
+                join teacher in _context.Teacher on lesson.IdTeacher equals teacher.IdTeacher
+                join student in _context.Student on lesson.IdStudent equals student.IdStudent
+                join person in _context.Person on teacher.IdTeacher equals person.IdPerson
+                where student.IdStudent == idStudent
+                group new { person, teacher } by new { person.IdPerson, person.Name, person.Surname }
+                into grouped
+                select new TeacherDTO
+                {
+                    IdPerson = grouped.Key.IdPerson,
+                    Name = grouped.Key.Name,
+                    Surname = grouped.Key.Surname,
+                    HourlyRate = 0,
+                    Image = grouped.First().person.Image == null
+                        ? null
+                        : Convert.ToBase64String(grouped.First().person.Image)
+                }
+            ).ToListAsync();
+
+            return teachers;
+        }
     }
 }

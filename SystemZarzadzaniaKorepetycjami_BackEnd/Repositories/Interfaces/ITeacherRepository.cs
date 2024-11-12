@@ -12,5 +12,6 @@ namespace SystemZarzadzaniaKorepetycjami_BackEnd.Repositories.Interfaces
         public Task<List<TeacherDTO>> GetTeachersBySubjectCategoryAsync(int subjectLevelId);
         public Task<Teacher> GetTeacherByEmailAsync(string email);
         public Task<Teacher> GetTeacherByIdAsync(int teacherId);
+        public Task<List<TeacherDTO>> GetAllTeachersThatTeachStudentByStudentId(int idStudent);
     }
 }

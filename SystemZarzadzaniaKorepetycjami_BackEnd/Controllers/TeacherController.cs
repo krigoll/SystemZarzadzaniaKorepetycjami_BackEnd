@@ -1,6 +1,5 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using SystemZarzadzaniaKorepetycjami_BackEnd.Enums;
 using SystemZarzadzaniaKorepetycjami_BackEnd.Services.Interfaces;
 
 namespace SystemZarzadzaniaKorepetycjami_BackEnd.Controllers;
@@ -22,12 +21,20 @@ public class TeacherController : ControllerBase
     {
         try
         {
-            var teachers = await _teacherService.GetTeachersBySubjectCategoryAsync(subjectLevelId,email);
+            var teachers = await _teacherService.GetTeachersBySubjectCategoryAsync(subjectLevelId, email);
             return Ok(teachers);
         }
         catch (Exception ex)
         {
             return StatusCode(StatusCodes.Status500InternalServerError, "Internal server error");
         }
+    }
+
+    [HttpGet("studentEmail")]
+    [Authorize]
+    public async Task<IActionResult> GetAllTeachersThatTeachStudentByStudentEmail(string studentEmail)
+    {
+        var teachers = await _teacherService.GetAllTeachersThatTeachStudentByStudentEmail(studentEmail);
+        return Ok(teachers);
     }
 }
