@@ -104,6 +104,9 @@ namespace SystemZarzadzaniaKorepetycjami_BackEnd.Repositories.Implementations
                 join student in _context.Student on lesson.IdStudent equals student.IdStudent
                 join person in _context.Person on teacher.IdTeacher equals person.IdPerson
                 where student.IdStudent == idStudent
+                      && !person.IsDeleted
+                      && lesson.IdLessonStatus == 2
+                      && lesson.StartDate < DateTime.Today
                 group new { person, teacher } by new { person.IdPerson, person.Name, person.Surname }
                 into grouped
                 select new TeacherDTO
