@@ -26,11 +26,13 @@ public class OpinionRepository : IOpinionRepository
 	public async Task<List<OpinionDTO>>  GetOpinionsByTeacherAsync(int idTeacher)
 	{
 		return await (from opinion in _context.Opinion
+			join person in _context.Person on opinion.IdStudent equals person.IdPerson 
 					  where opinion.IdTeacher == idTeacher
 					  select new OpinionDTO
 					  {
 						  Rating = opinion.Rating,
-						  Content = opinion.Content
+						  Content = opinion.Content,
+						  IdPerson = person.IdPerson
 					  }).ToListAsync();
 	}
 	
