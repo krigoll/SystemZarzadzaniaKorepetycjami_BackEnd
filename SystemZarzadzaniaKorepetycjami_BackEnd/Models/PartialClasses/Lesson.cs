@@ -43,8 +43,6 @@ public partial class Lesson
 
     public void SetStartDate(DateTime startDate)
     {
-        if (startDate < DateTime.Now)
-            throw new ArgumentException("Start date cannot be in the past");
         StartDate = startDate;
     }
 

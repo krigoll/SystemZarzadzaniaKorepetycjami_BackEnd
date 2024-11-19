@@ -56,10 +56,16 @@ namespace SystemZarzadzaniaKorepetycjami_BackEnd.Services.Implementations
                     return SingUpToLessonStatus.INVALID_SUBJECT;
                 }
 
+
                 var startDate = DateTime.ParseExact($"{singUpToLessonDTO.StartDate} {singUpToLessonDTO.StartTime}",
                     "yyyy-MM-dd HH:mm", CultureInfo.InvariantCulture);
-                var lessonStatusId = 1;    
-                var lesson = new Lesson(student.IdPerson, teacher.IdPerson, singUpToLessonDTO.SubjectLevelId, lessonStatusId,
+
+                if (startDate < DateTime.Now)
+                    return SingUpToLessonStatus.INVALID_LESSON;
+
+                var lessonStatusId = 1;
+                var lesson = new Lesson(student.IdPerson, teacher.IdPerson, singUpToLessonDTO.SubjectLevelId,
+                    lessonStatusId,
                     startDate, singUpToLessonDTO.DurationInMinutes);
                 var isLessonConflictlessAsync = await _lessonRepository.IsLessonConflictlessAsync(lesson);
                 if (!isLessonConflictlessAsync)
