@@ -1,7 +1,11 @@
-﻿namespace SystemZarzadzaniaKorepetycjami_BackEnd.Models;
+﻿using System;
+using System.Collections.Generic;
 
-public class AssignmentOnTest
+namespace SystemZarzadzaniaKorepetycjami_BackEnd.Models
 {
-    public int IdTest { get; }
-    public int IdAssignment { get; }
+public partial class AssignmentOnTest
+{
+    public int IdTest { get; private set; }
+    public int IdAssignment { get; private set; }
+}
 }
