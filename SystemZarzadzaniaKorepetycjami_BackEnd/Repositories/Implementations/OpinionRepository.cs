@@ -26,6 +26,7 @@ public class OpinionRepository : IOpinionRepository
     {
         return await (from opinion in _context.Opinion
             join person in _context.Person on opinion.IdStudent equals person.IdPerson
+            join student in _context.Student on opinion.IdStudent equals student.IdStudent
             where opinion.IdTeacher == idTeacher
             select new OpinionDTO
             {
