@@ -8,7 +8,6 @@ public partial class SubjectLevel
     private SubjectLevel()
     {
         Lesson = new HashSet<Lesson>();
-        Task = new HashSet<Task>();
         TeacherSalary = new HashSet<TeacherSalary>();
     }
 
@@ -18,7 +17,6 @@ public partial class SubjectLevel
 
             public virtual SubjectCategory IdSubjectCategoryNavigation { get; private set; }
             public virtual ICollection<Lesson> Lesson { get; private set; }
-            public virtual ICollection<Task> Task { get; private set; }
             public virtual ICollection<TeacherSalary> TeacherSalary { get; private set; }
 }
 }

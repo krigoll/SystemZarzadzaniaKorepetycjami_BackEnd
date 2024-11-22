@@ -13,6 +13,7 @@ public partial class TestForStudent
     public int IdTestForStudent { get; private set; }
     public int IdTest { get; private set; }
     public int IdStudent { get; private set; }
+    public DateTime DateOfCreation { get; private set; }
 
             public virtual Student IdStudentNavigation { get; private set; }
             public virtual Test IdTestNavigation { get; private set; }

@@ -19,7 +19,19 @@
          "ObjectType": 0
       },
       {
+         "Name": "[dbo].[Assignment]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Assignment_On_Test]",
+         "ObjectType": 0
+      },
+      {
          "Name": "[dbo].[Availability]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Ban]",
          "ObjectType": 0
       },
       {
@@ -76,18 +88,6 @@
       },
       {
          "Name": "[dbo].[Subject_Level]",
-         "ObjectType": 0
-      },
-      {
-         "Name": "[dbo].[Task]",
-         "ObjectType": 0
-      },
-      {
-         "Name": "[dbo].[Task_On_Test]",
-         "ObjectType": 0
-      },
-      {
-         "Name": "[dbo].[Task_Type]",
          "ObjectType": 0
       },
       {
