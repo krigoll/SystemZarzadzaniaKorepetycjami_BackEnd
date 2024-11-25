@@ -98,30 +98,45 @@ namespace SystemZarzadzaniaKorepetycjami_BackEnd.Repositories.Implementations
 
         public async Task<List<TeacherDTO>> GetAllTeachersThatTeachStudentByStudentId(int idStudent)
         {
-            var teachers = await (
-                from lesson in _context.Lesson
-                join teacher in _context.Teacher on lesson.IdTeacher equals teacher.IdTeacher
-                join student in _context.Student on lesson.IdStudent equals student.IdStudent
-                join person in _context.Person on teacher.IdTeacher equals person.IdPerson
-                where student.IdStudent == idStudent
-                      && !person.IsDeleted
-                      && lesson.IdLessonStatus == 2
-                      && lesson.StartDate < DateTime.Today
-                group new { person, teacher } by new { person.IdPerson, person.Name, person.Surname }
-                into grouped
+            var distinctData = await (
+                from person in _context.Person
+                join opinion in _context.Opinion on person.IdPerson equals opinion.IdTeacher into opinions
+                from opinion in opinions.DefaultIfEmpty()
+                join lesson in _context.Lesson on person.IdPerson equals lesson.IdTeacher into lessons
+                from lesson in lessons.DefaultIfEmpty()
+                join student in _context.Student on lesson.IdStudent equals student.IdStudent into students
+                from student in students.DefaultIfEmpty()
+                where !person.IsDeleted &&
+                      (
+                          (student != null &&
+                           student.IdStudent == idStudent &&
+                           lesson.IdLessonStatus == 2 &&
+                           lesson.StartDate < DateTime.Today) ||
+                          (opinion != null && opinion.IdStudent == idStudent)
+                      )
+                select new
+                {
+                    person.IdPerson,
+                    person.Name,
+                    person.Surname,
+                    person.IsDeleted
+                }
+            ).Distinct().ToListAsync();
+
+            var result = (
+                from d in distinctData
+                join person in _context.Person on d.IdPerson equals person.IdPerson
                 select new TeacherDTO
                 {
-                    IdPerson = grouped.Key.IdPerson,
-                    Name = grouped.Key.Name,
-                    Surname = grouped.Key.Surname,
+                    IdPerson = person.IdPerson,
+                    Name = person.Name,
+                    Surname = person.Surname,
                     HourlyRate = 0,
-                    Image = grouped.First().person.Image == null
-                        ? null
-                        : Convert.ToBase64String(grouped.First().person.Image)
+                    Image = person.Image == null ? null : Convert.ToBase64String(person.Image)
                 }
-            ).ToListAsync();
+            ).ToList();
 
-            return teachers;
+            return result;
         }
     }
 }
