@@ -106,6 +106,7 @@ namespace SystemZarzadzaniaKorepetycjami_BackEnd.Repositories.Implementations
                 from lesson in lessons.DefaultIfEmpty()
                 join student in _context.Student on lesson.IdStudent equals student.IdStudent into students
                 from student in students.DefaultIfEmpty()
+                join teacher in _context.Teacher on person.IdPerson equals teacher.IdTeacher
                 where !person.IsDeleted &&
                       (
                           (student != null &&
