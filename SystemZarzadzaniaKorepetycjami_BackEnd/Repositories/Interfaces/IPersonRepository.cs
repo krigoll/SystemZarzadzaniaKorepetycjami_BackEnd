@@ -13,4 +13,5 @@ public interface IPersonRepository
     public Task<bool> IsPhoneNumberUniqueAsync(string phoneNumber);
     public Task DeleteUserAsync(Person person);
     public Task<List<PersonDTO>> FindPersonBySearchAsync(string search);
+    public Task<List<PersonInfoDTO>> GetAllPersonsAsync();
 }

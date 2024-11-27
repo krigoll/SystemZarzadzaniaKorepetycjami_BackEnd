@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 using SystemZarzadzaniaKorepetycjami_BackEnd.DTOs;
 using SystemZarzadzaniaKorepetycjami_BackEnd.Enums;
 using SystemZarzadzaniaKorepetycjami_BackEnd.Services.Interfaces;
@@ -110,5 +111,21 @@ public class PersonController : ControllerBase
     {
         var people = await _personService.FindPersonsByNameOrSurname(search);
         return Ok(people);
+    }
+
+    [HttpGet]
+    [Authorize]
+    public async Task<IActionResult> GetAllPersonsAsync()
+    {
+        var isAdminClaim = HttpContext.User.FindFirst("isAdmin")?.Value;
+
+        if (isAdminClaim == null || !bool.TryParse(isAdminClaim, out var isAdmin) || !isAdmin)
+        {
+            return Forbid(); 
+        }
+
+        var allPersons = await _personService.GetAllPersonsAsync();
+
+        return Ok(allPersons);
     }
 }

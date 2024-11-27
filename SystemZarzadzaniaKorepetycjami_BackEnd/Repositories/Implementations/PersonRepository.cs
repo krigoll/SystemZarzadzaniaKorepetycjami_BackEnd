@@ -78,4 +78,24 @@ public class PersonRepository : IPersonRepository
         }).ToListAsync();
     }
 
+    public async Task<List<PersonInfoDTO>> GetAllPersonsAsync()
+    {
+        var persons = await (
+            from person in _context.Person
+                join teacher in _context.Teacher on person.IdPerson equals teacher.IdTeacher into teachers
+                from teacher in teachers.DefaultIfEmpty()
+                join student in _context.Student on  person.IdPerson equals student.IdStudent into students
+                from student in students.DefaultIfEmpty()
+                select new PersonInfoDTO
+                {
+                    IdPerson = person.IdPerson,
+                    Name = person.Name,
+                    Surname = person.Surname,
+                    Image = person.Image == null ? null : Convert.ToBase64String(person.Image),
+                    IsStudent = student.IdStudent != null,
+                    IsTeacher = teacher.IdTeacher != null,
+                }
+        ).ToListAsync();
+        return persons;
+    }
 }

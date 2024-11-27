@@ -194,4 +194,9 @@ public class PersonService : IPersonService
     {
         return await _personRepository.FindPersonBySearchAsync(search);
     }
+
+    public async Task<List<PersonInfoDTO>> GetAllPersonsAsync()
+    {
+        return await _personRepository.GetAllPersonsAsync();
+    }
 }
