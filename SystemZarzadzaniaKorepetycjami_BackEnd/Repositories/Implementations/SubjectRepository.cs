@@ -50,9 +50,9 @@ namespace SystemZarzadzaniaKorepetycjami_BackEnd.Repositories.Implementations
                     s => s.IdSubject,
                     (sc, s) => new { sc.SubjectLevel, sc.SubjectCategory, Subject = s })
                 .GroupJoin(_context.TeacherSalary.Where(ts => ts.IdTeacher == teacherId),
-                    subject => subject.SubjectLevel.IdSubjectLevel, 
-                    salary => salary.IdSubject, 
-                    (subject, salaries) => new { subject, Salary = salaries.FirstOrDefault() }) 
+                    subject => subject.SubjectLevel.IdSubjectLevel,
+                    salary => salary.IdSubject,
+                    (subject, salaries) => new { subject, Salary = salaries.FirstOrDefault() })
                 .Select(x => new SubjectTeacherDTO
                 {
                     SubjectFullName =
@@ -63,6 +63,24 @@ namespace SystemZarzadzaniaKorepetycjami_BackEnd.Repositories.Implementations
                 .ToListAsync();
 
             return result;
+        }
+
+        public async Task<Subject> FindSubjectByIdAsync(int idSubject)
+        {
+            var subject = await _context.Subject.FirstOrDefaultAsync(s => s.IdSubject == idSubject);
+            return subject;
+        }
+
+        public async Task CreateSubjectAsync(Subject subject)
+        {
+            await _context.Subject.AddAsync(subject);
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task UpdateSubjectAsync(Subject subject)
+        {
+            _context.Subject.Update(subject);
+            await _context.SaveChangesAsync();
         }
     }
 }

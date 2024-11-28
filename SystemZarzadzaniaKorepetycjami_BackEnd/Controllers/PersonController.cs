@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System.Security.Claims;
 using SystemZarzadzaniaKorepetycjami_BackEnd.DTOs;
 using SystemZarzadzaniaKorepetycjami_BackEnd.Enums;
 using SystemZarzadzaniaKorepetycjami_BackEnd.Services.Interfaces;
@@ -98,7 +97,7 @@ public class PersonController : ControllerBase
             await _personService.DeleteUserByEmailAsync(email);
             return Ok();
         }
-        catch(Exception e)
+        catch (Exception e)
         {
             Console.WriteLine(e);
             return StatusCode(StatusCodes.Status500InternalServerError, "Database Error");
@@ -121,11 +120,10 @@ public class PersonController : ControllerBase
 
         if (isAdminClaim == null || !bool.TryParse(isAdminClaim, out var isAdmin) || !isAdmin)
         {
-            return Forbid(); 
+            return Forbid();
         }
 
         var allPersons = await _personService.GetAllPersonsAsync();
-
         return Ok(allPersons);
     }
 }
