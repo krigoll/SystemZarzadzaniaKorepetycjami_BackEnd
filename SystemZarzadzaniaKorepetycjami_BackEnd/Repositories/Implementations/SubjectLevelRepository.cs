@@ -18,5 +18,24 @@ namespace SystemZarzadzaniaKorepetycjami_BackEnd.Repositories.Implementations
             var subjectLevel = await _context.SubjectLevel.FirstOrDefaultAsync(s => s.IdSubjectLevel == subjectLevelId);
             return subjectLevel == null;
         }
+
+        public async Task CreateSubjectLevelAsync(SubjectLevel subjectLevel)
+        {
+            await _context.SubjectLevel.AddAsync(subjectLevel);
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task UpdateSubjectLevelAsync(SubjectLevel subjectLevel)
+        {
+            _context.SubjectLevel.Update(subjectLevel);
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task<SubjectLevel> FindSubjectLevelByIdAsync(int idSubjectLevel)
+        {
+            var subjectLevel =
+                await _context.SubjectLevel.FirstOrDefaultAsync(sl => sl.IdSubjectLevel == idSubjectLevel);
+            return subjectLevel;
+        }
     }
 }

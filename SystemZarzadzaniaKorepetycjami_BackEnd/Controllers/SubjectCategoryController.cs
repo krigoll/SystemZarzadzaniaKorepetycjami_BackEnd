@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace SystemZarzadzaniaKorepetycjami_BackEnd.Controllers;
@@ -13,10 +14,14 @@ public class SubjectCategoryController : ControllerBase
         _subjectCategoryService = subjectCategoryService;
     }
 
-    //sprawdzenie czy jest adminem
     [HttpPost]
+    [Authorize]
     public async Task<IActionResult> CreateSubjectCategoryAsync(SubjectCategoryDTO subjectCategoryDTO)
     {
+        var isAdminClaim = HttpContext.User.FindFirst("isAdmin")?.Value;
+
+        if (isAdminClaim == null || !bool.TryParse(isAdminClaim, out var isAdmin) || !isAdmin) return Forbid();
+
         var subjectCategoryStatus = await _subjectCategoryService.CreateSubjectCategoryAsync(subjectCategoryDTO);
         switch (subjectCategoryStatus)
         {
@@ -38,9 +43,14 @@ public class SubjectCategoryController : ControllerBase
     }
 
     [HttpPut("{idSubjectCategory}")]
+    [Authorize]
     public async Task<IActionResult> UpdateSubjectCategoryAsync(int idSubjectCategory,
         SubjectCategoryDTO subjectCategoryDTO)
     {
+        var isAdminClaim = HttpContext.User.FindFirst("isAdmin")?.Value;
+
+        if (isAdminClaim == null || !bool.TryParse(isAdminClaim, out var isAdmin) || !isAdmin) return Forbid();
+
         var subjectCategoryStatus =
             await _subjectCategoryService.UpdateSubjectCategoryAsync(idSubjectCategory, subjectCategoryDTO);
         switch (subjectCategoryStatus)

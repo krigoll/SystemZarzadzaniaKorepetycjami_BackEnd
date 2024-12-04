@@ -91,6 +91,7 @@ builder.Services.AddScoped<IOpinionService, OpinionService>();
 builder.Services.AddScoped<IOpinionRepository, OpinionRepository>();
 builder.Services.AddScoped<ISubjectCategoryService, SubjectCategoryService>();
 builder.Services.AddScoped<ISubjectCategoryRepository, SubjectCategoryRepository>();
+builder.Services.AddScoped<ISubjectLevelService, SubjectLevelService>();
 
 builder.Services.AddDbContext<SZKContext>(options =>
 {
