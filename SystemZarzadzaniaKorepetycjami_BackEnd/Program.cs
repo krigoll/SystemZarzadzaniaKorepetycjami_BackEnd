@@ -13,7 +13,6 @@ var MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
 var config = builder.Configuration;
 var secret = config["Jwt:Secret"];
 
@@ -61,7 +60,7 @@ builder.Services.AddCors(options =>
 });
 
 builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
@@ -76,10 +75,23 @@ builder.Services.AddScoped<ISubjectService, SubjectService>();
 builder.Services.AddScoped<ITeacherSalaryRepository, TeacherSalaryRepository>();
 builder.Services.AddScoped<ITeacherSalaryService, TeacherSalaryService>();
 builder.Services.AddScoped<IAdminRepository, AdminRepository>();
-//builder.Services.AddScoped<ICalendarService, CalendarService>();
-//builder.Services.AddScoped<ICalendarRepository, CalendarRepository>();
 builder.Services.AddScoped<IAvailabilityRepository, AvailabilityRepository>();
 builder.Services.AddScoped<IAvailabilityService, AvailabilityService>();
+builder.Services.AddScoped<ITeacherService, TeacherService>();
+builder.Services.AddScoped<IRefreshTokenRepository, RefreshTokenRepository>();
+builder.Services.AddScoped<ILessonRepository, LessonRepository>();
+builder.Services.AddScoped<ISubjectLevelRepository, SubjectLevelRepository>();
+builder.Services.AddScoped<ISingUpToLessonService, SingUpToLessonService>();
+builder.Services.AddScoped<ILessonService, LessonService>();
+builder.Services.AddScoped<ICalendarService, CalendarService>();
+builder.Services.AddScoped<ICalendarRepository, CalendarRepository>();
+builder.Services.AddScoped<IMessageRepository, MessageRepository>();
+builder.Services.AddScoped<IMessageService, MessageService>();
+builder.Services.AddScoped<IOpinionService, OpinionService>();
+builder.Services.AddScoped<IOpinionRepository, OpinionRepository>();
+builder.Services.AddScoped<ISubjectCategoryService, SubjectCategoryService>();
+builder.Services.AddScoped<ISubjectCategoryRepository, SubjectCategoryRepository>();
+builder.Services.AddScoped<ISubjectLevelService, SubjectLevelService>();
 
 builder.Services.AddDbContext<SZKContext>(options =>
 {
@@ -90,7 +102,6 @@ builder.Services.AddDbContext<SZKContext>(options =>
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();

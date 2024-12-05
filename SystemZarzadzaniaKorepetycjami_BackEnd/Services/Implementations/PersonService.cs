@@ -3,25 +3,29 @@ using SystemZarzadzaniaKorepetycjami_BackEnd.Enums;
 using SystemZarzadzaniaKorepetycjami_BackEnd.Models;
 using SystemZarzadzaniaKorepetycjami_BackEnd.Repositories.Interfaces;
 using SystemZarzadzaniaKorepetycjami_BackEnd.Services.Interfaces;
+using Task = System.Threading.Tasks.Task;
 
 namespace SystemZarzadzaniaKorepetycjami_BackEnd.Services.Implementations;
 
 public class PersonService : IPersonService
 {
     private readonly IAdminRepository _adminRepository;
+    private readonly ILessonRepository _lessonRepository;
     private readonly ILoginRepository _loginRepository;
     private readonly IPersonRepository _personRepository;
     private readonly IStudentRepository _studentRepository;
     private readonly ITeacherRepository _teacherRepository;
 
-    public PersonService(IPersonRepository personRepository, ILoginRepository loginRepository,
-        IStudentRepository studentRepository, ITeacherRepository teacherRepository, IAdminRepository adminRepository)
+    public PersonService(IAdminRepository adminRepository, ILoginRepository loginRepository,
+        IPersonRepository personRepository, IStudentRepository studentRepository, ITeacherRepository teacherRepository,
+        ILessonRepository lessonRepository)
     {
-        _personRepository = personRepository;
+        _adminRepository = adminRepository;
         _loginRepository = loginRepository;
+        _personRepository = personRepository;
         _studentRepository = studentRepository;
         _teacherRepository = teacherRepository;
-        _adminRepository = adminRepository;
+        _lessonRepository = lessonRepository;
     }
 
     public async Task<RegisterStatus> RegistrationPerson(RegistrationDTO registrationDto)
@@ -74,11 +78,14 @@ public class PersonService : IPersonService
 
     public async Task<PersonRoleDTO> GetPersonRoleAsync(string email)
     {
+        var person = await _personRepository.FindPersonByEmailAsync(email);
+
         return new PersonRoleDTO
         {
             isAdmin = await _adminRepository.isAdministratorByEmail(email),
-            isStudent = await _studentRepository.isPersonByEmail(email),
-            isTeacher = await _teacherRepository.isTeacherByEmail(email)
+            isStudent = await _studentRepository.isStudentByEmail(email),
+            isTeacher = await _teacherRepository.isTeacherByEmail(email),
+            IdPerson = person.IdPerson
         };
     }
 
@@ -108,7 +115,7 @@ public class PersonService : IPersonService
     {
         try
         {
-            var person = await _personRepository.FindUserByIdAsync(idPerson);
+            var person = await _personRepository.FindPersonByIdAsync(idPerson);
 
             var isPersonExists = await _loginRepository.findPersonByEmailAsync(personProfileDto.Email);
             if (isPersonExists != null && personProfileDto.Email != person.Email)
@@ -128,13 +135,13 @@ public class PersonService : IPersonService
 
 
             if (!personProfileDto.IsStudent && personRoles.isStudent)
-                await _studentRepository.RemoveStudentAsync(new Student(idPerson));
+                await RemoveStudentAsync(new Student(idPerson));
 
             if (personProfileDto.IsStudent && !personRoles.isStudent)
                 await _studentRepository.AddStudent(new Student(idPerson));
 
             if (!personProfileDto.IsTeacher && personRoles.isTeacher)
-                await _teacherRepository.RemoveTeacherAsync(new Teacher(idPerson));
+                await RemoveTeacherAsync(new Teacher(idPerson));
 
             if (personProfileDto.IsTeacher && !personRoles.isTeacher)
                 await _teacherRepository.AddTeacher(new Teacher(idPerson));
@@ -152,5 +159,44 @@ public class PersonService : IPersonService
             Console.WriteLine(e);
             return UpdateUserStatus.DATEBASE_ERROR;
         }
+    }
+
+    public async Task DeleteUserByEmailAsync(string email)
+    {
+        var person = await _personRepository.FindPersonByEmailAsync(email);
+
+        if (person != null)
+        {
+            var personRoles = await GetPersonRoleAsync(person.Email);
+            if (personRoles.isStudent)
+                await RemoveStudentAsync(new Student(person.IdPerson));
+
+            if (personRoles.isTeacher)
+                await RemoveTeacherAsync(new Teacher(person.IdPerson));
+
+            await _personRepository.DeleteUserAsync(person);
+        }
+    }
+
+    public async Task RemoveStudentAsync(Student student)
+    {
+        await _lessonRepository.CancelLessonAndSetStudentNullAsync(student);
+        await _studentRepository.RemoveStudentAsync(student);
+    }
+
+    public async Task RemoveTeacherAsync(Teacher teacher)
+    {
+        await _lessonRepository.CancelLessonAndSetTeacherNullAsync(teacher);
+        await _teacherRepository.RemoveTeacherAsync(teacher);
+    }
+
+    public async Task<List<PersonDTO>> FindPersonsByNameOrSurname(string search)
+    {
+        return await _personRepository.FindPersonBySearchAsync(search);
+    }
+
+    public async Task<List<PersonInfoDTO>> GetAllPersonsAsync()
+    {
+        return await _personRepository.GetAllPersonsAsync();
     }
 }

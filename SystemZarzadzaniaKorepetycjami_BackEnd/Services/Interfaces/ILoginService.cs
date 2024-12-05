@@ -5,5 +5,7 @@ namespace SystemZarzadzaniaKorepetycjami_BackEnd.Services.Interfaces;
 
 public interface ILoginService
 {
-    public Task<LoginStatus> LoginUserByEmailAndPasswordAsync(LoginDTO loginDto);
+    public Task<(LoginStatus, string, string)> LoginAsync(LoginDTO request);
+    public Task<string> RefreshTokenAsync(string refreshToken);
+    public string HashPassword(LoginDTO request);
 }

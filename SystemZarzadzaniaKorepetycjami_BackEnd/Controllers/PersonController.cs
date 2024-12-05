@@ -87,4 +87,43 @@ public class PersonController : ControllerBase
             return StatusCode(StatusCodes.Status500InternalServerError, "Database Error");
         }
     }
+
+    [HttpDelete("delete")]
+    [Authorize]
+    public async Task<IActionResult> DeleteUserByEmailAsync(string email)
+    {
+        try
+        {
+            await _personService.DeleteUserByEmailAsync(email);
+            return Ok();
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            return StatusCode(StatusCodes.Status500InternalServerError, "Database Error");
+        }
+    }
+
+    [HttpGet("{search}")]
+    //[Authorize]
+    public async Task<IActionResult> FindPersonsByNameOrSurname(string search)
+    {
+        var people = await _personService.FindPersonsByNameOrSurname(search);
+        return Ok(people);
+    }
+
+    [HttpGet]
+    [Authorize]
+    public async Task<IActionResult> GetAllPersonsAsync()
+    {
+        var isAdminClaim = HttpContext.User.FindFirst("isAdmin")?.Value;
+
+        if (isAdminClaim == null || !bool.TryParse(isAdminClaim, out var isAdmin) || !isAdmin)
+        {
+            return Forbid();
+        }
+
+        var allPersons = await _personService.GetAllPersonsAsync();
+        return Ok(allPersons);
+    }
 }

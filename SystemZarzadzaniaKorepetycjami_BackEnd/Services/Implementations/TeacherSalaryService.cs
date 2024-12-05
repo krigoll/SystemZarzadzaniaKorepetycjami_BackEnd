@@ -23,13 +23,8 @@ public class TeacherSalaryService : ITeacherSalaryService
             var person = await _personRepository.FindPersonByEmailAsync(teacherSalaryDTO.First().PersonEmail);
             if (person == null) return TeacherSalaryStatus.INVALID_TEACHER_SALARY;
 
-            List<TeacherSalary> teacherSalaryList = new List<TeacherSalary>();
-            foreach (var dto in teacherSalaryDTO)
-            {
-                teacherSalaryList.Add(new TeacherSalary(dto.HourlyRate, person.IdPerson, dto.Subject_LevelId));
-            }
+            await _teacherSalaryRepository.CreateUpdateDeleteTeacherSalaryByPersonAsync(teacherSalaryDTO,person);
 
-            await _teacherSalaryRepository.AddTeacherSalaryAsync(teacherSalaryList);
             return TeacherSalaryStatus.VALID_TEACHER_SALARY;
         }
         catch (ArgumentException e)
@@ -43,4 +38,5 @@ public class TeacherSalaryService : ITeacherSalaryService
             return TeacherSalaryStatus.DATEBASE_ERROR;
         }
     }
+
 }

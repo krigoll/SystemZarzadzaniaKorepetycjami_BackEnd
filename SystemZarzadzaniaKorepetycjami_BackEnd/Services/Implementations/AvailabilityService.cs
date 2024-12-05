@@ -45,6 +45,35 @@ public class AvailabilityService : IAvailabilityService
         return newAvailabilitiesToReturn;
     }
 
+    public async Task<List<AvailabilityDTO>> GetTeacherAvailabilityByIdAsync(int teacherId)
+    {
+        var teacher = await _teacherRepository.GetTeacherByIdAsync(teacherId);
+        if (teacher == null) return null;
+
+        var availabilities = await _availabilityRepository.GetTeacherAvailabilityByTeacherAsync(teacher);
+        var newAvailabilitiesToReturn = new List<AvailabilityDTO>();
+        for (var i = 0; i < 7; i++)
+        {
+            var result = availabilities.FirstOrDefault(a => a.IdDayOfTheWeek == i + 1);
+            if (result != null)
+                newAvailabilitiesToReturn.Add(new AvailabilityDTO
+                {
+                    IdDayOfTheWeek = i + 1,
+                    StartTime = result.StartTime.ToString(),
+                    EndTime = result.EndTime.ToString()
+                });
+            else
+                newAvailabilitiesToReturn.Add(new AvailabilityDTO
+                {
+                    IdDayOfTheWeek = i + 1,
+                    StartTime = null,
+                    EndTime = null,
+                });
+        }
+
+        return newAvailabilitiesToReturn;
+    }
+
     public async Task<SetAvailabilityStatus> CreateAndUpdateAvailabilityByEmail(string email,
         List<AvailabilityDTO> availabilities)
     {

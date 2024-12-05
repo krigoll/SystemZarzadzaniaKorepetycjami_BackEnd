@@ -1,0 +1,8 @@
+public enum SubjectLevelStatus
+{
+    OK,
+    INVALID_SUBJECT_LEVEL,
+    SERVER_ERROR,
+    INVALID_SUBJECT_LEVEL_ID,
+    INVALID_SUBJECT_CATEGORY_ID
+}

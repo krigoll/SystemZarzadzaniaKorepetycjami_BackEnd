@@ -23,7 +23,7 @@ namespace SystemZarzadzaniaKorepetycjami_BackEnd.Repositories.Implementations
         public async Task<bool> isTeacherByEmail(string email)
         {
             var person = await _context.Person
-                .Where(p => p.Email == email)
+                .Where(p => p.Email == email && !p.IsDeleted)
                 .Select(p => new { p.IdPerson })
                 .FirstOrDefaultAsync();
 
@@ -46,12 +46,98 @@ namespace SystemZarzadzaniaKorepetycjami_BackEnd.Repositories.Implementations
         public async Task<Teacher> GetTeacherByEmailAsync(string email)
         {
             var person = await _context.Person
-                .Where(p => p.Email == email)
+                .Where(p => p.Email == email && !p.IsDeleted)
                 .Select(p => new { p.IdPerson })
                 .FirstOrDefaultAsync();
 
             return await _context.Teacher
                 .FirstOrDefaultAsync(t => t.IdTeacher == person.IdPerson);
+        }
+
+        public async Task<List<TeacherDTO>> GetTeachersBySubjectCategoryAsync(int subjectLevelId, Teacher teacherE)
+        {
+            var teachers = await (from teacher in _context.Teacher
+                join person in _context.Person on teacher.IdTeacher equals person.IdPerson
+                join salary in _context.TeacherSalary on teacher.IdTeacher equals salary.IdTeacher
+                where salary.IdSubject == subjectLevelId && !person.IsDeleted && teacher.IdTeacher != teacherE.IdTeacher
+                select new TeacherDTO
+                {
+                    IdPerson = person.IdPerson,
+                    Name = person.Name,
+                    Surname = person.Surname,
+                    HourlyRate = salary.HourlyRate,
+                    Image = person.Image == null ? null : Convert.ToBase64String(person.Image)
+                }).ToListAsync();
+
+            return teachers;
+        }
+
+        public async Task<List<TeacherDTO>> GetTeachersBySubjectCategoryAsync(int subjectLevelId)
+        {
+            var teachers = await (from teacher in _context.Teacher
+                join person in _context.Person on teacher.IdTeacher equals person.IdPerson
+                join salary in _context.TeacherSalary on teacher.IdTeacher equals salary.IdTeacher
+                where salary.IdSubject == subjectLevelId && !person.IsDeleted
+                select new TeacherDTO
+                {
+                    IdPerson = person.IdPerson,
+                    Name = person.Name,
+                    Surname = person.Surname,
+                    HourlyRate = salary.HourlyRate,
+                    Image = person.Image == null ? null : Convert.ToBase64String(person.Image)
+                }).ToListAsync();
+
+            return teachers;
+        }
+
+        public async Task<Teacher> GetTeacherByIdAsync(int teacherId)
+        {
+            return await _context.Teacher
+                .FirstOrDefaultAsync(t => t.IdTeacher == teacherId);
+        }
+
+        public async Task<List<TeacherDTO>> GetAllTeachersThatTeachStudentByStudentId(int idStudent)
+        {
+            var distinctData = await (
+                from person in _context.Person
+                join opinion in _context.Opinion on person.IdPerson equals opinion.IdTeacher into opinions
+                from opinion in opinions.DefaultIfEmpty()
+                join lesson in _context.Lesson on person.IdPerson equals lesson.IdTeacher into lessons
+                from lesson in lessons.DefaultIfEmpty()
+                join student in _context.Student on lesson.IdStudent equals student.IdStudent into students
+                from student in students.DefaultIfEmpty()
+                join teacher in _context.Teacher on person.IdPerson equals teacher.IdTeacher
+                where !person.IsDeleted &&
+                      (
+                          (student != null &&
+                           student.IdStudent == idStudent &&
+                           lesson.IdLessonStatus == 2 &&
+                           lesson.StartDate < DateTime.Today) ||
+                          (opinion != null && opinion.IdStudent == idStudent)
+                      )
+                select new
+                {
+                    person.IdPerson,
+                    person.Name,
+                    person.Surname,
+                    person.IsDeleted
+                }
+            ).Distinct().ToListAsync();
+
+            var result = (
+                from d in distinctData
+                join person in _context.Person on d.IdPerson equals person.IdPerson
+                select new TeacherDTO
+                {
+                    IdPerson = person.IdPerson,
+                    Name = person.Name,
+                    Surname = person.Surname,
+                    HourlyRate = 0,
+                    Image = person.Image == null ? null : Convert.ToBase64String(person.Image)
+                }
+            ).ToList();
+
+            return result;
         }
     }
 }
