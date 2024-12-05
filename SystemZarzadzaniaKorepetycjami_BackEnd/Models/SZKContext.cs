@@ -145,7 +145,7 @@ public SZKContext(DbContextOptions<SZKContext> options) : base(options)
                 entity.HasOne(d => d.IdSubjectLevelNavigation)
                     .WithMany(p => p.Lesson)
                     .HasForeignKey(d => d.IdSubjectLevel)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .OnDelete(DeleteBehavior.SetNull)
                     .HasConstraintName("Lesson_Subject");
 
                 entity.HasOne(d => d.IdTeacherNavigation)
@@ -380,7 +380,6 @@ public SZKContext(DbContextOptions<SZKContext> options) : base(options)
                 entity.HasOne(d => d.IdSubjectNavigation)
                     .WithMany(p => p.SubjectCategory)
                     .HasForeignKey(d => d.IdSubject)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("Subject_Category_Subject");
             });
 
@@ -399,7 +398,6 @@ public SZKContext(DbContextOptions<SZKContext> options) : base(options)
                 entity.HasOne(d => d.IdSubjectCategoryNavigation)
                     .WithMany(p => p.SubjectLevel)
                     .HasForeignKey(d => d.IdSubjectCategory)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("Subject_Level_Subject_Category");
             });
 
@@ -429,7 +427,6 @@ public SZKContext(DbContextOptions<SZKContext> options) : base(options)
                 entity.HasOne(d => d.IdSubjectNavigation)
                     .WithMany(p => p.TeacherSalary)
                     .HasForeignKey(d => d.IdSubject)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("Teacher_Salary_Subject");
 
                 entity.HasOne(d => d.IdTeacherNavigation)

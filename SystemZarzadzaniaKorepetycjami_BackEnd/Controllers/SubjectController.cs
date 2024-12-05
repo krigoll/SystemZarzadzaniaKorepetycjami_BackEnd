@@ -48,7 +48,7 @@ public class SubjectController : ControllerBase
         }
     }
 
-    [HttpPost]
+    [HttpPost("addSubject")]
     [Authorize]
     public async Task<IActionResult> CreateSubjectAsync(string subjectName)
     {
@@ -63,7 +63,7 @@ public class SubjectController : ControllerBase
                 return Ok();
                 break;
             case SubjectStatus.INVALID_SUBJECT:
-                return StatusCode(StatusCodes.Status500InternalServerError, "Invalid Subject");
+                return StatusCode(StatusCodes.Status400BadRequest, "Invalid Subject");
                 break;
             case SubjectStatus.SERVER_ERROR:
                 return StatusCode(StatusCodes.Status500InternalServerError, "Server error");
@@ -73,28 +73,25 @@ public class SubjectController : ControllerBase
         }
     }
 
-    [HttpPut("{idSubject}")]
+    [HttpPut("{subjectName}/delete")]
     [Authorize]
-    public async Task<IActionResult> UpdateSubjectAsync(int idSubject, string subjectName)
+    public async Task<IActionResult> DeleteSubjectAsync(string subjectName)
     {
         var isAdminClaim = HttpContext.User.FindFirst("isAdmin")?.Value;
 
         if (isAdminClaim == null || !bool.TryParse(isAdminClaim, out var isAdmin) || !isAdmin) return Forbid();
 
-        var subjectStatus = await _subjectService.UpdateSubjectAsync(idSubject, subjectName);
+        var subjectStatus = await _subjectService.DeleteSubjectAsync(subjectName);
         switch (subjectStatus)
         {
             case SubjectStatus.OK:
                 return Ok();
                 break;
             case SubjectStatus.INVALID_SUBJECT:
-                return StatusCode(StatusCodes.Status500InternalServerError, "Invalid Subject");
+                return StatusCode(StatusCodes.Status400BadRequest, "Invalid Subject");
                 break;
             case SubjectStatus.SERVER_ERROR:
                 return StatusCode(StatusCodes.Status500InternalServerError, "Server error");
-                break;
-            case SubjectStatus.INVALID_SUBJECT_ID:
-                return StatusCode(StatusCodes.Status500InternalServerError, "Invalid Subject Id");
                 break;
             default:
                 return StatusCode(StatusCodes.Status500InternalServerError, "Server error");

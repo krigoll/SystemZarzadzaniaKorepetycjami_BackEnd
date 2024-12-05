@@ -77,9 +77,10 @@ namespace SystemZarzadzaniaKorepetycjami_BackEnd.Repositories.Implementations
             await _context.SaveChangesAsync();
         }
 
-        public async Task UpdateSubjectAsync(Subject subject)
+        public async Task DeleteSubjectByNameAsync(string subjectName)
         {
-            _context.Subject.Update(subject);
+            var subject = await _context.Subject.FirstOrDefaultAsync(s => s.Name == subjectName);
+            _context.Subject.Remove(subject);
             await _context.SaveChangesAsync();
         }
     }

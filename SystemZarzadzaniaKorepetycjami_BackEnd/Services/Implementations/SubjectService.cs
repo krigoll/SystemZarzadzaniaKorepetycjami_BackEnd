@@ -59,16 +59,11 @@ public class SubjectService : ISubjectService
         }
     }
 
-    public async Task<SubjectStatus> UpdateSubjectAsync(int idSubject, string subjectName)
+    public async Task<SubjectStatus> DeleteSubjectAsync(string subjectName)
     {
         try
         {
-            var updateSubject = await _subjectRepository.FindSubjectByIdAsync(idSubject);
-            if (updateSubject == null) return SubjectStatus.INVALID_SUBJECT_ID;
-
-            updateSubject.SetName(subjectName);
-
-            await _subjectRepository.UpdateSubjectAsync(updateSubject);
+            await _subjectRepository.DeleteSubjectByNameAsync(subjectName);
 
             return SubjectStatus.OK;
         }
