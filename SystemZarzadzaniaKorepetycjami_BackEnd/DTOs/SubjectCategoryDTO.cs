@@ -1,5 +1,5 @@
 public class SubjectCategoryDTO
 {
-    public int IdSubject { get; set; }
-    public string Name { get; set; }
+    public string SubjectName { get; set; }
+    public string SubjectCategoryName { get; set; }
 }

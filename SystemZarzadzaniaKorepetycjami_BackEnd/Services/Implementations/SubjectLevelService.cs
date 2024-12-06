@@ -5,23 +5,28 @@ public class SubjectLevelService : ISubjectLevelService
 {
     private readonly ISubjectCategoryRepository _subjectCategoryRepository;
     private readonly ISubjectLevelRepository _subjectLevelRepository;
+    private readonly ISubjectRepository _subjectRepository;
 
     public SubjectLevelService(ISubjectLevelRepository subjectLevelRepository,
-        ISubjectCategoryRepository subjectCategoryRepository)
+        ISubjectCategoryRepository subjectCategoryRepository, ISubjectRepository subjectRepository)
     {
         _subjectLevelRepository = subjectLevelRepository;
         _subjectCategoryRepository = subjectCategoryRepository;
+        _subjectRepository = subjectRepository;
     }
 
     public async Task<SubjectLevelStatus> CreateSubjectLevelAsync(SubjectLevelDTO subjectLevelDTO)
     {
         try
         {
+            var subject = _subjectRepository.FindSubjectByNameAsync(subjectLevelDTO.SubjectName);
+
             var subjectCategory =
-                await _subjectCategoryRepository.FindSubjectCategoryByIdAsync(subjectLevelDTO.IdSubjectCategory);
+                await _subjectCategoryRepository.FindSubjectCategoryBySubjectIdAndSubjectCategoryNameAsync(subject.Id,
+                    subjectLevelDTO.SubjectCategoryName);
             if (subjectCategory == null) return SubjectLevelStatus.INVALID_SUBJECT_CATEGORY_ID;
 
-            var newSubjectLevel = new SubjectLevel(subjectLevelDTO.IdSubjectCategory, subjectLevelDTO.Name);
+            var newSubjectLevel = new SubjectLevel(subjectLevelDTO.SubjectLevelName, subjectCategory.IdSubjectCategory);
 
             await _subjectLevelRepository.CreateSubjectLevelAsync(newSubjectLevel);
 
@@ -39,21 +44,20 @@ public class SubjectLevelService : ISubjectLevelService
         }
     }
 
-    public async Task<SubjectLevelStatus> UpdateSubjectLevelAsync(int idSubjectLevel, SubjectLevelDTO subjectLevelDTO)
+    public async Task<SubjectLevelStatus> DeleteSubjectLevelAsync(string subjectName, string subjectCategoryName,
+        string subjectLevelName)
     {
         try
         {
-            var updateSubjectLevel = await _subjectLevelRepository.FindSubjectLevelByIdAsync(idSubjectLevel);
-            if (updateSubjectLevel == null) return SubjectLevelStatus.INVALID_SUBJECT_LEVEL_ID;
+            var subject = _subjectRepository.FindSubjectByNameAsync(subjectName);
 
             var subjectCategory =
-                await _subjectCategoryRepository.FindSubjectCategoryByIdAsync(subjectLevelDTO.IdSubjectCategory);
+                await _subjectCategoryRepository.FindSubjectCategoryBySubjectIdAndSubjectCategoryNameAsync(subject.Id,
+                    subjectCategoryName);
             if (subjectCategory == null) return SubjectLevelStatus.INVALID_SUBJECT_CATEGORY_ID;
 
-            updateSubjectLevel.SetName(subjectLevelDTO.Name);
-            updateSubjectLevel.SetIdSubjectCategory(subjectLevelDTO.IdSubjectCategory);
 
-            await _subjectLevelRepository.UpdateSubjectLevelAsync(updateSubjectLevel);
+            await _subjectLevelRepository.DeleteSubjectLevelAsync(subjectCategory.IdSubjectCategory, subjectLevelName);
 
             return SubjectLevelStatus.OK;
         }

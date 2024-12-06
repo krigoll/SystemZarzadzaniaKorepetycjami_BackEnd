@@ -8,6 +8,7 @@ public interface ISubjectRepository
     public Task<List<SubjectDTO>> GetAllFullSubjects();
     public Task<List<SubjectTeacherDTO>> GetAllFullSubjectsByTeacherId(int teacherId);
     public Task<Subject> FindSubjectByIdAsync(int idSubject);
+    public Task<Subject> FindSubjectByNameAsync(string subjectName);
     public Task CreateSubjectAsync(Subject subject);
     public Task DeleteSubjectByNameAsync(string subjectName);
 }

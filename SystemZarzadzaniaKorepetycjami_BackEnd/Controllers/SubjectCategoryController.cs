@@ -14,7 +14,7 @@ public class SubjectCategoryController : ControllerBase
         _subjectCategoryService = subjectCategoryService;
     }
 
-    [HttpPost]
+    [HttpPost("addSubjectCategory")]
     [Authorize]
     public async Task<IActionResult> CreateSubjectCategoryAsync(SubjectCategoryDTO subjectCategoryDTO)
     {
@@ -42,17 +42,17 @@ public class SubjectCategoryController : ControllerBase
         }
     }
 
-    [HttpPut("{idSubjectCategory}")]
+    [HttpPut("{subjectName}/{subjectCategoryName}/delete")]
     [Authorize]
-    public async Task<IActionResult> UpdateSubjectCategoryAsync(int idSubjectCategory,
-        SubjectCategoryDTO subjectCategoryDTO)
+    public async Task<IActionResult> DeleteSubjectCategoryAsync(string subjectName,
+        string subjectCategoryName)
     {
         var isAdminClaim = HttpContext.User.FindFirst("isAdmin")?.Value;
 
         if (isAdminClaim == null || !bool.TryParse(isAdminClaim, out var isAdmin) || !isAdmin) return Forbid();
 
         var subjectCategoryStatus =
-            await _subjectCategoryService.UpdateSubjectCategoryAsync(idSubjectCategory, subjectCategoryDTO);
+            await _subjectCategoryService.DeleteSubjectCategoryAsync(subjectName, subjectCategoryName);
         switch (subjectCategoryStatus)
         {
             case SubjectCategoryStatus.OK:

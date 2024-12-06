@@ -71,6 +71,12 @@ namespace SystemZarzadzaniaKorepetycjami_BackEnd.Repositories.Implementations
             return subject;
         }
 
+        public async Task<Subject> FindSubjectByNameAsync(string subjectName)
+        {
+            var subject = await _context.Subject.FirstOrDefaultAsync(s => s.Name == subjectName);
+            return subject;
+        }
+
         public async Task CreateSubjectAsync(Subject subject)
         {
             await _context.Subject.AddAsync(subject);
