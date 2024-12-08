@@ -31,6 +31,25 @@ public class SubjectController : ControllerBase
         }
     }
 
+    [HttpGet("getAllSubjectsAdmin")]
+    [Authorize]
+    public async Task<IActionResult> GetAllSubjectsAdmin()
+    {
+        var isAdminClaim = HttpContext.User.FindFirst("isAdmin")?.Value;
+
+        if (isAdminClaim == null || !bool.TryParse(isAdminClaim, out var isAdmin) || !isAdmin) return Forbid();
+
+        try
+        {
+            var subjects = await _subjectService.GetAllSubjectsAdminAsync();
+            return Ok(subjects);
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(StatusCodes.Status500InternalServerError, "Internal server error");
+        }
+    }
+
     [HttpGet("getAllSubjectsByEmail")]
     [Authorize]
     public async Task<IActionResult> GetAllSubjectsEdit(string email)
@@ -50,7 +69,7 @@ public class SubjectController : ControllerBase
 
     [HttpPost("addSubject")]
     [Authorize]
-    public async Task<IActionResult> CreateSubjectAsync(string subjectName)
+    public async Task<IActionResult> CreateSubjectAsync([FromBody] string subjectName)
     {
         var isAdminClaim = HttpContext.User.FindFirst("isAdmin")?.Value;
 

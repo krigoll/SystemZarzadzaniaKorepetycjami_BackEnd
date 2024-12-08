@@ -38,6 +38,36 @@ namespace SystemZarzadzaniaKorepetycjami_BackEnd.Repositories.Implementations
             return formattedResult;
         }
 
+        public async Task<List<SubjectDTO>> GetAllSubjects()
+        {
+            var result = await _context.Subject
+                .Include(s => s.SubjectCategory)
+                .ThenInclude(sc => sc.SubjectLevel)
+                .ToListAsync();
+
+            var formattedResult = result
+                .SelectMany(s => s.SubjectCategory.DefaultIfEmpty(),
+                    (s, sc) => new { SubjectName = s.Name, SubjectCategory = sc })
+                .SelectMany(
+                    sc => sc.SubjectCategory?.SubjectLevel.DefaultIfEmpty() ?? new List<SubjectLevel> { null },
+                    (sc, sl) => new
+                    {
+                        Subject = sc.SubjectName,
+                        Category = sc.SubjectCategory?.Name ?? "Brak Kategorii",
+                        Level = sl?.Name ?? "Brak Poziomu",
+                        LevelId = sl?.IdSubjectLevel
+                    }
+                )
+                .Select(x => new SubjectDTO
+                {
+                    SubjectFullName = $"{x.Subject}, {x.Category}, {x.Level}",
+                    SubjectLevelId = x.LevelId ?? 0
+                })
+                .ToList();
+
+            return formattedResult;
+        }
+
         public async Task<List<SubjectTeacherDTO>> GetAllFullSubjectsByTeacherId(int teacherId)
         {
             var result = await _context.SubjectLevel

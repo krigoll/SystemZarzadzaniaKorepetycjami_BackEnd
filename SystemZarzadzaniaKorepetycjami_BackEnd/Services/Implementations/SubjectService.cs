@@ -26,6 +26,11 @@ public class SubjectService : ISubjectService
         return await _subjectRepository.GetAllFullSubjects();
     }
 
+    public async Task<List<SubjectDTO>> GetAllSubjectsAdminAsync()
+    {
+        return await _subjectRepository.GetAllSubjects();
+    }
+
     public async Task<List<SubjectTeacherDTO>> GetAllSubjectsEditAsync(string email)
     {
         if (await _teacherRepository.isTeacherByEmail(email))
@@ -41,6 +46,9 @@ public class SubjectService : ISubjectService
     {
         try
         {
+            Console.WriteLine("Jajko");
+            Console.WriteLine(subjectName);
+            Console.WriteLine("Jajko");
             var newSubject = new Subject(subjectName);
 
             await _subjectRepository.CreateSubjectAsync(newSubject);
