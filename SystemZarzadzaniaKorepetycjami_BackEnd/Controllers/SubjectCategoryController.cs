@@ -16,7 +16,7 @@ public class SubjectCategoryController : ControllerBase
 
     [HttpPost("addSubjectCategory")]
     [Authorize]
-    public async Task<IActionResult> CreateSubjectCategoryAsync(SubjectCategoryDTO subjectCategoryDTO)
+    public async Task<IActionResult> CreateSubjectCategoryAsync([FromBody] SubjectCategoryDTO subjectCategoryDTO)
     {
         var isAdminClaim = HttpContext.User.FindFirst("isAdmin")?.Value;
 
@@ -42,7 +42,7 @@ public class SubjectCategoryController : ControllerBase
         }
     }
 
-    [HttpPut("{subjectName}/{subjectCategoryName}/delete")]
+    [HttpDelete("{subjectName}/{subjectCategoryName}/delete")]
     [Authorize]
     public async Task<IActionResult> DeleteSubjectCategoryAsync(string subjectName,
         string subjectCategoryName)

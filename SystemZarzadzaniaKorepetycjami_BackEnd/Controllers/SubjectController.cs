@@ -92,10 +92,12 @@ public class SubjectController : ControllerBase
         }
     }
 
-    [HttpPut("{subjectName}/delete")]
+    [HttpDelete("{subjectName}/delete")]
     [Authorize]
     public async Task<IActionResult> DeleteSubjectAsync(string subjectName)
     {
+        Console.WriteLine(subjectName);
+
         var isAdminClaim = HttpContext.User.FindFirst("isAdmin")?.Value;
 
         if (isAdminClaim == null || !bool.TryParse(isAdminClaim, out var isAdmin) || !isAdmin) return Forbid();

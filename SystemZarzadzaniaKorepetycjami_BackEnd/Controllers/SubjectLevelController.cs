@@ -13,9 +13,9 @@ public class SubjectLevelController : ControllerBase
     }
 
 
-    [HttpPost]
+    [HttpPost("addSubjectLevel")]
     [Authorize]
-    public async Task<IActionResult> CreateSubjectLevelAsync(SubjectLevelDTO subjectLevelDTO)
+    public async Task<IActionResult> CreateSubjectLevelAsync([FromBody] SubjectLevelDTO subjectLevelDTO)
     {
         var isAdminClaim = HttpContext.User.FindFirst("isAdmin")?.Value;
 
@@ -41,7 +41,7 @@ public class SubjectLevelController : ControllerBase
         }
     }
 
-    [HttpPut("{subjectName}/{subjectCategoryName}/{subjectLevelName}/delete")]
+    [HttpDelete("{subjectName}/{subjectCategoryName}/{subjectLevelName}/delete")]
     [Authorize]
     public async Task<IActionResult> DeleteSubjectLevelAsync(string subjectName, string subjectCategoryName,
         string subjectLevelName)

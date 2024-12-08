@@ -19,10 +19,10 @@ public class SubjectLevelService : ISubjectLevelService
     {
         try
         {
-            var subject = _subjectRepository.FindSubjectByNameAsync(subjectLevelDTO.SubjectName);
-
+            var subject = await _subjectRepository.FindSubjectByNameAsync(subjectLevelDTO.SubjectName);
             var subjectCategory =
-                await _subjectCategoryRepository.FindSubjectCategoryBySubjectIdAndSubjectCategoryNameAsync(subject.Id,
+                await _subjectCategoryRepository.FindSubjectCategoryBySubjectIdAndSubjectCategoryNameAsync(
+                    subject.IdSubject,
                     subjectLevelDTO.SubjectCategoryName);
             if (subjectCategory == null) return SubjectLevelStatus.INVALID_SUBJECT_CATEGORY_ID;
 
@@ -49,10 +49,11 @@ public class SubjectLevelService : ISubjectLevelService
     {
         try
         {
-            var subject = _subjectRepository.FindSubjectByNameAsync(subjectName);
+            var subject = await _subjectRepository.FindSubjectByNameAsync(subjectName);
 
             var subjectCategory =
-                await _subjectCategoryRepository.FindSubjectCategoryBySubjectIdAndSubjectCategoryNameAsync(subject.Id,
+                await _subjectCategoryRepository.FindSubjectCategoryBySubjectIdAndSubjectCategoryNameAsync(
+                    subject.IdSubject,
                     subjectCategoryName);
             if (subjectCategory == null) return SubjectLevelStatus.INVALID_SUBJECT_CATEGORY_ID;
 
