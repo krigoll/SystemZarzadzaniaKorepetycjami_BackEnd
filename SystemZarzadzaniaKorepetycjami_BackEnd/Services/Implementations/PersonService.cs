@@ -111,6 +111,28 @@ public class PersonService : IPersonService
         };
     }
 
+    public async Task<PersonProfileDTO> GetPersonProfileByIdAsync(int userId)
+    {
+        var person = await _personRepository.FindPersonByIdAsync(userId);
+        if (person == null) return null;
+
+        var personRoles = await GetPersonRoleAsync(person.Email);
+        return new PersonProfileDTO
+        {
+            IdPerson = person.IdPerson,
+            Name = person.Name,
+            Surname = person.Surname,
+            BirthDate = person.BirthDate.ToString(),
+            Email = person.Email,
+            PhoneNumber = person.PhoneNumber,
+            JoiningDate = person.JoiningDate,
+            Image = person.Image == null ? null : Convert.ToBase64String(person.Image),
+            IsStudent = personRoles.isStudent,
+            IsTeacher = personRoles.isTeacher,
+            IsAdmin = personRoles.isAdmin
+        };
+    }
+
     public async Task<UpdateUserStatus> UpdateUserAsync(int idPerson, PersonEditProfileDTO personProfileDto)
     {
         try
