@@ -94,6 +94,8 @@ builder.Services.AddScoped<ISubjectCategoryRepository, SubjectCategoryRepository
 builder.Services.AddScoped<ISubjectLevelService, SubjectLevelService>();
 builder.Services.AddScoped<IReportService, ReportService>();
 builder.Services.AddScoped<IReportRepository, ReportRepository>();
+builder.Services.AddScoped<IBanService, BanService>();
+builder.Services.AddScoped<IBanRepository, BanRepository>();
 
 builder.Services.AddDbContext<SZKContext>(options =>
 {

@@ -1,0 +1,7 @@
+public enum BanStatus
+{
+	OK,
+	SERVER_ERROR,
+	INVALID_BAN,
+	INVALID_BANED_ID
+}

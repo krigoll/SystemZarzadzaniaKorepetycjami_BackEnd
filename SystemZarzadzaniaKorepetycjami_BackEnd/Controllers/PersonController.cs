@@ -88,7 +88,7 @@ public class PersonController : ControllerBase
         }
     }
 
-    HttpGet("getUser/{userId}")]
+    [HttpGet("getUser/{userId}")]
     [Authorize]
     public async Task<IActionResult> GetUserInformationByIdAsync(int userId)
     {

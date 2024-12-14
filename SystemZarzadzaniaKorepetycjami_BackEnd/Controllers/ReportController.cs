@@ -64,13 +64,13 @@ public class ReportController : ControllerBase
                 return Ok();
                 break;
             case ReportStatus.INVALID_REPORT:
-                return StatusCode(StatusCodes.Status500InternalServerError, "Invalid Report");
+                return StatusCode(StatusCodes.Status400BadRequest, "Invalid Report");
                 break;
             case ReportStatus.SERVER_ERROR:
                 return StatusCode(StatusCodes.Status500InternalServerError, "Server error");
                 break;
             case ReportStatus.INVALID_SENDER_ID:
-                return StatusCode(StatusCodes.Status500InternalServerError, "Invalid Sender Id");
+                return StatusCode(StatusCodes.Status400BadRequest, "Invalid Sender Id");
                 break;
             default:
                 return StatusCode(StatusCodes.Status500InternalServerError, "Server error");
@@ -79,7 +79,7 @@ public class ReportController : ControllerBase
 
     [HttpPut("{idReport}/update")]
     [Authorize]
-    public async Task<IActionResult> UpdateRepostAsync(int idReport, ReportDetailsDTO report)
+    public async Task<IActionResult> UpdateRepostAsync(int idReport, [FromBody] ReportDetailsDTO report)
     {
         var isAdminClaim = HttpContext.User.FindFirst("isAdmin")?.Value;
 
@@ -92,13 +92,13 @@ public class ReportController : ControllerBase
                 return Ok();
                 break;
             case ReportStatus.INVALID_REPORT:
-                return StatusCode(StatusCodes.Status500InternalServerError, "Invalid Report");
+                return StatusCode(StatusCodes.Status400BadRequest, "Invalid Report");
                 break;
             case ReportStatus.SERVER_ERROR:
                 return StatusCode(StatusCodes.Status500InternalServerError, "Server error");
                 break;
             case ReportStatus.INVALID_SENDER_ID:
-                return StatusCode(StatusCodes.Status500InternalServerError, "Invalid Sender Id");
+                return StatusCode(StatusCodes.Status400BadRequest, "Invalid Sender Id");
                 break;
             default:
                 return StatusCode(StatusCodes.Status500InternalServerError, "Server error");
