@@ -15,10 +15,11 @@ public class PersonService : IPersonService
     private readonly IPersonRepository _personRepository;
     private readonly IStudentRepository _studentRepository;
     private readonly ITeacherRepository _teacherRepository;
+    private readonly IBanRepository _banRepository;
 
     public PersonService(IAdminRepository adminRepository, ILoginRepository loginRepository,
         IPersonRepository personRepository, IStudentRepository studentRepository, ITeacherRepository teacherRepository,
-        ILessonRepository lessonRepository)
+        ILessonRepository lessonRepository, IBanRepository banRepository)
     {
         _adminRepository = adminRepository;
         _loginRepository = loginRepository;
@@ -26,6 +27,7 @@ public class PersonService : IPersonService
         _studentRepository = studentRepository;
         _teacherRepository = teacherRepository;
         _lessonRepository = lessonRepository;
+        _banRepository = banRepository;
     }
 
     public async Task<RegisterStatus> RegistrationPerson(RegistrationDTO registrationDto)
@@ -111,13 +113,14 @@ public class PersonService : IPersonService
         };
     }
 
-    public async Task<PersonProfileDTO> GetPersonProfileByIdAsync(int userId)
+    public async Task<PersonProfileForAdminDTO> GetPersonProfileByIdAsync(int userId)
     {
         var person = await _personRepository.FindPersonByIdAsync(userId);
         if (person == null) return null;
 
         var personRoles = await GetPersonRoleAsync(person.Email);
-        return new PersonProfileDTO
+        var personBan = await _banRepository.GetNewestBanByUserId(userId);
+        return new PersonProfileForAdminDTO
         {
             IdPerson = person.IdPerson,
             Name = person.Name,
@@ -129,7 +132,9 @@ public class PersonService : IPersonService
             Image = person.Image == null ? null : Convert.ToBase64String(person.Image),
             IsStudent = personRoles.isStudent,
             IsTeacher = personRoles.isTeacher,
-            IsAdmin = personRoles.isAdmin
+            IsBaned = personBan.IsBaned,
+            NumberOfDays = personBan.NummberOfDays,
+            Reason = personBan.Reason
         };
     }
 

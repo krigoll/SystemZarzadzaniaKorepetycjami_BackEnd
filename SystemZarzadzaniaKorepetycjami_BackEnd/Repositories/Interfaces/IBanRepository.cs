@@ -9,4 +9,5 @@ public interface IBanRepository
 	public Task<Ban> FindBanByIdAsync(int idBan);
 	public Task UpdateBanAsync(Ban updateBan);
 	public Task RemoveBanAsync(Ban ban);
+	public Task<BannedInformationDTO> GetNewestBanByUserId(int userId);
 }

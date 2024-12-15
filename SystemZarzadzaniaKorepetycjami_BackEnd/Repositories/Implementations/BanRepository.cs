@@ -67,4 +67,35 @@ public class BanRepository : IBanRepository
 		_context.Ban.Remove(ban);
 		await _context.SaveChangesAsync(); 
 	}
+
+	public async Task<BannedInformationDTO> GetNewestBanByUserId(int userId)
+	{
+		var now = DateTime.UtcNow;
+
+        var activeBans = await _context.Ban
+            .Where(ban => ban.IdPerson == userId && 
+                          now >= ban.StartTime && 
+                          now <= ban.StartTime.AddDays(ban.LenghtInDays))
+            .OrderByDescending(ban => ban.StartTime.AddDays(ban.LenghtInDays))
+            .ToListAsync();
+
+        if (!activeBans.Any())
+        {
+            return new BannedInformationDTO
+            {
+                IsBaned = false,
+                NummberOfDays = 0,
+                Reason = null
+            };
+        }
+
+        var latestBan = activeBans.First();
+
+        return new BannedInformationDTO
+        {
+            IsBaned = true,
+            NummberOfDays = (latestBan.StartTime.AddDays(latestBan.LenghtInDays) - now).Days,
+            Reason = latestBan.Reason
+        };
+	}
 }
