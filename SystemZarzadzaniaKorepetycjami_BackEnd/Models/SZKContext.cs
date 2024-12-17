@@ -1,42 +1,39 @@
-﻿using System;
-using System.Collections.Generic;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata;
+﻿using Microsoft.EntityFrameworkCore;
 
 namespace SystemZarzadzaniaKorepetycjami_BackEnd.Models
 {
-public partial class SZKContext : DbContext
-{
-    public virtual DbSet<Administrator> Administrator { get; set; }
-    public virtual DbSet<Assignment> Assignment { get; set; }
-    public virtual DbSet<Availability> Availability { get; set; }
-    public virtual DbSet<Ban> Ban { get; set; }
-    public virtual DbSet<DayOfTheWeek> DayOfTheWeek { get; set; }
-    public virtual DbSet<Lesson> Lesson { get; set; }
-    public virtual DbSet<LessonStatus> LessonStatus { get; set; }
-    public virtual DbSet<Mark> Mark { get; set; }
-    public virtual DbSet<Message> Message { get; set; }
-    public virtual DbSet<Opinion> Opinion { get; set; }
-    public virtual DbSet<Person> Person { get; set; }
-    public virtual DbSet<RefreshTokens> RefreshTokens { get; set; }
-    public virtual DbSet<Report> Report { get; set; }
-    public virtual DbSet<Student> Student { get; set; }
-    public virtual DbSet<StudentAnswer> StudentAnswer { get; set; }
-    public virtual DbSet<Subject> Subject { get; set; }
-    public virtual DbSet<SubjectCategory> SubjectCategory { get; set; }
-    public virtual DbSet<SubjectLevel> SubjectLevel { get; set; }
-    public virtual DbSet<Teacher> Teacher { get; set; }
-    public virtual DbSet<TeacherSalary> TeacherSalary { get; set; }
-    public virtual DbSet<Test> Test { get; set; }
-    public virtual DbSet<TestForStudent> TestForStudent { get; set; }
+    public partial class SZKContext : DbContext
+    {
+        public SZKContext()
+        {
+        }
 
-public SZKContext()
-{
-}
+        public SZKContext(DbContextOptions<SZKContext> options) : base(options)
+        {
+        }
 
-public SZKContext(DbContextOptions<SZKContext> options) : base(options)
-{
-}
+        public virtual DbSet<Administrator> Administrator { get; set; }
+        public virtual DbSet<Assignment> Assignment { get; set; }
+        public virtual DbSet<Availability> Availability { get; set; }
+        public virtual DbSet<Ban> Ban { get; set; }
+        public virtual DbSet<DayOfTheWeek> DayOfTheWeek { get; set; }
+        public virtual DbSet<Lesson> Lesson { get; set; }
+        public virtual DbSet<LessonStatus> LessonStatus { get; set; }
+        public virtual DbSet<Mark> Mark { get; set; }
+        public virtual DbSet<Message> Message { get; set; }
+        public virtual DbSet<Opinion> Opinion { get; set; }
+        public virtual DbSet<Person> Person { get; set; }
+        public virtual DbSet<RefreshTokens> RefreshTokens { get; set; }
+        public virtual DbSet<Report> Report { get; set; }
+        public virtual DbSet<Student> Student { get; set; }
+        public virtual DbSet<StudentAnswer> StudentAnswer { get; set; }
+        public virtual DbSet<Subject> Subject { get; set; }
+        public virtual DbSet<SubjectCategory> SubjectCategory { get; set; }
+        public virtual DbSet<SubjectLevel> SubjectLevel { get; set; }
+        public virtual DbSet<Teacher> Teacher { get; set; }
+        public virtual DbSet<TeacherSalary> TeacherSalary { get; set; }
+        public virtual DbSet<Test> Test { get; set; }
+        public virtual DbSet<TestForStudent> TestForStudent { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -93,9 +90,7 @@ public SZKContext(DbContextOptions<SZKContext> options) : base(options)
             modelBuilder.Entity<Ban>(entity =>
             {
                 entity.HasKey(e => e.IdBan)
-                    .HasName("Ban_pk");
-
-                entity.Property(e => e.IdBan).ValueGeneratedNever();
+                    .HasName("PK__Ban__0EE9EA89A1DA1BA1");
 
                 entity.Property(e => e.Reason)
                     .IsRequired()
@@ -108,7 +103,7 @@ public SZKContext(DbContextOptions<SZKContext> options) : base(options)
                     .WithMany(p => p.Ban)
                     .HasForeignKey(d => d.IdPerson)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("Ban_Person");
+                    .HasConstraintName("FK__Ban__IdPerson__1CBC4616");
             });
 
             modelBuilder.Entity<DayOfTheWeek>(entity =>
@@ -456,8 +451,10 @@ public SZKContext(DbContextOptions<SZKContext> options) : base(options)
                     .WithMany(p => p.IdTest)
                     .UsingEntity<Dictionary<string, object>>(
                         "AssignmentOnTest",
-                        l => l.HasOne<Assignment>().WithMany().HasForeignKey("IdAssignment").OnDelete(DeleteBehavior.ClientSetNull).HasConstraintName("Task_On_Test_Task"),
-                        r => r.HasOne<Test>().WithMany().HasForeignKey("IdTest").OnDelete(DeleteBehavior.ClientSetNull).HasConstraintName("Task_On_Test_Test"),
+                        l => l.HasOne<Assignment>().WithMany().HasForeignKey("IdAssignment")
+                            .OnDelete(DeleteBehavior.ClientSetNull).HasConstraintName("Task_On_Test_Task"),
+                        r => r.HasOne<Test>().WithMany().HasForeignKey("IdTest").OnDelete(DeleteBehavior.ClientSetNull)
+                            .HasConstraintName("Task_On_Test_Test"),
                         j =>
                         {
                             j.HasKey("IdTest", "IdAssignment").HasName("Assignment_On_Test_pk");
@@ -492,5 +489,5 @@ public SZKContext(DbContextOptions<SZKContext> options) : base(options)
         }
 
         partial void OnModelCreatingPartial(ModelBuilder modelBuilder);
-}
+    }
 }
