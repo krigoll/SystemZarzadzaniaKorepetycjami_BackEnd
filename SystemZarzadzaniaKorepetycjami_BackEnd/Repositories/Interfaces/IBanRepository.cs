@@ -10,4 +10,5 @@ public interface IBanRepository
 	public Task UpdateBanAsync(Ban updateBan);
 	public Task RemoveBanAsync(Ban ban);
 	public Task<BannedInformationDTO> GetNewestBanByUserId(int userId);
+	public Task<bool> IsUserBannedByEmail(string email);
 }

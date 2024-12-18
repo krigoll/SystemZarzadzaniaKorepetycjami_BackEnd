@@ -4,5 +4,6 @@ public enum LoginStatus
 {
     USER_EXISTS,
     USER_NOT_EXISTS,
-    DATABASE_ERROR
+    DATABASE_ERROR,
+    USER_BANED
 }

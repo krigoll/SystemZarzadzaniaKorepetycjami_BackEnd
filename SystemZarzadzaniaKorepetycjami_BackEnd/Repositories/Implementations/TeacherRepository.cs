@@ -112,7 +112,7 @@ namespace SystemZarzadzaniaKorepetycjami_BackEnd.Repositories.Implementations
                           (student != null &&
                            student.IdStudent == idStudent &&
                            lesson.IdLessonStatus == 2 &&
-                           lesson.StartDate < DateTime.Today) ||
+                           lesson.StartDate < DateTime.Now) ||
                           (opinion != null && opinion.IdStudent == idStudent)
                       )
                 select new

@@ -100,4 +100,20 @@ public class BanRepository : IBanRepository
             Reason = latestBan.Reason
         };
     }
+
+    public async Task<bool> IsUserBannedByEmail(string email)
+    {
+        var now = DateTime.Now;
+
+        var banExists = await _context.Ban
+            .Join(_context.Person,
+                ban => ban.IdPerson,
+                person => person.IdPerson,
+                (ban, person) => new { Ban = ban, Person = person })
+            .Where(bp => bp.Person.Email == email)
+            .Where(bp => now >= bp.Ban.StartTime && now <= bp.Ban.StartTime.AddDays(bp.Ban.LengthInDays))
+            .AnyAsync();
+
+        return banExists;
+    }
 }

@@ -53,7 +53,8 @@ namespace SystemZarzadzaniaKorepetycjami_BackEnd.Repositories.Implementations
                     SubjectCategoryName = subjectCategory.Name,
                     SubjectLevelName = subjectLevel.Name,
                     StudentName = person.Name,
-                    StudentSurname = person.Surname
+                    StudentSurname = person.Surname,
+                    DurationInMinutes = lesson.DurationInMinutes
                 }).ToListAsync();
             //Dodać w bazie joba który codziennie zmienia status lekcji zarezerwowanych których startdate jest < datetime.now
             return lessons;

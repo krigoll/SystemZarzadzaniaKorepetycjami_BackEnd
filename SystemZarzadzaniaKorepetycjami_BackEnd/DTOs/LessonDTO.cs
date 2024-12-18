@@ -8,4 +8,5 @@ public class LessonDTO
     public string SubjectLevelName { get; set; }
     public string StudentName { get; set; }
     public string StudentSurname { get; set; }
+    public int DurationInMinutes { get; set; }
 }

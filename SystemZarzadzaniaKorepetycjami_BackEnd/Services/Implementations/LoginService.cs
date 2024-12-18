@@ -17,15 +17,17 @@ public class LoginService : ILoginService
     private readonly IPersonRepository _personRepository;
     private readonly IPersonService _personService;
     private readonly IRefreshTokenRepository _refreshTokenRepository;
+    private readonly IBanRepository _banRepository;
 
     public LoginService(ILoginRepository loginRepository, IConfiguration config, IPersonRepository personRepository,
-        IRefreshTokenRepository refreshTokenRepository, IPersonService personService)
+        IRefreshTokenRepository refreshTokenRepository, IPersonService personService, IBanRepository banRepository)
     {
         _loginRepository = loginRepository;
         _config = config;
         _personRepository = personRepository;
         _refreshTokenRepository = refreshTokenRepository;
         _personService = personService;
+        _banRepository = banRepository;
     }
 
     public async Task<(LoginStatus, string, string)> LoginAsync(LoginDTO request)
@@ -88,6 +90,9 @@ public class LoginService : ILoginService
         {
             var person = await _loginRepository.findPersonByEmailAsync(email);
             if (person == null) return LoginStatus.USER_NOT_EXISTS;
+
+            var isBanned = await _banRepository.IsUserBannedByEmail(email);
+            if (isBanned.isBanned) return LoginStatus.USER_BANED;
 
             if (BCrypt.Net.BCrypt.Verify(password, person.Password)) return LoginStatus.USER_EXISTS;
 
