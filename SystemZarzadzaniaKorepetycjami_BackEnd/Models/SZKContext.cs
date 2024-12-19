@@ -64,6 +64,12 @@ namespace SystemZarzadzaniaKorepetycjami_BackEnd.Models
                     .IsRequired()
                     .HasMaxLength(500)
                     .IsUnicode(false);
+
+                entity.HasOne(d => d.IdTestNavigation)
+                    .WithMany(p => p.Assignment)
+                    .HasForeignKey(d => d.IdTest)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_Assignment_Test");
             });
 
             modelBuilder.Entity<Availability>(entity =>
@@ -446,21 +452,6 @@ namespace SystemZarzadzaniaKorepetycjami_BackEnd.Models
                     .HasForeignKey(d => d.IdTeacher)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("Test_Teacher");
-
-                entity.HasMany(d => d.IdAssignment)
-                    .WithMany(p => p.IdTest)
-                    .UsingEntity<Dictionary<string, object>>(
-                        "AssignmentOnTest",
-                        l => l.HasOne<Assignment>().WithMany().HasForeignKey("IdAssignment")
-                            .OnDelete(DeleteBehavior.ClientSetNull).HasConstraintName("Task_On_Test_Task"),
-                        r => r.HasOne<Test>().WithMany().HasForeignKey("IdTest").OnDelete(DeleteBehavior.ClientSetNull)
-                            .HasConstraintName("Task_On_Test_Test"),
-                        j =>
-                        {
-                            j.HasKey("IdTest", "IdAssignment").HasName("Assignment_On_Test_pk");
-
-                            j.ToTable("Assignment_On_Test");
-                        });
             });
 
             modelBuilder.Entity<TestForStudent>(entity =>

@@ -12,12 +12,12 @@ namespace SystemZarzadzaniaKorepetycjami_BackEnd.Services.Implementations;
 
 public class LoginService : ILoginService
 {
+    private readonly IBanRepository _banRepository;
     private readonly IConfiguration _config;
     private readonly ILoginRepository _loginRepository;
     private readonly IPersonRepository _personRepository;
     private readonly IPersonService _personService;
     private readonly IRefreshTokenRepository _refreshTokenRepository;
-    private readonly IBanRepository _banRepository;
 
     public LoginService(ILoginRepository loginRepository, IConfiguration config, IPersonRepository personRepository,
         IRefreshTokenRepository refreshTokenRepository, IPersonService personService, IBanRepository banRepository)
@@ -92,7 +92,7 @@ public class LoginService : ILoginService
             if (person == null) return LoginStatus.USER_NOT_EXISTS;
 
             var isBanned = await _banRepository.IsUserBannedByEmail(email);
-            if (isBanned.isBanned) return LoginStatus.USER_BANED;
+            if (isBanned) return LoginStatus.USER_BANED;
 
             if (BCrypt.Net.BCrypt.Verify(password, person.Password)) return LoginStatus.USER_EXISTS;
 

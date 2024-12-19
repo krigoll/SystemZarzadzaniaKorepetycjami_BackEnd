@@ -23,10 +23,6 @@
          "ObjectType": 0
       },
       {
-         "Name": "[dbo].[Assignment_On_Test]",
-         "ObjectType": 0
-      },
-      {
          "Name": "[dbo].[Availability]",
          "ObjectType": 0
       },
