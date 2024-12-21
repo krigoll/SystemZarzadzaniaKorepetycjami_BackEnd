@@ -25,7 +25,8 @@ public class TestRepository : ITestRepository
         var tests = await (
             from test in _context.Test
             join assignment in _context.Assignment
-                on test.IdTest equals assignment.IdTest
+                on test.IdTest equals assignment.IdTest into assignments
+            from assignment in assignments.DefaultIfEmpty()
             where test.IdTeacher == teacherId
             group assignment by new { test.IdTest, test.Title }
             into g
@@ -33,7 +34,7 @@ public class TestRepository : ITestRepository
             {
                 IdTest = g.Key.IdTest,
                 Title = g.Key.Title,
-                NumberOfAssigments = g.Count()
+                NumberOfAssignments = g.Count()
             }).ToListAsync();
 
         return tests;
