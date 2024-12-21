@@ -31,7 +31,7 @@ public class TestService : ITestService
         {
             IdTest = idTest,
             Title = test.Title,
-            Assigments = assignments
+            Assignments = assignments
         };
     }
 

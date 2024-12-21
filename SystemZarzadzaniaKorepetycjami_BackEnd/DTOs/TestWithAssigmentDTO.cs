@@ -4,5 +4,5 @@ public class TestWithAssigmentDTO
 {
     public int IdTest { get; set; }
     public string Title { get; set; }
-    public List<AssignmentDTO> Assigments { get; set; }
+    public List<AssignmentDTO> Assignments { get; set; }
 }
