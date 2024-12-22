@@ -1,3 +1,4 @@
+using SystemZarzadzaniaKorepetycjami_BackEnd.DTOs;
 using SystemZarzadzaniaKorepetycjami_BackEnd.Models;
 using Task = System.Threading.Tasks.Task;
 
@@ -9,4 +10,5 @@ public interface IStudentRepository
     public Task<bool> isStudentByEmail(string email);
     public Task RemoveStudentAsync(Student student);
     public Task<Student> GetStudentByEmailAsync(string email);
+    public Task<List<StudentDTO>> GetStudentsThatTeachOrWillByTeachTeacherByTeacherIdAsync(int idTeacher);
 }

@@ -56,7 +56,7 @@ public class TestController : ControllerBase
                 return StatusCode(StatusCodes.Status500InternalServerError, "Server error");
                 break;
             case TestStatus.INVALID_TEACHER_ID:
-                return StatusCode(StatusCodes.Status500InternalServerError, "Invalid Teacher Id");
+                return StatusCode(StatusCodes.Status400BadRequest, "Invalid Teacher Id");
                 break;
             default:
                 return StatusCode(StatusCodes.Status500InternalServerError, "Server error");
@@ -80,10 +80,10 @@ public class TestController : ControllerBase
                 return StatusCode(StatusCodes.Status500InternalServerError, "Server error");
                 break;
             case TestStatus.INVALID_TEACHER_ID:
-                return StatusCode(StatusCodes.Status500InternalServerError, "Invalid Teacher Id");
+                return StatusCode(StatusCodes.Status400BadRequest, "Invalid Teacher Id");
                 break;
             case TestStatus.INVALID_TEST_ID:
-                return StatusCode(StatusCodes.Status500InternalServerError, "Invalid Test Id");
+                return StatusCode(StatusCodes.Status400BadRequest, "Invalid Test Id");
                 break;
             default:
                 return StatusCode(StatusCodes.Status500InternalServerError, "Server error");

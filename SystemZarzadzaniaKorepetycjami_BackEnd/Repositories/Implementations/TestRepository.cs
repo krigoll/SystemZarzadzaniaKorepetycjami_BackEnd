@@ -34,7 +34,7 @@ public class TestRepository : ITestRepository
             {
                 IdTest = g.Key.IdTest,
                 Title = g.Key.Title,
-                NumberOfAssignments = g.Count()
+                NumberOfAssignments = g.Count(a => a != null)
             }).ToListAsync();
 
         return tests;
@@ -54,6 +54,8 @@ public class TestRepository : ITestRepository
 
     public async Task DeleteTestAsync(Test test)
     {
+        var assignments = _context.Assignment.Where(a => a.IdTest == test.IdTest);
+        _context.Assignment.RemoveRange(assignments);
         _context.Test.Remove(test);
         await _context.SaveChangesAsync();
     }

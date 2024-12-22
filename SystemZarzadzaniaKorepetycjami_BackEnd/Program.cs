@@ -99,6 +99,7 @@ builder.Services.AddScoped<IBanRepository, BanRepository>();
 builder.Services.AddScoped<ITestService, TestService>();
 builder.Services.AddScoped<ITestRepository, TestRepository>();
 builder.Services.AddScoped<IAssignmentRepository, AssignmentRepository>();
+builder.Services.AddScoped<IStudentService, StudentService>();
 
 builder.Services.AddDbContext<SZKContext>(options =>
 {
