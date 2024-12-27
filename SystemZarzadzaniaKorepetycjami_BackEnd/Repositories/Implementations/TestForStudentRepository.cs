@@ -37,7 +37,8 @@ public class TestForStudentRepository : ITestForStudentRepository
             group assignment by new
             {
                 test.IdTest, test.Title, testForStudent.DateOfCreation,
-                TeacherFullName = person.Name + " " + person.Surname
+                TeacherFullName = person.Name + " " + person.Surname,
+                testForStudent.IdTestForStudent
             }
             into g
             select new TestForStudentDTO
@@ -45,8 +46,9 @@ public class TestForStudentRepository : ITestForStudentRepository
                 IdTest = g.Key.IdTest,
                 Title = g.Key.Title,
                 NumberOfAssignments = g.Count(a => a != null),
-                CreationTime = g.Key.DateOfCreation,
-                Fullname = g.Key.TeacherFullName
+                CreationTime = g.Key.DateOfCreation.ToString("yyyy-MM-dd HH:mm"),
+                Fullname = g.Key.TeacherFullName,
+                IdTestForStudent = g.Key.IdTestForStudent
             }).ToListAsync();
 
         return tests;
@@ -70,7 +72,8 @@ public class TestForStudentRepository : ITestForStudentRepository
             group assignment by new
             {
                 test.IdTest, test.Title, testForStudent.DateOfCreation,
-                StudentFullName = person.Name + " " + person.Surname
+                StudentFullName = person.Name + " " + person.Surname,
+                testForStudent.IdTestForStudent
             }
             into g
             select new TestForStudentDTO
@@ -78,10 +81,47 @@ public class TestForStudentRepository : ITestForStudentRepository
                 IdTest = g.Key.IdTest,
                 Title = g.Key.Title,
                 NumberOfAssignments = g.Count(a => a != null),
-                CreationTime = g.Key.DateOfCreation,
-                Fullname = g.Key.StudentFullName
+                CreationTime = g.Key.DateOfCreation.ToString("yyyy-MM-dd HH:mm"),
+                Fullname = g.Key.StudentFullName,
+                IdTestForStudent = g.Key.IdTestForStudent
             }).ToListAsync();
 
         return tests;
+    }
+
+    public async Task<TestForStudentDetailsDTO> GetTestForStudentDetails(int idTestForStudent)
+    {
+        var testForStudentDetails = await (
+            from tfs in _context.TestForStudent
+            join t in _context.Test on tfs.IdTest equals t.IdTest
+            where tfs.IdTestForStudent == idTestForStudent
+            select new TestForStudentDetailsDTO
+            {
+                IdTestForStudent = tfs.IdTestForStudent,
+                Title = t.Title,
+                Assignment = (
+                    from a in _context.Assignment
+                    join sa in _context.StudentAnswer
+                        on a.IdAssignment equals sa.IdAssignment into answers
+                    from sa in answers.DefaultIfEmpty()
+                    join m in _context.Mark on sa.IdMark equals m.IdMark into marks
+                    from m in marks.DefaultIfEmpty()
+                    where a.IdTest == tfs.IdTest
+                    select new StudentAnswerAndMarkDTO
+                    {
+                        IdStudentAnswer = sa != null ? sa.IdStudentAnswer : 0,
+                        StudentAnswer = sa != null ? sa.Answer : null,
+                        IdAssignment = a.IdAssignment,
+                        AnswerAssignment = a.Answer,
+                        Content = a.Content,
+                        IdMark = m != null ? m.IdMark : 0,
+                        Description = m != null ? m.Description : null,
+                        Value = m != null ? m.Value : false
+                    }
+                ).ToList()
+            }
+        ).FirstOrDefaultAsync();
+
+        return testForStudentDetails;
     }
 }

@@ -6,5 +6,6 @@ public class TestForStudentDTO
     public string Title { get; set; }
     public int NumberOfAssignments { get; set; }
     public string Fullname { get; set; }
-    public DateTime CreationTime { get; set; }
+    public string CreationTime { get; set; }
+    public int IdTestForStudent { get; set; }
 }

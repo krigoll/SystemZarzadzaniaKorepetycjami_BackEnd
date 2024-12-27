@@ -16,7 +16,18 @@ public class TestForStudentController : ControllerBase
         _testForStudentService = testForStudentService;
     }
 
-    [HttpGet("{idTeacher}")]
+    [HttpGet("{idTestForStudent}")]
+    [Authorize]
+    public async Task<IActionResult> GetTestForStudentDetails(int idTestForStudent)
+    {
+        var test = await _testForStudentService.GetTestForStudentDetails(idTestForStudent);
+
+        return test == null
+            ? StatusCode(StatusCodes.Status400BadRequest, "Invalid Test For Student Id")
+            : Ok(test);
+    }
+
+    [HttpGet("teacher/{idTeacher}")]
     [Authorize]
     public async Task<IActionResult> GetGivenTestsByTeacherAsync(int idTeacher)
     {
@@ -27,7 +38,7 @@ public class TestForStudentController : ControllerBase
             : Ok(tests);
     }
 
-    [HttpGet("{idStudent}")]
+    [HttpGet("student/{idStudent}")]
     [Authorize]
     public async Task<IActionResult> GetGivenTestsByStudentAsync(int idStudent)
     {

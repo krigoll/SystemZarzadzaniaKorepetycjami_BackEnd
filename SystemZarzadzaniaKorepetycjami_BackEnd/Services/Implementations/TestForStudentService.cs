@@ -67,4 +67,9 @@ public class TestForStudentService : ITestForStudentService
             return TestForStudentStatus.SERVER_ERROR;
         }
     }
+
+    public async Task<TestForStudentDetailsDTO> GetTestForStudentDetails(int idTestForStudent)
+    {
+        return await _testForStudentRepository.GetTestForStudentDetails(idTestForStudent);
+    }
 }

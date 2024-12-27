@@ -8,4 +8,5 @@ public interface ITestForStudentRepository
     public Task AddTestForStudent(TestForStudent testForStudent);
     public Task<List<TestForStudentDTO>> GetTestsForStudent(int idStudent);
     public Task<List<TestForStudentDTO>> GetTestsForTeacher(int idTeacher);
+    public Task<TestForStudentDetailsDTO> GetTestForStudentDetails(int idTestForStudent);
 }
