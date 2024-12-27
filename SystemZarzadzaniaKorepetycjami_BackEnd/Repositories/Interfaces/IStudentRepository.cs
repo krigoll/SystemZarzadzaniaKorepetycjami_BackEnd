@@ -10,5 +10,6 @@ public interface IStudentRepository
     public Task<bool> isStudentByEmail(string email);
     public Task RemoveStudentAsync(Student student);
     public Task<Student> GetStudentByEmailAsync(string email);
+    public Task<Student> GetStudentByIdAsync(int idStudent);
     public Task<List<StudentDTO>> GetStudentsThatTeachOrWillByTeachTeacherByTeacherIdAsync(int idTeacher);
 }

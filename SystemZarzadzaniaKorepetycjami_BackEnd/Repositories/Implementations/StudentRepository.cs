@@ -49,6 +49,11 @@ namespace SystemZarzadzaniaKorepetycjami_BackEnd.Repositories.Implementations
             return await _context.Student.FirstOrDefaultAsync(s => s.IdStudent == person.IdPerson);
         }
 
+        public async Task<Student> GetStudentByIdAsync(int idStudent)
+        {
+            return await _context.Student.FirstOrDefaultAsync(s => s.IdStudent == idStudent);
+        }
+
         public async Task<List<StudentDTO>> GetStudentsThatTeachOrWillByTeachTeacherByTeacherIdAsync(int idTeacher)
         {
             var students = await (
