@@ -30,8 +30,7 @@ public class StudentAnswerService : IStudentAnswerService
             var studentA = new List<StudentAnswer>();
 
             foreach (var sa in studentAnswer)
-                if (sa.Answer != null)
-                    studentA.Add(new StudentAnswer(sa.Answer, idTestForStudent, sa.IdAssignment));
+                studentA.Add(new StudentAnswer(sa.Answer, idTestForStudent, sa.IdAssignment));
 
             await _studentAnswerRepository.CreateAndUpdateStudentAnswer(idTestForStudent, studentA);
 

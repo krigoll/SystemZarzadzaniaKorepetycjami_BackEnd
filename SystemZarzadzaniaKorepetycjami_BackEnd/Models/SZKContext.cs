@@ -181,6 +181,7 @@ namespace SystemZarzadzaniaKorepetycjami_BackEnd.Models
                 entity.HasOne(d => d.IdStudentAnswerNavigation)
                     .WithMany(p => p.Mark)
                     .HasForeignKey(d => d.IdStudentAnswer)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_Mark_StudentAnswer");
             });
 

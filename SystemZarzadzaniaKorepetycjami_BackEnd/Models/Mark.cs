@@ -1,11 +1,11 @@
 ﻿namespace SystemZarzadzaniaKorepetycjami_BackEnd.Models
 {
-    public class Mark
+    public partial class Mark
     {
         public int IdMark { get; }
-        public string Description { get; }
-        public bool Value { get; }
-        public int? IdStudentAnswer { get; }
+        public string Description { get; private set; }
+        public bool Value { get; private set; }
+        public int IdStudentAnswer { get; private set; }
 
         public virtual StudentAnswer IdStudentAnswerNavigation { get; }
     }
