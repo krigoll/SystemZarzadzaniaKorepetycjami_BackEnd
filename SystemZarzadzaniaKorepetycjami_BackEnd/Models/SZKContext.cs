@@ -177,6 +177,11 @@ namespace SystemZarzadzaniaKorepetycjami_BackEnd.Models
                     .IsRequired()
                     .HasMaxLength(100)
                     .IsUnicode(false);
+
+                entity.HasOne(d => d.IdStudentAnswerNavigation)
+                    .WithMany(p => p.Mark)
+                    .HasForeignKey(d => d.IdStudentAnswer)
+                    .HasConstraintName("FK_Mark_StudentAnswer");
             });
 
             modelBuilder.Entity<Message>(entity =>
@@ -341,12 +346,6 @@ namespace SystemZarzadzaniaKorepetycjami_BackEnd.Models
                     .HasForeignKey(d => d.IdAssignment)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("Student_Answer_Task");
-
-                entity.HasOne(d => d.IdMarkNavigation)
-                    .WithMany(p => p.StudentAnswer)
-                    .HasForeignKey(d => d.IdMark)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("Student_Answer_Mark");
 
                 entity.HasOne(d => d.IdTestForStudentNavigation)
                     .WithMany(p => p.StudentAnswer)

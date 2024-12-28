@@ -104,7 +104,7 @@ public class TestForStudentRepository : ITestForStudentRepository
                     join sa in _context.StudentAnswer
                         on a.IdAssignment equals sa.IdAssignment into answers
                     from sa in answers.DefaultIfEmpty()
-                    join m in _context.Mark on sa.IdMark equals m.IdMark into marks
+                    join m in _context.Mark on sa.IdStudentAnswer equals m.IdStudentAnswer into marks
                     from m in marks.DefaultIfEmpty()
                     where a.IdTest == tfs.IdTest
                     select new StudentAnswerAndMarkDTO
@@ -123,5 +123,12 @@ public class TestForStudentRepository : ITestForStudentRepository
         ).FirstOrDefaultAsync();
 
         return testForStudentDetails;
+    }
+
+    public async Task<TestForStudent> GetTestForStudent(int idTestForStudent)
+    {
+        var testForStudent =
+            await _context.TestForStudent.FirstOrDefaultAsync(tfs => tfs.IdTestForStudent == idTestForStudent);
+        return testForStudent;
     }
 }
