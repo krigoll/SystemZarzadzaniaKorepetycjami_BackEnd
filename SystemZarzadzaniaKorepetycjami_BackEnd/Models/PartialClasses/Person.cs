@@ -66,7 +66,7 @@ public partial class Person
     public void SetPassword(string password)
     {
         if (string.IsNullOrWhiteSpace(password) || !IsValidPassword(password))
-            throw new ArgumentException("Invalid email address.");
+            throw new ArgumentException("Invalid password.");
 
         var workFactor = 12;
         Password = BCrypt.Net.BCrypt.HashPassword(password, workFactor);

@@ -25,6 +25,7 @@ namespace SystemZarzadzaniaKorepetycjami_BackEnd.Models
         public virtual DbSet<Person> Person { get; set; }
         public virtual DbSet<RefreshTokens> RefreshTokens { get; set; }
         public virtual DbSet<Report> Report { get; set; }
+        public virtual DbSet<RessetPassword> RessetPassword { get; set; }
         public virtual DbSet<Student> Student { get; set; }
         public virtual DbSet<StudentAnswer> StudentAnswer { get; set; }
         public virtual DbSet<Subject> Subject { get; set; }
@@ -315,6 +316,25 @@ namespace SystemZarzadzaniaKorepetycjami_BackEnd.Models
                     .HasForeignKey(d => d.Sender)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("Complaint_Person");
+            });
+
+            modelBuilder.Entity<RessetPassword>(entity =>
+            {
+                entity.HasKey(e => e.IdRessetPassword)
+                    .HasName("PK__RessetPa__D67734B120DDC79F");
+
+                entity.Property(e => e.Code)
+                    .IsRequired()
+                    .HasMaxLength(6)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.ExpiryDate).HasColumnType("datetime");
+
+                entity.HasOne(d => d.IdPersonNavigation)
+                    .WithMany(p => p.RessetPassword)
+                    .HasForeignKey(d => d.IdPerson)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK__RessetPas__IdPer__3C34F16F");
             });
 
             modelBuilder.Entity<Student>(entity =>

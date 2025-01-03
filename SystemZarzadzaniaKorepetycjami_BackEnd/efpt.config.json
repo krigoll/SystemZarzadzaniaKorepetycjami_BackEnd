@@ -67,6 +67,10 @@
          "ObjectType": 0
       },
       {
+         "Name": "[dbo].[RessetPassword]",
+         "ObjectType": 0
+      },
+      {
          "Name": "[dbo].[Student]",
          "ObjectType": 0
       },

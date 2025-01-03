@@ -106,6 +106,8 @@ builder.Services.AddScoped<IStudentAnswerService, StudentAnswerService>();
 builder.Services.AddScoped<IStudentAnswerRepository, StudentAnswerRepository>();
 builder.Services.AddScoped<IMarkRepository, MarkRepository>();
 builder.Services.AddScoped<IMarkService, MarkService>();
+builder.Services.AddScoped<IResetPasswordService, ResetPasswordService>();
+builder.Services.AddScoped<IResetPasswordRepository, ResetPasswordRepository>();
 
 builder.Services.AddDbContext<SZKContext>(options =>
 {
