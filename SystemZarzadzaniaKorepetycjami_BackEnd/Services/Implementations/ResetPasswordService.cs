@@ -51,6 +51,7 @@ public class ResetPasswordService : IResetPasswordService
             var person = await _personRepository.FindPersonByIdAsync(idPerson);
             person.SetPassword(password);
             await _personRepository.UpdateUserAsync(person);
+            await _resetPasswordRepository.RemoveCode(code);
             return ResetStatus.OK;
         }
         catch (Exception e)

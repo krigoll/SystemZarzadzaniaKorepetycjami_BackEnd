@@ -15,6 +15,10 @@ public class ResetPasswordRepository : IResetPasswordRepository
 
     public async Task AddAsync(RessetPassword ressetPassword)
     {
+        var existingRecords = _context.RessetPassword
+            .Where(rp => rp.IdPerson == ressetPassword.IdPerson);
+
+        _context.RessetPassword.RemoveRange(existingRecords);
         await _context.RessetPassword.AddAsync(ressetPassword);
         await _context.SaveChangesAsync();
     }
@@ -26,5 +30,12 @@ public class ResetPasswordRepository : IResetPasswordRepository
         if (resetPassword == null) return -1;
 
         return resetPassword.IdPerson;
+    }
+
+    public async Task RemoveCode(string code)
+    {
+        var resetPassword = await _context.RessetPassword.FirstOrDefaultAsync(rp => rp.Code == code);
+        _context.RessetPassword.Remove(resetPassword);
+        await _context.SaveChangesAsync();
     }
 }
