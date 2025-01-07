@@ -8,6 +8,9 @@ public partial class Mark
     {
         SetDescription(description);
         Value = value;
+
+        if (idStudentAnswer < 0) throw new ArgumentException("Invalid Id Student Answer");
+
         IdStudentAnswer = idStudentAnswer;
     }
 
