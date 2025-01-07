@@ -59,4 +59,13 @@ public class OpinionRepository : IOpinionRepository
         _context.Opinion.Remove(opinion);
         await _context.SaveChangesAsync();
     }
+
+    public async Task DeleteOpinionsByPersonId(int idPerson)
+    {
+        var opinions = await _context.Opinion
+            .Where(opinion => opinion.IdTeacher == idPerson || opinion.IdStudent == idPerson)
+            .ToListAsync();
+        _context.Opinion.RemoveRange(opinions);
+        await _context.SaveChangesAsync();
+    }
 }

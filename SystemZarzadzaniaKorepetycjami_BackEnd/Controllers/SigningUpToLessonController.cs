@@ -1,15 +1,8 @@
-using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
-using System.Security.Cryptography;
-using System.Text;
-using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.IdentityModel.Tokens;
-using Newtonsoft.Json;
 using SystemZarzadzaniaKorepetycjami_BackEnd.DTOs;
 using SystemZarzadzaniaKorepetycjami_BackEnd.Enums;
 using SystemZarzadzaniaKorepetycjami_BackEnd.Services.Interfaces;
-using Microsoft.AspNetCore.Authorization;
 
 namespace SystemZarzadzaniaKorepetycjami_BackEnd.Controllers;
 
@@ -17,7 +10,6 @@ namespace SystemZarzadzaniaKorepetycjami_BackEnd.Controllers;
 [Route("api/singUpToLesson")]
 public class SingUpToLesson : ControllerBase
 {
-
     private readonly ISingUpToLessonService _singUpToLessonService;
 
     public SingUpToLesson(ISingUpToLessonService singUpToLessonService)
@@ -46,14 +38,16 @@ public class SingUpToLesson : ControllerBase
                 return StatusCode(StatusCodes.Status500InternalServerError, "Database Error");
                 break;
             case SingUpToLessonStatus.INVALID_LESSON:
-                return StatusCode(StatusCodes.Status400BadRequest, "Invalid Lesson"); 
-                break;    
+                return StatusCode(StatusCodes.Status400BadRequest, "Invalid Lesson");
+                break;
             case SingUpToLessonStatus.CONFLICT_LESSON:
-                return StatusCode(StatusCodes.Status409Conflict, "Conflict with another lesson"); 
-                break;  
+                return StatusCode(StatusCodes.Status409Conflict, "Conflict with another lesson");
+                break;
+            case SingUpToLessonStatus.NOT_AVAILABILITY:
+                return StatusCode(StatusCodes.Status422UnprocessableEntity, "Teacher is not available");
+                break;
             default:
                 return StatusCode(StatusCodes.Status500InternalServerError, "Database Error");
         }
-        
     }
 }
