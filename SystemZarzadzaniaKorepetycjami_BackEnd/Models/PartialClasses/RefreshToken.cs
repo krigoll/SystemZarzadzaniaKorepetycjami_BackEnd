@@ -2,13 +2,13 @@
 
 namespace SystemZarzadzaniaKorepetycjami_BackEnd.Models;
 
-public partial class RefreshTokens
+public partial class RefreshToken
 {
-    public RefreshTokens(int idPerson, string token, DateTime expiryDate, DateTime createdDate)
+    public RefreshToken(int idPerson, string token, DateTime expireDate, DateTime createdDate)
     {
         SetIdPerson(idPerson);
         SetToken(token);
-        SetExpiryDate(expiryDate);
+        SetExpiryDate(expireDate);
         SetCreatedDate(createdDate);
     }
 
@@ -28,7 +28,7 @@ public partial class RefreshTokens
 
     public void SetExpiryDate(DateTime expiryDate)
     {
-        ExpiryDate = expiryDate;
+        ExpireDate = expiryDate;
     }
 
     public void SetCreatedDate(DateTime createdDate)

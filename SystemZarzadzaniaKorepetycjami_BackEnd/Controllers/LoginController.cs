@@ -23,6 +23,9 @@ public class LoginController : ControllerBase
 
         if (status == LoginStatus.USER_NOT_EXISTS)
             return StatusCode(StatusCodes.Status401Unauthorized, "Unauthorized");
+        
+        if (status == LoginStatus.USER_BANED)
+            return StatusCode(StatusCodes.Status403Forbidden, "User is banned");
 
         if (status == LoginStatus.DATABASE_ERROR)
             return StatusCode(StatusCodes.Status500InternalServerError, "Database Error");

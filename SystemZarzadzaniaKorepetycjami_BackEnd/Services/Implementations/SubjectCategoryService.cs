@@ -19,10 +19,10 @@ public class SubjectCategoryService : ISubjectCategoryService
     {
         try
         {
-            var subject = await _subjectRepository.FindSubjectByIdAsync(subjectCategoryDTO.IdSubject);
+            var subject = await _subjectRepository.FindSubjectByNameAsync(subjectCategoryDTO.SubjectName);
             if (subject == null) return SubjectCategoryStatus.INVALID_SUBJECT_ID;
 
-            var newSubjectCategory = new SubjectCategory(subjectCategoryDTO.IdSubject, subjectCategoryDTO.Name);
+            var newSubjectCategory = new SubjectCategory(subjectCategoryDTO.SubjectCategoryName, subject.IdSubject);
 
             await _subjectCategoryRepository.CreateSubjectCategoryAsync(newSubjectCategory);
 
@@ -40,22 +40,15 @@ public class SubjectCategoryService : ISubjectCategoryService
         }
     }
 
-    public async Task<SubjectCategoryStatus> UpdateSubjectCategoryAsync(int idSubjectCategory,
-        SubjectCategoryDTO subjectCategoryDTO)
+    public async Task<SubjectCategoryStatus> DeleteSubjectCategoryAsync(string subjectName,
+        string subjectCategoryName)
     {
         try
         {
-            var updateSubjectCategory =
-                await _subjectCategoryRepository.FindSubjectCategoryByIdAsync(idSubjectCategory);
-            if (updateSubjectCategory == null) return SubjectCategoryStatus.INVALID_SUBJECT_CATEGORY_ID;
-
-            var subject = await _subjectRepository.FindSubjectByIdAsync(subjectCategoryDTO.IdSubject);
+            var subject = await _subjectRepository.FindSubjectByNameAsync(subjectName);
             if (subject == null) return SubjectCategoryStatus.INVALID_SUBJECT_ID;
 
-            updateSubjectCategory.SetName(subjectCategoryDTO.Name);
-            updateSubjectCategory.SetIdSubject(subjectCategoryDTO.IdSubject);
-
-            await _subjectCategoryRepository.UpdateSubjectCategoryAsync(updateSubjectCategory);
+            await _subjectCategoryRepository.DeleteSubjectCategoryAsync(subject.IdSubject, subjectCategoryName);
 
             return SubjectCategoryStatus.OK;
         }

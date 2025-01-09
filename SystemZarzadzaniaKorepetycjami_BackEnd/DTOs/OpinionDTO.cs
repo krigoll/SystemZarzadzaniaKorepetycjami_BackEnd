@@ -4,4 +4,5 @@ public class OpinionDTO
     public string Content { get; set; }
     public int IdPerson { get; set; }
     public int IdOpinion { get; set; }
+    public string FullName { get; set; }
 }

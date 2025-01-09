@@ -4,7 +4,7 @@ namespace SystemZarzadzaniaKorepetycjami_BackEnd.Models;
 
 public partial class SubjectCategory
 {
-    public SubjectCategory(int idSubject, string name)
+    public SubjectCategory(string name, int idSubject)
     {
         SetIdSubject(idSubject);
         SetName(name);

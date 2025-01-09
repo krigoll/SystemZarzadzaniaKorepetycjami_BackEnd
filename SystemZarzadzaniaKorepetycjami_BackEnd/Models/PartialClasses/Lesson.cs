@@ -2,7 +2,7 @@
 
 public partial class Lesson
 {
-    public Lesson(int? idStudent, int? idTeacher, int idSubjectLevel, int idLessonStatus, DateTime startDate,
+    public Lesson(int? idStudent, int? idTeacher, int? idSubjectLevel, int idLessonStatus, DateTime startDate,
         int durationInMinutes)
     {
         SetIdStudent(idStudent);
@@ -27,9 +27,9 @@ public partial class Lesson
         IdTeacher = idTeacher;
     }
 
-    public void SetIdSubjectLevel(int idSubjectLevel)
+    public void SetIdSubjectLevel(int? idSubjectLevel)
     {
-        if (idSubjectLevel <= 0)
+        if (idSubjectLevel != null && idSubjectLevel <= 0)
             throw new ArgumentException("Invalid subject level ID");
         IdSubjectLevel = idSubjectLevel;
     }

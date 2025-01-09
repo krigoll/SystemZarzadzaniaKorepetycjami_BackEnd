@@ -1,5 +1,6 @@
 public class SubjectLevelDTO
 {
-    public int IdSubjectCategory { get; set; }
-    public string Name { get; set; }
+    public string SubjectName { get; set; }
+    public string SubjectCategoryName { get; set; }
+    public string SubjectLevelName { get; set; }
 }

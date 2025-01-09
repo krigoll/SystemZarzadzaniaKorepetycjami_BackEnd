@@ -1,19 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace SystemZarzadzaniaKorepetycjami_BackEnd.Models
+﻿namespace SystemZarzadzaniaKorepetycjami_BackEnd.Models
 {
-public partial class Mark
-{
-    private Mark()
+    public partial class Mark
     {
-        StudentAnswer = new HashSet<StudentAnswer>();
+        public int IdMark { get; }
+        public string Description { get; private set; }
+        public bool Value { get; private set; }
+        public int IdStudentAnswer { get; private set; }
+
+        public virtual StudentAnswer IdStudentAnswerNavigation { get; }
     }
-
-    public int IdMark { get; private set; }
-    public string Description { get; private set; }
-    public bool Value { get; private set; }
-
-            public virtual ICollection<StudentAnswer> StudentAnswer { get; private set; }
-}
 }

@@ -52,4 +52,21 @@ public class AvailabilityRepository : IAvailabilityRepository
 
         await _context.SaveChangesAsync();
     }
+
+    public async Task<bool> IsThisLessonInAvailabilityTime(Lesson lesson)
+    {
+        var dayOfWeek = (int)lesson.StartDate.DayOfWeek;
+
+        var teacherAvailability = await _context.Availability
+            .FirstOrDefaultAsync(a => a.IdTeacher == lesson.IdTeacher && a.IdDayOfTheWeek == dayOfWeek);
+
+        if (teacherAvailability == null)
+            return false;
+
+        var lessonStartTime = lesson.StartDate;
+        var lessonEndTime = lessonStartTime.AddMinutes(lesson.DurationInMinutes);
+
+        return lessonStartTime.TimeOfDay >= teacherAvailability.StartTime.ToTimeSpan() &&
+               lessonEndTime.TimeOfDay <= teacherAvailability.EndTime.ToTimeSpan();
+    }
 }

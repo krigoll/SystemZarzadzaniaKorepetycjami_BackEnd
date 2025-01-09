@@ -1,42 +1,40 @@
-﻿using System;
-using System.Collections.Generic;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata;
+﻿using Microsoft.EntityFrameworkCore;
 
 namespace SystemZarzadzaniaKorepetycjami_BackEnd.Models
 {
-public partial class SZKContext : DbContext
-{
-    public virtual DbSet<Administrator> Administrator { get; set; }
-    public virtual DbSet<Assignment> Assignment { get; set; }
-    public virtual DbSet<Availability> Availability { get; set; }
-    public virtual DbSet<Ban> Ban { get; set; }
-    public virtual DbSet<DayOfTheWeek> DayOfTheWeek { get; set; }
-    public virtual DbSet<Lesson> Lesson { get; set; }
-    public virtual DbSet<LessonStatus> LessonStatus { get; set; }
-    public virtual DbSet<Mark> Mark { get; set; }
-    public virtual DbSet<Message> Message { get; set; }
-    public virtual DbSet<Opinion> Opinion { get; set; }
-    public virtual DbSet<Person> Person { get; set; }
-    public virtual DbSet<RefreshTokens> RefreshTokens { get; set; }
-    public virtual DbSet<Report> Report { get; set; }
-    public virtual DbSet<Student> Student { get; set; }
-    public virtual DbSet<StudentAnswer> StudentAnswer { get; set; }
-    public virtual DbSet<Subject> Subject { get; set; }
-    public virtual DbSet<SubjectCategory> SubjectCategory { get; set; }
-    public virtual DbSet<SubjectLevel> SubjectLevel { get; set; }
-    public virtual DbSet<Teacher> Teacher { get; set; }
-    public virtual DbSet<TeacherSalary> TeacherSalary { get; set; }
-    public virtual DbSet<Test> Test { get; set; }
-    public virtual DbSet<TestForStudent> TestForStudent { get; set; }
+    public partial class SZKContext : DbContext
+    {
+        public SZKContext()
+        {
+        }
 
-public SZKContext()
-{
-}
+        public SZKContext(DbContextOptions<SZKContext> options) : base(options)
+        {
+        }
 
-public SZKContext(DbContextOptions<SZKContext> options) : base(options)
-{
-}
+        public virtual DbSet<Administrator> Administrator { get; set; }
+        public virtual DbSet<Assignment> Assignment { get; set; }
+        public virtual DbSet<Availability> Availability { get; set; }
+        public virtual DbSet<Ban> Ban { get; set; }
+        public virtual DbSet<DayOfTheWeek> DayOfTheWeek { get; set; }
+        public virtual DbSet<Lesson> Lesson { get; set; }
+        public virtual DbSet<LessonStatus> LessonStatus { get; set; }
+        public virtual DbSet<Mark> Mark { get; set; }
+        public virtual DbSet<Message> Message { get; set; }
+        public virtual DbSet<Opinion> Opinion { get; set; }
+        public virtual DbSet<Person> Person { get; set; }
+        public virtual DbSet<RefreshToken> RefreshToken { get; set; }
+        public virtual DbSet<Report> Report { get; set; }
+        public virtual DbSet<ResetPassword> ResetPassword { get; set; }
+        public virtual DbSet<Student> Student { get; set; }
+        public virtual DbSet<StudentAnswer> StudentAnswer { get; set; }
+        public virtual DbSet<Subject> Subject { get; set; }
+        public virtual DbSet<SubjectCategory> SubjectCategory { get; set; }
+        public virtual DbSet<SubjectLevel> SubjectLevel { get; set; }
+        public virtual DbSet<Teacher> Teacher { get; set; }
+        public virtual DbSet<TeacherSalary> TeacherSalary { get; set; }
+        public virtual DbSet<Test> Test { get; set; }
+        public virtual DbSet<TestForStudent> TestForStudent { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -67,6 +65,11 @@ public SZKContext(DbContextOptions<SZKContext> options) : base(options)
                     .IsRequired()
                     .HasMaxLength(500)
                     .IsUnicode(false);
+
+                entity.HasOne(d => d.IdTestNavigation)
+                    .WithMany(p => p.Assignment)
+                    .HasForeignKey(d => d.IdTest)
+                    .HasConstraintName("Assignment_Test");
             });
 
             modelBuilder.Entity<Availability>(entity =>
@@ -94,8 +97,6 @@ public SZKContext(DbContextOptions<SZKContext> options) : base(options)
             {
                 entity.HasKey(e => e.IdBan)
                     .HasName("Ban_pk");
-
-                entity.Property(e => e.IdBan).ValueGeneratedNever();
 
                 entity.Property(e => e.Reason)
                     .IsRequired()
@@ -145,7 +146,7 @@ public SZKContext(DbContextOptions<SZKContext> options) : base(options)
                 entity.HasOne(d => d.IdSubjectLevelNavigation)
                     .WithMany(p => p.Lesson)
                     .HasForeignKey(d => d.IdSubjectLevel)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .OnDelete(DeleteBehavior.SetNull)
                     .HasConstraintName("Lesson_Subject");
 
                 entity.HasOne(d => d.IdTeacherNavigation)
@@ -176,6 +177,11 @@ public SZKContext(DbContextOptions<SZKContext> options) : base(options)
                     .IsRequired()
                     .HasMaxLength(100)
                     .IsUnicode(false);
+
+                entity.HasOne(d => d.IdStudentAnswerNavigation)
+                    .WithMany(p => p.Mark)
+                    .HasForeignKey(d => d.IdStudentAnswer)
+                    .HasConstraintName("Mark_Student_Answer");
             });
 
             modelBuilder.Entity<Message>(entity =>
@@ -261,18 +267,18 @@ public SZKContext(DbContextOptions<SZKContext> options) : base(options)
                     .IsUnicode(false);
             });
 
-            modelBuilder.Entity<RefreshTokens>(entity =>
+            modelBuilder.Entity<RefreshToken>(entity =>
             {
                 entity.HasKey(e => e.IdJwt)
-                    .HasName("Refresh_Tokens_pk");
+                    .HasName("Refresh_Token_pk");
 
-                entity.ToTable("Refresh_Tokens");
+                entity.ToTable("Refresh_Token");
 
                 entity.Property(e => e.IdJwt).HasColumnName("IdJWT");
 
                 entity.Property(e => e.CreatedDate).HasColumnType("datetime");
 
-                entity.Property(e => e.ExpiryDate).HasColumnType("datetime");
+                entity.Property(e => e.ExpireDate).HasColumnType("datetime");
 
                 entity.Property(e => e.Token)
                     .IsRequired()
@@ -280,7 +286,7 @@ public SZKContext(DbContextOptions<SZKContext> options) : base(options)
                     .IsUnicode(false);
 
                 entity.HasOne(d => d.IdPersonNavigation)
-                    .WithMany(p => p.RefreshTokens)
+                    .WithMany(p => p.RefreshToken)
                     .HasForeignKey(d => d.IdPerson)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("JWT_Person");
@@ -308,6 +314,27 @@ public SZKContext(DbContextOptions<SZKContext> options) : base(options)
                     .HasForeignKey(d => d.Sender)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("Complaint_Person");
+            });
+
+            modelBuilder.Entity<ResetPassword>(entity =>
+            {
+                entity.HasKey(e => e.IdResetPassword)
+                    .HasName("Reset_Password_pk");
+
+                entity.ToTable("Reset_Password");
+
+                entity.Property(e => e.Code)
+                    .IsRequired()
+                    .HasMaxLength(6)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.ExpireDate).HasColumnType("datetime");
+
+                entity.HasOne(d => d.IdPersonNavigation)
+                    .WithMany(p => p.ResetPassword)
+                    .HasForeignKey(d => d.IdPerson)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("RessetPassword_Person");
             });
 
             modelBuilder.Entity<Student>(entity =>
@@ -338,14 +365,7 @@ public SZKContext(DbContextOptions<SZKContext> options) : base(options)
                 entity.HasOne(d => d.IdAssignmentNavigation)
                     .WithMany(p => p.StudentAnswer)
                     .HasForeignKey(d => d.IdAssignment)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("Student_Answer_Task");
-
-                entity.HasOne(d => d.IdMarkNavigation)
-                    .WithMany(p => p.StudentAnswer)
-                    .HasForeignKey(d => d.IdMark)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("Student_Answer_Mark");
 
                 entity.HasOne(d => d.IdTestForStudentNavigation)
                     .WithMany(p => p.StudentAnswer)
@@ -380,7 +400,6 @@ public SZKContext(DbContextOptions<SZKContext> options) : base(options)
                 entity.HasOne(d => d.IdSubjectNavigation)
                     .WithMany(p => p.SubjectCategory)
                     .HasForeignKey(d => d.IdSubject)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("Subject_Category_Subject");
             });
 
@@ -399,7 +418,6 @@ public SZKContext(DbContextOptions<SZKContext> options) : base(options)
                 entity.HasOne(d => d.IdSubjectCategoryNavigation)
                     .WithMany(p => p.SubjectLevel)
                     .HasForeignKey(d => d.IdSubjectCategory)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("Subject_Level_Subject_Category");
             });
 
@@ -429,7 +447,6 @@ public SZKContext(DbContextOptions<SZKContext> options) : base(options)
                 entity.HasOne(d => d.IdSubjectNavigation)
                     .WithMany(p => p.TeacherSalary)
                     .HasForeignKey(d => d.IdSubject)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("Teacher_Salary_Subject");
 
                 entity.HasOne(d => d.IdTeacherNavigation)
@@ -454,19 +471,6 @@ public SZKContext(DbContextOptions<SZKContext> options) : base(options)
                     .HasForeignKey(d => d.IdTeacher)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("Test_Teacher");
-
-                entity.HasMany(d => d.IdAssignment)
-                    .WithMany(p => p.IdTest)
-                    .UsingEntity<Dictionary<string, object>>(
-                        "AssignmentOnTest",
-                        l => l.HasOne<Assignment>().WithMany().HasForeignKey("IdAssignment").OnDelete(DeleteBehavior.ClientSetNull).HasConstraintName("Task_On_Test_Task"),
-                        r => r.HasOne<Test>().WithMany().HasForeignKey("IdTest").OnDelete(DeleteBehavior.ClientSetNull).HasConstraintName("Task_On_Test_Test"),
-                        j =>
-                        {
-                            j.HasKey("IdTest", "IdAssignment").HasName("Assignment_On_Test_pk");
-
-                            j.ToTable("Assignment_On_Test");
-                        });
             });
 
             modelBuilder.Entity<TestForStudent>(entity =>
@@ -487,7 +491,6 @@ public SZKContext(DbContextOptions<SZKContext> options) : base(options)
                 entity.HasOne(d => d.IdTestNavigation)
                     .WithMany(p => p.TestForStudent)
                     .HasForeignKey(d => d.IdTest)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("Test_For_Student_Test");
             });
 
@@ -495,5 +498,5 @@ public SZKContext(DbContextOptions<SZKContext> options) : base(options)
         }
 
         partial void OnModelCreatingPartial(ModelBuilder modelBuilder);
-}
+    }
 }

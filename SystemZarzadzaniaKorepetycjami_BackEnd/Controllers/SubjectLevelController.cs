@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 [ApiController]
@@ -11,10 +12,15 @@ public class SubjectLevelController : ControllerBase
         _subjectLevelService = subjectLevelService;
     }
 
-    //sprawdzenie czy jest adminem
-    [HttpPost]
-    public async Task<IActionResult> CreateSubjectLevelAsync(SubjectLevelDTO subjectLevelDTO)
+
+    [HttpPost("addSubjectLevel")]
+    [Authorize]
+    public async Task<IActionResult> CreateSubjectLevelAsync([FromBody] SubjectLevelDTO subjectLevelDTO)
     {
+        var isAdminClaim = HttpContext.User.FindFirst("isAdmin")?.Value;
+
+        if (isAdminClaim == null || !bool.TryParse(isAdminClaim, out var isAdmin) || !isAdmin) return Forbid();
+
         var subjectLevelStatus = await _subjectLevelService.CreateSubjectLevelAsync(subjectLevelDTO);
         switch (subjectLevelStatus)
         {
@@ -35,10 +41,17 @@ public class SubjectLevelController : ControllerBase
         }
     }
 
-    [HttpPut("{idSubjectLevel}")]
-    public async Task<IActionResult> UpdateSubjectLevelAsync(int idSubjectLevel, SubjectLevelDTO subjectLevelDTO)
+    [HttpDelete("{subjectName}/{subjectCategoryName}/{subjectLevelName}/delete")]
+    [Authorize]
+    public async Task<IActionResult> DeleteSubjectLevelAsync(string subjectName, string subjectCategoryName,
+        string subjectLevelName)
     {
-        var subjectLevelStatus = await _subjectLevelService.UpdateSubjectLevelAsync(idSubjectLevel, subjectLevelDTO);
+        var isAdminClaim = HttpContext.User.FindFirst("isAdmin")?.Value;
+
+        if (isAdminClaim == null || !bool.TryParse(isAdminClaim, out var isAdmin) || !isAdmin) return Forbid();
+
+        var subjectLevelStatus =
+            await _subjectLevelService.DeleteSubjectLevelAsync(subjectName, subjectCategoryName, subjectLevelName);
         switch (subjectLevelStatus)
         {
             case SubjectLevelStatus.OK:

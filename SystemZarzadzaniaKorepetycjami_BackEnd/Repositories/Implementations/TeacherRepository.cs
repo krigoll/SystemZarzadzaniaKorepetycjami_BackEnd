@@ -59,14 +59,28 @@ namespace SystemZarzadzaniaKorepetycjami_BackEnd.Repositories.Implementations
             var teachers = await (from teacher in _context.Teacher
                 join person in _context.Person on teacher.IdTeacher equals person.IdPerson
                 join salary in _context.TeacherSalary on teacher.IdTeacher equals salary.IdTeacher
+                join opinion in _context.Opinion on teacher.IdTeacher equals opinion.IdTeacher into opinionsGroup
                 where salary.IdSubject == subjectLevelId && !person.IsDeleted && teacher.IdTeacher != teacherE.IdTeacher
+                group new { person, salary, opinionsGroup } by new
+                {
+                    person.IdPerson,
+                    person.Name,
+                    person.Surname,
+                    salary.HourlyRate
+                }
+                into grouped
                 select new TeacherDTO
                 {
-                    IdPerson = person.IdPerson,
-                    Name = person.Name,
-                    Surname = person.Surname,
-                    HourlyRate = salary.HourlyRate,
-                    Image = person.Image == null ? null : Convert.ToBase64String(person.Image)
+                    IdPerson = grouped.Key.IdPerson,
+                    Name = grouped.Key.Name,
+                    Surname = grouped.Key.Surname,
+                    HourlyRate = grouped.Key.HourlyRate,
+                    Image = grouped.Select(g => g.person.Image).FirstOrDefault() == null
+                        ? null
+                        : Convert.ToBase64String(grouped.Select(g => g.person.Image).FirstOrDefault()),
+                    AvgOpinion = grouped.SelectMany(g => g.opinionsGroup)
+                        .Select(o => (float?)o.Rating)
+                        .Average() ?? 0
                 }).ToListAsync();
 
             return teachers;
@@ -77,18 +91,33 @@ namespace SystemZarzadzaniaKorepetycjami_BackEnd.Repositories.Implementations
             var teachers = await (from teacher in _context.Teacher
                 join person in _context.Person on teacher.IdTeacher equals person.IdPerson
                 join salary in _context.TeacherSalary on teacher.IdTeacher equals salary.IdTeacher
+                join opinion in _context.Opinion on teacher.IdTeacher equals opinion.IdTeacher into opinionsGroup
                 where salary.IdSubject == subjectLevelId && !person.IsDeleted
+                group new { person, salary, opinionsGroup } by new
+                {
+                    person.IdPerson,
+                    person.Name,
+                    person.Surname,
+                    salary.HourlyRate
+                }
+                into grouped
                 select new TeacherDTO
                 {
-                    IdPerson = person.IdPerson,
-                    Name = person.Name,
-                    Surname = person.Surname,
-                    HourlyRate = salary.HourlyRate,
-                    Image = person.Image == null ? null : Convert.ToBase64String(person.Image)
+                    IdPerson = grouped.Key.IdPerson,
+                    Name = grouped.Key.Name,
+                    Surname = grouped.Key.Surname,
+                    HourlyRate = grouped.Key.HourlyRate,
+                    Image = grouped.Select(g => g.person.Image).FirstOrDefault() == null
+                        ? null
+                        : Convert.ToBase64String(grouped.Select(g => g.person.Image).FirstOrDefault()),
+                    AvgOpinion = grouped.SelectMany(g => g.opinionsGroup)
+                        .Select(o => (float?)o.Rating)
+                        .Average() ?? 0
                 }).ToListAsync();
 
             return teachers;
         }
+
 
         public async Task<Teacher> GetTeacherByIdAsync(int teacherId)
         {
@@ -112,7 +141,7 @@ namespace SystemZarzadzaniaKorepetycjami_BackEnd.Repositories.Implementations
                           (student != null &&
                            student.IdStudent == idStudent &&
                            lesson.IdLessonStatus == 2 &&
-                           lesson.StartDate < DateTime.Today) ||
+                           lesson.StartDate < DateTime.Now) ||
                           (opinion != null && opinion.IdStudent == idStudent)
                       )
                 select new

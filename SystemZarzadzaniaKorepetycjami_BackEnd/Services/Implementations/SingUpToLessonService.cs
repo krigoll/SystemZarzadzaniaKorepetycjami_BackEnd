@@ -9,6 +9,7 @@ namespace SystemZarzadzaniaKorepetycjami_BackEnd.Services.Implementations
 {
     public class SingUpToLessonService : ISingUpToLessonService
     {
+        private readonly IAvailabilityRepository _availabilityRepository;
         private readonly ILessonRepository _lessonRepository;
 
         private readonly IPersonRepository _personRepository;
@@ -16,16 +17,18 @@ namespace SystemZarzadzaniaKorepetycjami_BackEnd.Services.Implementations
         private readonly ISubjectLevelRepository _subjectLevelRepository;
         private readonly ITeacherRepository _teacherRepository;
 
-        public SingUpToLessonService(IPersonRepository personRepository, ISubjectLevelRepository subjectLevelRepository,
-            ILessonRepository lessonRepository, IStudentRepository studentRepository,
-            ITeacherRepository teacherRepository)
+        public SingUpToLessonService(ILessonRepository lessonRepository, IPersonRepository personRepository,
+            IStudentRepository studentRepository, ISubjectLevelRepository subjectLevelRepository,
+            ITeacherRepository teacherRepository, IAvailabilityRepository availabilityRepository)
         {
-            _personRepository = personRepository;
-            _subjectLevelRepository = subjectLevelRepository;
             _lessonRepository = lessonRepository;
+            _personRepository = personRepository;
             _studentRepository = studentRepository;
+            _subjectLevelRepository = subjectLevelRepository;
             _teacherRepository = teacherRepository;
+            _availabilityRepository = availabilityRepository;
         }
+
 
         public async Task<SingUpToLessonStatus> SingUpToLessonAsync(SingUpToLessonDTO singUpToLessonDTO)
         {
@@ -67,6 +70,10 @@ namespace SystemZarzadzaniaKorepetycjami_BackEnd.Services.Implementations
                 var lesson = new Lesson(student.IdPerson, teacher.IdPerson, singUpToLessonDTO.SubjectLevelId,
                     lessonStatusId,
                     startDate, singUpToLessonDTO.DurationInMinutes);
+
+                if (!await _availabilityRepository.IsThisLessonInAvailabilityTime(lesson))
+                    return SingUpToLessonStatus.NOT_AVAILABILITY;
+
                 var isLessonConflictlessAsync = await _lessonRepository.IsLessonConflictlessAsync(lesson);
                 if (!isLessonConflictlessAsync)
                 {

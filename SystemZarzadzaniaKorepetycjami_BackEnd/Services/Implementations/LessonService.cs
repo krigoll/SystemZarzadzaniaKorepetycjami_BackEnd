@@ -33,6 +33,11 @@ public class LessonService : ILessonService
         return await _lessonRepository.changeLessonStatus(lessonId, 3);
     }
 
+    public async Task<bool> CancelLessonByIdAsync(int lessonId)
+    {
+        return await _lessonRepository.changeLessonStatus(lessonId, 4);
+    }
+
     public async Task<LessonDatailsDTO> GetLessonDetailsByIdAsync(int lessonId)
     {
         return await _lessonRepository.GetLessonDetailsByIdAsync(lessonId);

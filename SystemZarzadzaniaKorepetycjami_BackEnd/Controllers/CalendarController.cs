@@ -18,11 +18,20 @@ public class CalendarController : ControllerBase
     }
 
     [HttpGet]
-    //[Authorize]
+    [Authorize]
     public async Task<IActionResult> GetCalendarsByEmailAndDate(string email, string date)
     {
         try
         {
+
+            var isAdminClaim = HttpContext.User.FindFirst("isAdmin")?.Value;
+
+            if (!(isAdminClaim == null || !bool.TryParse(isAdminClaim, out var isAdmin) || !isAdmin)) 
+            {
+                var calendarsAdmin = await _calendarService.GetCalendarsFromTheWeekByDate(DateOnly.Parse(date));
+                return Ok(calendarsAdmin);
+            }
+
             var calendars =
                 await _calendarService.GetCalendarsFromTheWeekByDateAndTeacherEmail(DateOnly.Parse(date),email);
             return calendars == null

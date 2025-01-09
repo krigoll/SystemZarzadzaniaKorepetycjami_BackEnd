@@ -38,6 +38,36 @@ namespace SystemZarzadzaniaKorepetycjami_BackEnd.Repositories.Implementations
             return formattedResult;
         }
 
+        public async Task<List<SubjectDTO>> GetAllSubjects()
+        {
+            var result = await _context.Subject
+                .Include(s => s.SubjectCategory)
+                .ThenInclude(sc => sc.SubjectLevel)
+                .ToListAsync();
+
+            var formattedResult = result
+                .SelectMany(s => s.SubjectCategory.DefaultIfEmpty(),
+                    (s, sc) => new { SubjectName = s.Name, SubjectCategory = sc })
+                .SelectMany(
+                    sc => sc.SubjectCategory?.SubjectLevel.DefaultIfEmpty() ?? new List<SubjectLevel> { null },
+                    (sc, sl) => new
+                    {
+                        Subject = sc.SubjectName,
+                        Category = sc.SubjectCategory?.Name ?? "Brak Kategorii",
+                        Level = sl?.Name ?? "Brak Poziomu",
+                        LevelId = sl?.IdSubjectLevel
+                    }
+                )
+                .Select(x => new SubjectDTO
+                {
+                    SubjectFullName = $"{x.Subject}, {x.Category}, {x.Level}",
+                    SubjectLevelId = x.LevelId ?? 0
+                })
+                .ToList();
+
+            return formattedResult;
+        }
+
         public async Task<List<SubjectTeacherDTO>> GetAllFullSubjectsByTeacherId(int teacherId)
         {
             var result = await _context.SubjectLevel
@@ -71,15 +101,22 @@ namespace SystemZarzadzaniaKorepetycjami_BackEnd.Repositories.Implementations
             return subject;
         }
 
+        public async Task<Subject> FindSubjectByNameAsync(string subjectName)
+        {
+            var subject = await _context.Subject.FirstOrDefaultAsync(s => s.Name == subjectName);
+            return subject;
+        }
+
         public async Task CreateSubjectAsync(Subject subject)
         {
             await _context.Subject.AddAsync(subject);
             await _context.SaveChangesAsync();
         }
 
-        public async Task UpdateSubjectAsync(Subject subject)
+        public async Task DeleteSubjectByNameAsync(string subjectName)
         {
-            _context.Subject.Update(subject);
+            var subject = await _context.Subject.FirstOrDefaultAsync(s => s.Name == subjectName);
+            _context.Subject.Remove(subject);
             await _context.SaveChangesAsync();
         }
     }

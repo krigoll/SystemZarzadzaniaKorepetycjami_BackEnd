@@ -19,20 +19,20 @@ public class RefreshTokenRepository : IRefreshTokenRepository
         var person = await _context.Person.SingleOrDefaultAsync(p => p.Email == email && !p.IsDeleted);
         if (person == null) return;
 
-        var token = new RefreshTokens(person.IdPerson, refreshToken, DateTime.UtcNow.AddDays(7), DateTime.UtcNow);
+        var token = new RefreshToken(person.IdPerson, refreshToken, DateTime.UtcNow.AddDays(7), DateTime.UtcNow);
 
-        _context.RefreshTokens.Add(token);
+        _context.RefreshToken.Add(token);
         await _context.SaveChangesAsync();
     }
 
-    public async Task<RefreshTokens> GetRefreshTokenAsync(string refreshToken)
+    public async Task<RefreshToken> GetRefreshTokenAsync(string refreshToken)
     {
-        return await _context.RefreshTokens.SingleOrDefaultAsync(rt => rt.Token == refreshToken);
+        return await _context.RefreshToken.SingleOrDefaultAsync(rt => rt.Token == refreshToken);
     }
 
     public async Task ReplaceRefreshTokenAsync(string oldRefreshToken, string newRefreshToken)
     {
-        var token = await _context.RefreshTokens.SingleOrDefaultAsync(rt => rt.Token == oldRefreshToken);
+        var token = await _context.RefreshToken.SingleOrDefaultAsync(rt => rt.Token == oldRefreshToken);
         if (token == null) return;
 
         token.SetToken(newRefreshToken);
@@ -44,14 +44,14 @@ public class RefreshTokenRepository : IRefreshTokenRepository
 
     public async Task<string> GetUserEmailByRefreshTokenAsync(string refreshToken)
     {
-        var token = await _context.RefreshTokens.SingleOrDefaultAsync(rt => rt.Token == refreshToken);
+        var token = await _context.RefreshToken.SingleOrDefaultAsync(rt => rt.Token == refreshToken);
         var person = await _context.Person.SingleOrDefaultAsync(p => p.IdPerson == token.IdPerson);
         return person.Email;
     }
 
-    public async Task<RefreshTokens> GetRefreshTokenByEmailAsync(string email)
+    public async Task<RefreshToken> GetRefreshTokenByEmailAsync(string email)
     {
         var person = await _context.Person.SingleOrDefaultAsync(p => p.Email == email && !p.IsDeleted);
-        return await _context.RefreshTokens.SingleOrDefaultAsync(rt => rt.IdPerson == person.IdPerson);
+        return await _context.RefreshToken.SingleOrDefaultAsync(rt => rt.IdPerson == person.IdPerson);
     }
 }

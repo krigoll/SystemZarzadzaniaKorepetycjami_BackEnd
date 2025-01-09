@@ -12,6 +12,7 @@ namespace SystemZarzadzaniaKorepetycjami_BackEnd.Services.Implementations;
 
 public class LoginService : ILoginService
 {
+    private readonly IBanRepository _banRepository;
     private readonly IConfiguration _config;
     private readonly ILoginRepository _loginRepository;
     private readonly IPersonRepository _personRepository;
@@ -19,13 +20,14 @@ public class LoginService : ILoginService
     private readonly IRefreshTokenRepository _refreshTokenRepository;
 
     public LoginService(ILoginRepository loginRepository, IConfiguration config, IPersonRepository personRepository,
-        IRefreshTokenRepository refreshTokenRepository, IPersonService personService)
+        IRefreshTokenRepository refreshTokenRepository, IPersonService personService, IBanRepository banRepository)
     {
         _loginRepository = loginRepository;
         _config = config;
         _personRepository = personRepository;
         _refreshTokenRepository = refreshTokenRepository;
         _personService = personService;
+        _banRepository = banRepository;
     }
 
     public async Task<(LoginStatus, string, string)> LoginAsync(LoginDTO request)
@@ -45,7 +47,7 @@ public class LoginService : ILoginService
             refreshToken = GenerateRefreshToken();
             await _refreshTokenRepository.StoreRefreshTokenAsync(request.Email, refreshToken);
         }
-        else if (storedToken.ExpiryDate < DateTime.UtcNow)
+        else if (storedToken.ExpireDate < DateTime.UtcNow)
         {
             refreshToken = GenerateRefreshToken();
             await _refreshTokenRepository.ReplaceRefreshTokenAsync(storedToken.Token, refreshToken);
@@ -62,7 +64,7 @@ public class LoginService : ILoginService
     {
         var storedToken = await _refreshTokenRepository.GetRefreshTokenAsync(refreshToken);
 
-        if (storedToken == null || storedToken.ExpiryDate < DateTime.UtcNow)
+        if (storedToken == null || storedToken.ExpireDate < DateTime.UtcNow)
             return null;
 
         var validToken = await ValidateRefreshToken(storedToken.Token);
@@ -88,6 +90,9 @@ public class LoginService : ILoginService
         {
             var person = await _loginRepository.findPersonByEmailAsync(email);
             if (person == null) return LoginStatus.USER_NOT_EXISTS;
+
+            var isBanned = await _banRepository.IsUserBannedByEmail(email);
+            if (isBanned) return LoginStatus.USER_BANED;
 
             if (BCrypt.Net.BCrypt.Verify(password, person.Password)) return LoginStatus.USER_EXISTS;
 

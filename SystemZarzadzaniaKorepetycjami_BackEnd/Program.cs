@@ -92,6 +92,22 @@ builder.Services.AddScoped<IOpinionRepository, OpinionRepository>();
 builder.Services.AddScoped<ISubjectCategoryService, SubjectCategoryService>();
 builder.Services.AddScoped<ISubjectCategoryRepository, SubjectCategoryRepository>();
 builder.Services.AddScoped<ISubjectLevelService, SubjectLevelService>();
+builder.Services.AddScoped<IReportService, ReportService>();
+builder.Services.AddScoped<IReportRepository, ReportRepository>();
+builder.Services.AddScoped<IBanService, BanService>();
+builder.Services.AddScoped<IBanRepository, BanRepository>();
+builder.Services.AddScoped<ITestService, TestService>();
+builder.Services.AddScoped<ITestRepository, TestRepository>();
+builder.Services.AddScoped<IAssignmentRepository, AssignmentRepository>();
+builder.Services.AddScoped<IStudentService, StudentService>();
+builder.Services.AddScoped<ITestForStudentService, TestForStudentService>();
+builder.Services.AddScoped<ITestForStudentRepository, TestForStudentRepository>();
+builder.Services.AddScoped<IStudentAnswerService, StudentAnswerService>();
+builder.Services.AddScoped<IStudentAnswerRepository, StudentAnswerRepository>();
+builder.Services.AddScoped<IMarkRepository, MarkRepository>();
+builder.Services.AddScoped<IMarkService, MarkService>();
+builder.Services.AddScoped<IResetPasswordService, ResetPasswordService>();
+builder.Services.AddScoped<IResetPasswordRepository, ResetPasswordRepository>();
 
 builder.Services.AddDbContext<SZKContext>(options =>
 {

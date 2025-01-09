@@ -14,11 +14,15 @@ public class OpinionRepository : IOpinionRepository
     public async Task<List<OpinionDTO>> GetOpinionsByStudentAsync(int idStudent)
     {
         return await (from opinion in _context.Opinion
+            join person in _context.Person on opinion.IdTeacher equals person.IdPerson
             where opinion.IdStudent == idStudent
             select new OpinionDTO
             {
                 Rating = opinion.Rating,
-                Content = opinion.Content
+                Content = opinion.Content,
+                IdPerson = person.IdPerson,
+                IdOpinion = opinion.IdOpinion,
+                FullName = person.Name + ' ' + person.Surname
             }).ToListAsync();
     }
 
@@ -33,7 +37,8 @@ public class OpinionRepository : IOpinionRepository
                 Rating = opinion.Rating,
                 Content = opinion.Content,
                 IdPerson = person.IdPerson,
-                IdOpinion = opinion.IdOpinion
+                IdOpinion = opinion.IdOpinion,
+                FullName = person.Name + ' ' + person.Surname
             }).ToListAsync();
     }
 
@@ -57,6 +62,15 @@ public class OpinionRepository : IOpinionRepository
     public async Task DeleteOpinionByIdAsync(Opinion opinion)
     {
         _context.Opinion.Remove(opinion);
+        await _context.SaveChangesAsync();
+    }
+
+    public async Task DeleteOpinionsByPersonId(int idPerson)
+    {
+        var opinions = await _context.Opinion
+            .Where(opinion => opinion.IdTeacher == idPerson || opinion.IdStudent == idPerson)
+            .ToListAsync();
+        _context.Opinion.RemoveRange(opinions);
         await _context.SaveChangesAsync();
     }
 }

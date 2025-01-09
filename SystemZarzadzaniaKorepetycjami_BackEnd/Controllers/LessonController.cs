@@ -54,6 +54,16 @@ public class LessonController : ControllerBase
         return StatusCode(StatusCodes.Status400BadRequest, "Invalid Lesson Id");
     }
 
+    [HttpPut("{lessonId}/cancel")]
+    [Authorize]
+    public async Task<IActionResult> CancelLessonByLessonIdAsync(int lessonId)
+    {
+        var accepted = await _lessonService.CancelLessonByIdAsync(lessonId);
+        if (accepted)
+            return Ok();
+        return StatusCode(StatusCodes.Status400BadRequest, "Invalid Lesson Id");
+    }
+
     [HttpGet("getLessonDetails")]
     [Authorize]
     public async Task<IActionResult> GetLessonDetailsByIdAsync(int lessonId)

@@ -36,6 +36,21 @@ public class CalendarService : ICalendarService
         return calendars;
     }
 
+    public async Task<List<List<CalendarDTO>>> GetCalendarsFromTheWeekByDate(DateOnly dateOnly)
+    {
+        (var startOfWeek, var endOfWeek) = GetStartAndEndOfWeek(dateOnly);
+
+        if (startOfWeek > endOfWeek)
+        {
+            return new List<List<CalendarDTO>>();
+        }
+
+
+        var calendars =
+            await _calendarRepository.GetCalendarsRangeFromToAsync(startOfWeek, endOfWeek);
+        return calendars;
+    }
+
     public static (DateTime startOfWeek, DateTime endOfWeek) GetStartAndEndOfWeek(DateOnly date)
     {
         var daysToStartOfWeek = (int)date.DayOfWeek - (int)DayOfWeek.Monday;

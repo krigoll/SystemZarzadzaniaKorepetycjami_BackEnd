@@ -72,13 +72,31 @@ public class PersonController : ControllerBase
 
     [HttpGet("getUser")]
     [Authorize]
-    public async Task<IActionResult> GetUserInformationAsync(string email)
+    public async Task<IActionResult> GetUserInformationByEmailAsync(string email)
     {
         try
         {
             var personProfileDto = await _personService.GetPersonProfileByEmailAsync(email);
             return personProfileDto == null
                 ? StatusCode(StatusCodes.Status400BadRequest, "Invalid Email")
+                : Ok(personProfileDto);
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            return StatusCode(StatusCodes.Status500InternalServerError, "Database Error");
+        }
+    }
+
+    [HttpGet("getUser/{userId}")]
+    [Authorize]
+    public async Task<IActionResult> GetUserInformationByIdAsync(int userId)
+    {
+        try
+        {
+            var personProfileDto = await _personService.GetPersonProfileByIdAsync(userId);
+            return personProfileDto == null
+                ? StatusCode(StatusCodes.Status400BadRequest, "Invalid user id")
                 : Ok(personProfileDto);
         }
         catch (Exception e)

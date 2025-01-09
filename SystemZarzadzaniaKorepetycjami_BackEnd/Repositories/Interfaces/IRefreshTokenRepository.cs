@@ -6,8 +6,8 @@ namespace SystemZarzadzaniaKorepetycjami_BackEnd.Repositories.Interfaces;
 public interface IRefreshTokenRepository
 {
     Task StoreRefreshTokenAsync(string email, string refreshToken);
-    Task<RefreshTokens> GetRefreshTokenAsync(string refreshToken);
+    Task<RefreshToken> GetRefreshTokenAsync(string refreshToken);
     Task ReplaceRefreshTokenAsync(string oldRefreshToken, string newRefreshToken);
     Task<string> GetUserEmailByRefreshTokenAsync(string refreshToken);
-    Task<RefreshTokens> GetRefreshTokenByEmailAsync(string email);
+    Task<RefreshToken> GetRefreshTokenByEmailAsync(string email);
 }
