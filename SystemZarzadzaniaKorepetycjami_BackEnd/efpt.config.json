@@ -59,7 +59,7 @@
          "ObjectType": 0
       },
       {
-         "Name": "[dbo].[Refresh_Tokens]",
+         "Name": "[dbo].[Refresh_Token]",
          "ObjectType": 0
       },
       {
@@ -67,7 +67,7 @@
          "ObjectType": 0
       },
       {
-         "Name": "[dbo].[RessetPassword]",
+         "Name": "[dbo].[Reset_Password]",
          "ObjectType": 0
       },
       {

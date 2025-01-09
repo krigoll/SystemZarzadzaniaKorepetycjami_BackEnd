@@ -9,9 +9,9 @@
             MessageSenderNavigation = new HashSet<Message>();
             OpinionIdStudentNavigation = new HashSet<Opinion>();
             OpinionIdTeacherNavigation = new HashSet<Opinion>();
-            RefreshTokens = new HashSet<RefreshTokens>();
+            RefreshToken = new HashSet<RefreshToken>();
             Report = new HashSet<Report>();
-            RessetPassword = new HashSet<RessetPassword>();
+            ResetPassword = new HashSet<ResetPassword>();
         }
 
         public int IdPerson { get; }
@@ -33,8 +33,8 @@
         public virtual ICollection<Message> MessageSenderNavigation { get; private set; }
         public virtual ICollection<Opinion> OpinionIdStudentNavigation { get; private set; }
         public virtual ICollection<Opinion> OpinionIdTeacherNavigation { get; private set; }
-        public virtual ICollection<RefreshTokens> RefreshTokens { get; private set; }
+        public virtual ICollection<RefreshToken> RefreshToken { get; private set; }
         public virtual ICollection<Report> Report { get; private set; }
-        public virtual ICollection<RessetPassword> RessetPassword { get; private set; }
+        public virtual ICollection<ResetPassword> ResetPassword { get; private set; }
     }
 }

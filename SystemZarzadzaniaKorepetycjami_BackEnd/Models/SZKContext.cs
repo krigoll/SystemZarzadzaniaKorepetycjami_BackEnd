@@ -23,9 +23,9 @@ namespace SystemZarzadzaniaKorepetycjami_BackEnd.Models
         public virtual DbSet<Message> Message { get; set; }
         public virtual DbSet<Opinion> Opinion { get; set; }
         public virtual DbSet<Person> Person { get; set; }
-        public virtual DbSet<RefreshTokens> RefreshTokens { get; set; }
+        public virtual DbSet<RefreshToken> RefreshToken { get; set; }
         public virtual DbSet<Report> Report { get; set; }
-        public virtual DbSet<RessetPassword> RessetPassword { get; set; }
+        public virtual DbSet<ResetPassword> ResetPassword { get; set; }
         public virtual DbSet<Student> Student { get; set; }
         public virtual DbSet<StudentAnswer> StudentAnswer { get; set; }
         public virtual DbSet<Subject> Subject { get; set; }
@@ -69,8 +69,7 @@ namespace SystemZarzadzaniaKorepetycjami_BackEnd.Models
                 entity.HasOne(d => d.IdTestNavigation)
                     .WithMany(p => p.Assignment)
                     .HasForeignKey(d => d.IdTest)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_Assignment_Test");
+                    .HasConstraintName("Assignment_Test");
             });
 
             modelBuilder.Entity<Availability>(entity =>
@@ -97,7 +96,7 @@ namespace SystemZarzadzaniaKorepetycjami_BackEnd.Models
             modelBuilder.Entity<Ban>(entity =>
             {
                 entity.HasKey(e => e.IdBan)
-                    .HasName("PK__Ban__0EE9EA89A1DA1BA1");
+                    .HasName("Ban_pk");
 
                 entity.Property(e => e.Reason)
                     .IsRequired()
@@ -110,7 +109,7 @@ namespace SystemZarzadzaniaKorepetycjami_BackEnd.Models
                     .WithMany(p => p.Ban)
                     .HasForeignKey(d => d.IdPerson)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__Ban__IdPerson__1CBC4616");
+                    .HasConstraintName("Ban_Person");
             });
 
             modelBuilder.Entity<DayOfTheWeek>(entity =>
@@ -182,8 +181,7 @@ namespace SystemZarzadzaniaKorepetycjami_BackEnd.Models
                 entity.HasOne(d => d.IdStudentAnswerNavigation)
                     .WithMany(p => p.Mark)
                     .HasForeignKey(d => d.IdStudentAnswer)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_Mark_StudentAnswer");
+                    .HasConstraintName("Mark_Student_Answer");
             });
 
             modelBuilder.Entity<Message>(entity =>
@@ -269,18 +267,18 @@ namespace SystemZarzadzaniaKorepetycjami_BackEnd.Models
                     .IsUnicode(false);
             });
 
-            modelBuilder.Entity<RefreshTokens>(entity =>
+            modelBuilder.Entity<RefreshToken>(entity =>
             {
                 entity.HasKey(e => e.IdJwt)
-                    .HasName("Refresh_Tokens_pk");
+                    .HasName("Refresh_Token_pk");
 
-                entity.ToTable("Refresh_Tokens");
+                entity.ToTable("Refresh_Token");
 
                 entity.Property(e => e.IdJwt).HasColumnName("IdJWT");
 
                 entity.Property(e => e.CreatedDate).HasColumnType("datetime");
 
-                entity.Property(e => e.ExpiryDate).HasColumnType("datetime");
+                entity.Property(e => e.ExpireDate).HasColumnType("datetime");
 
                 entity.Property(e => e.Token)
                     .IsRequired()
@@ -288,7 +286,7 @@ namespace SystemZarzadzaniaKorepetycjami_BackEnd.Models
                     .IsUnicode(false);
 
                 entity.HasOne(d => d.IdPersonNavigation)
-                    .WithMany(p => p.RefreshTokens)
+                    .WithMany(p => p.RefreshToken)
                     .HasForeignKey(d => d.IdPerson)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("JWT_Person");
@@ -318,23 +316,25 @@ namespace SystemZarzadzaniaKorepetycjami_BackEnd.Models
                     .HasConstraintName("Complaint_Person");
             });
 
-            modelBuilder.Entity<RessetPassword>(entity =>
+            modelBuilder.Entity<ResetPassword>(entity =>
             {
-                entity.HasKey(e => e.IdRessetPassword)
-                    .HasName("PK__RessetPa__D67734B120DDC79F");
+                entity.HasKey(e => e.IdResetPassword)
+                    .HasName("Reset_Password_pk");
+
+                entity.ToTable("Reset_Password");
 
                 entity.Property(e => e.Code)
                     .IsRequired()
                     .HasMaxLength(6)
                     .IsUnicode(false);
 
-                entity.Property(e => e.ExpiryDate).HasColumnType("datetime");
+                entity.Property(e => e.ExpireDate).HasColumnType("datetime");
 
                 entity.HasOne(d => d.IdPersonNavigation)
-                    .WithMany(p => p.RessetPassword)
+                    .WithMany(p => p.ResetPassword)
                     .HasForeignKey(d => d.IdPerson)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__RessetPas__IdPer__3C34F16F");
+                    .HasConstraintName("RessetPassword_Person");
             });
 
             modelBuilder.Entity<Student>(entity =>
@@ -365,7 +365,6 @@ namespace SystemZarzadzaniaKorepetycjami_BackEnd.Models
                 entity.HasOne(d => d.IdAssignmentNavigation)
                     .WithMany(p => p.StudentAnswer)
                     .HasForeignKey(d => d.IdAssignment)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("Student_Answer_Task");
 
                 entity.HasOne(d => d.IdTestForStudentNavigation)
@@ -492,7 +491,6 @@ namespace SystemZarzadzaniaKorepetycjami_BackEnd.Models
                 entity.HasOne(d => d.IdTestNavigation)
                     .WithMany(p => p.TestForStudent)
                     .HasForeignKey(d => d.IdTest)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("Test_For_Student_Test");
             });
 

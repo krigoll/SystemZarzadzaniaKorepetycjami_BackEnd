@@ -28,7 +28,7 @@ public class ResetPasswordService : IResetPasswordService
 
             var rnd = new Random();
             var code = rnd.Next(100000, 999999);
-            var resetPassword = new RessetPassword(person.IdPerson, code.ToString(), DateTime.Now.AddHours(1));
+            var resetPassword = new ResetPassword(person.IdPerson, code.ToString(), DateTime.Now.AddHours(1));
 
             await _resetPasswordRepository.AddAsync(resetPassword);
             await SendEmailAsync(email, code.ToString());

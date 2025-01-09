@@ -1,5 +1,5 @@
 ﻿namespace SystemZarzadzaniaKorepetycjami_BackEnd_Test.Models;
 
-public class RessetPasswordTests
+public class ResetPasswordTests
 {
 }

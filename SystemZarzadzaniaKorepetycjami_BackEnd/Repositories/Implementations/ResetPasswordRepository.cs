@@ -13,20 +13,20 @@ public class ResetPasswordRepository : IResetPasswordRepository
         _context = context;
     }
 
-    public async Task AddAsync(RessetPassword ressetPassword)
+    public async Task AddAsync(ResetPassword resetPassword)
     {
-        var existingRecords = _context.RessetPassword
-            .Where(rp => rp.IdPerson == ressetPassword.IdPerson);
+        var existingRecords = _context.ResetPassword
+            .Where(rp => rp.IdPerson == resetPassword.IdPerson);
 
-        _context.RessetPassword.RemoveRange(existingRecords);
-        await _context.RessetPassword.AddAsync(ressetPassword);
+        _context.ResetPassword.RemoveRange(existingRecords);
+        await _context.ResetPassword.AddAsync(resetPassword);
         await _context.SaveChangesAsync();
     }
 
     public async Task<int> GetIdPersonByCode(string code)
     {
         var resetPassword =
-            await _context.RessetPassword.FirstOrDefaultAsync(rp => rp.Code == code && rp.ExpiryDate > DateTime.Now);
+            await _context.ResetPassword.FirstOrDefaultAsync(rp => rp.Code == code && rp.ExpireDate > DateTime.Now);
         if (resetPassword == null) return -1;
 
         return resetPassword.IdPerson;
@@ -34,8 +34,8 @@ public class ResetPasswordRepository : IResetPasswordRepository
 
     public async Task RemoveCode(string code)
     {
-        var resetPassword = await _context.RessetPassword.FirstOrDefaultAsync(rp => rp.Code == code);
-        _context.RessetPassword.Remove(resetPassword);
+        var resetPassword = await _context.ResetPassword.FirstOrDefaultAsync(rp => rp.Code == code);
+        _context.ResetPassword.Remove(resetPassword);
         await _context.SaveChangesAsync();
     }
 }

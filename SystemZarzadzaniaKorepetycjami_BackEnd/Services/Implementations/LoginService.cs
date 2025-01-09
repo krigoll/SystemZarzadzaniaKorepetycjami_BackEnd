@@ -47,7 +47,7 @@ public class LoginService : ILoginService
             refreshToken = GenerateRefreshToken();
             await _refreshTokenRepository.StoreRefreshTokenAsync(request.Email, refreshToken);
         }
-        else if (storedToken.ExpiryDate < DateTime.UtcNow)
+        else if (storedToken.ExpireDate < DateTime.UtcNow)
         {
             refreshToken = GenerateRefreshToken();
             await _refreshTokenRepository.ReplaceRefreshTokenAsync(storedToken.Token, refreshToken);
@@ -64,7 +64,7 @@ public class LoginService : ILoginService
     {
         var storedToken = await _refreshTokenRepository.GetRefreshTokenAsync(refreshToken);
 
-        if (storedToken == null || storedToken.ExpiryDate < DateTime.UtcNow)
+        if (storedToken == null || storedToken.ExpireDate < DateTime.UtcNow)
             return null;
 
         var validToken = await ValidateRefreshToken(storedToken.Token);

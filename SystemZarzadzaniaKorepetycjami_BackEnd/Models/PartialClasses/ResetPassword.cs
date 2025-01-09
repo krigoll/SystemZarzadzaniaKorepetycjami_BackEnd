@@ -1,8 +1,8 @@
 ﻿namespace SystemZarzadzaniaKorepetycjami_BackEnd.Models;
 
-public partial class RessetPassword
+public partial class ResetPassword
 {
-    public RessetPassword(int idPerson, string code, DateTime expiryDate)
+    public ResetPassword(int idPerson, string code, DateTime expireDate)
     {
         if (idPerson < 0) throw new ArgumentException("Invalid Id Person");
 
@@ -12,6 +12,6 @@ public partial class RessetPassword
 
         Code = code;
 
-        ExpiryDate = expiryDate;
+        ExpireDate = expireDate;
     }
 }
