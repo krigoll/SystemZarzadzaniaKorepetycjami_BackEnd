@@ -18,8 +18,6 @@ public class MarkTests
     [Test]
     public void Constructor_InvalidDescription_ShouldThrowArgumentException()
     {
-        Assert.Throws<ArgumentException>(() => new Mark("", true, 1));
-        Assert.Throws<ArgumentException>(() => new Mark(null, true, 1));
         Assert.Throws<ArgumentException>(() => new Mark(new string('A', 101), true, 1));
     }
 
@@ -43,9 +41,6 @@ public class MarkTests
     public void SetDescription_InvalidInput_ShouldThrowArgumentException()
     {
         var mark = new Mark("Good job", true, 1);
-
-        Assert.Throws<ArgumentException>(() => mark.SetDescription(""));
-        Assert.Throws<ArgumentException>(() => mark.SetDescription(null));
         Assert.Throws<ArgumentException>(() => mark.SetDescription(new string('B', 101)));
     }
 

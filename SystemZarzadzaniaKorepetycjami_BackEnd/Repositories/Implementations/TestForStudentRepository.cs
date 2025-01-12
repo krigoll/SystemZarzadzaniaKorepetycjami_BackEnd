@@ -102,7 +102,8 @@ public class TestForStudentRepository : ITestForStudentRepository
                 Assignment = (
                     from a in _context.Assignment
                     join sa in _context.StudentAnswer
-                        on a.IdAssignment equals sa.IdAssignment into answers
+                        on new { a.IdAssignment, tfs.IdTestForStudent }
+                        equals new { sa.IdAssignment, sa.IdTestForStudent } into answers
                     from sa in answers.DefaultIfEmpty()
                     join m in _context.Mark on sa.IdStudentAnswer equals m.IdStudentAnswer into marks
                     from m in marks.DefaultIfEmpty()

@@ -4,4 +4,5 @@ public class StudentDTO
 {
     public int IdStudent { get; set; }
     public string FullName { get; set; }
+    public bool WasGiven { get; set; }
 }

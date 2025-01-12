@@ -17,9 +17,10 @@ public class StudentController : ControllerBase
 
     [HttpGet("{idTeacher}")]
     [Authorize]
-    public async Task<IActionResult> GetStudentsThatTeachOrWillByTeachTeacherByTeacherIdAsync(int idTeacher)
+    public async Task<IActionResult> GetStudentsThatTeachOrWillByTeachTeacherByTeacherIdAsync(int idTeacher, int idTest)
     {
-        var students = await _studentService.GetStudentsThatTeachOrWillByTeachTeacherByTeacherIdAsync(idTeacher);
+        var students =
+            await _studentService.GetStudentsThatTeachOrWillByTeachTeacherByTeacherIdAsync(idTeacher, idTest);
 
         return students == null
             ? StatusCode(StatusCodes.Status400BadRequest, "Invalid Teacher Id")

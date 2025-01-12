@@ -1,5 +1,4 @@
-﻿using Microsoft.IdentityModel.Tokens;
-using SystemZarzadzaniaKorepetycjami_BackEnd.DTOs;
+﻿using SystemZarzadzaniaKorepetycjami_BackEnd.DTOs;
 using SystemZarzadzaniaKorepetycjami_BackEnd.Enums;
 using SystemZarzadzaniaKorepetycjami_BackEnd.Models;
 using SystemZarzadzaniaKorepetycjami_BackEnd.Repositories.Interfaces;
@@ -23,8 +22,7 @@ public class MarkService : IMarkService
             var makr = new List<Mark>();
 
             foreach (var m in marks)
-                if (!m.Description.IsNullOrEmpty())
-                    makr.Add(new Mark(m.Description, m.Value, m.IdStudentAnswer));
+                makr.Add(new Mark(m.Description, m.Value, m.IdStudentAnswer));
 
 
             await _markRepository.CreateAndUpdateMark(makr);

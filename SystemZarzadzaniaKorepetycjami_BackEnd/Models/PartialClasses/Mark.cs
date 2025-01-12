@@ -9,14 +9,15 @@ public partial class Mark
         SetDescription(description);
         Value = value;
 
-        if (idStudentAnswer < 0) throw new ArgumentException("Invalid Id Student Answer");
+        if (idStudentAnswer < 1) throw new ArgumentException("Invalid Id Student Answer");
 
         IdStudentAnswer = idStudentAnswer;
     }
 
     public void SetDescription(string description)
     {
-        if (description.IsNullOrEmpty() || description.Length > 100) throw new ArgumentException("Invalid Description");
+        if (!description.IsNullOrEmpty() && description.Length > 100)
+            throw new ArgumentException("Invalid Description");
 
         Description = description;
     }
