@@ -199,11 +199,11 @@ public class PersonService : IPersonService
             var personRoles = await GetPersonRoleAsync(person.Email);
             if (personRoles.isStudent)
                 await RemoveStudentAsync(new Student(person.IdPerson));
-            //dodadkowe usuwanie rzeczy
+
 
             if (personRoles.isTeacher)
                 await RemoveTeacherAsync(new Teacher(person.IdPerson));
-            //dodadkowe usuwanie rzeczy
+
             await _opinionRepository.DeleteOpinionsByPersonId(person.IdPerson);
 
             await _personRepository.DeleteUserAsync(person);

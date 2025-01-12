@@ -77,6 +77,10 @@ public class OpinionService : IOpinionService
             if (!await _lessonRepository.AreThisTeacherTeachThisStudentAsync(teacher.IdTeacher, student.IdStudent))
                 return OpinionStatus.CAN_NOT_OPINION_TEACHER_WITCH_NOT_TEACHED_YOU;
 
+            if (await _opinionRepository.GetOpinionByIdTeacherAndStudentIdAsync(teacher.IdTeacher, student.IdStudent) ==
+                null)
+                return OpinionStatus.INVALID_OPINION;
+
             var newOpinion = new Opinion(
                 student.IdStudent,
                 teacher.IdTeacher,

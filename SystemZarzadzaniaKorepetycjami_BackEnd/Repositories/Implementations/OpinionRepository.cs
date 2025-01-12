@@ -73,4 +73,11 @@ public class OpinionRepository : IOpinionRepository
         _context.Opinion.RemoveRange(opinions);
         await _context.SaveChangesAsync();
     }
+
+    public async Task<Opinion> GetOpinionByIdTeacherAndStudentIdAsync(int idTeacher, int idStudent)
+    {
+        var opinion =
+            await _context.Opinion.FirstOrDefaultAsync(o => o.IdTeacher == idTeacher && o.IdStudent == idStudent);
+        return opinion;
+    }
 }

@@ -56,7 +56,6 @@ namespace SystemZarzadzaniaKorepetycjami_BackEnd.Repositories.Implementations
                     StudentSurname = person.Surname,
                     DurationInMinutes = lesson.DurationInMinutes
                 }).ToListAsync();
-            //Dodać w bazie joba który codziennie zmienia status lekcji zarezerwowanych których startdate jest < datetime.now
             return lessons;
         }
 

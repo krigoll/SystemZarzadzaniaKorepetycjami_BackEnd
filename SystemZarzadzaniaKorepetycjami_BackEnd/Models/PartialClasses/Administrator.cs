@@ -2,7 +2,5 @@
 {
     public partial class Administrator
     {
-        // publiczny konstruktor
-        // settery
     }
 }

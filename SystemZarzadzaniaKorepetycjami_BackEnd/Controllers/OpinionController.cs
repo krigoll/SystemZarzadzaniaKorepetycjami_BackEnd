@@ -84,18 +84,10 @@ public class OpinionController : ControllerBase
         return StatusCode(StatusCodes.Status400BadRequest, "Invalid Opinion Id");
     }
 
-    // [HttpDelete("deleteAll")]
-    // [Authorize]
-    // public async Task<IActionResult> DeleteAllOpinionsByEmailAsync(string eamil)
-    // {
-    // 	//usuwane wszystkich opinji o podanym email 
-    // }
-
     [HttpPost("createOpinion")]
     [Authorize]
     public async Task<IActionResult> CreateOpinionAsync(OpinionCreateDTO opinionCreateDTO)
     {
-        //TODO dodać sprawdzenie czy już jest opinia na podstawie IdTeacher i emailStudent
         var createOpinionStatus = await _opinionService.CreateOpinionAsync(opinionCreateDTO);
         switch (createOpinionStatus)
         {

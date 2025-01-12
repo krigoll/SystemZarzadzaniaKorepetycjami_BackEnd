@@ -18,26 +18,31 @@ public class MessageController : ControllerBase
     }
 
     [HttpGet("getConversations")]
-    //[Authorize]
+    [Authorize]
     public async Task<IActionResult> GetConversationsByEmailAsync(string email)
     {
         var ConversationDTOList = await _messageService.GetConversationsByEmailAsync(email);
 
-        return ConversationDTOList == null ? StatusCode(StatusCodes.Status400BadRequest, "Invalid email") : Ok(ConversationDTOList);
+        return ConversationDTOList == null
+            ? StatusCode(StatusCodes.Status400BadRequest, "Invalid email")
+            : Ok(ConversationDTOList);
     }
 
     [HttpGet("getConversation")]
-    //[Authorize]
+    [Authorize]
     public async Task<IActionResult> GetConversationByUserIdAndCorespondentIdAsync(int userId, int corespondentId)
     {
-        var MessageDTOList = await _messageService.GetConversationByUserIdAndCorespondentIdAsync(userId, corespondentId);
+        var MessageDTOList =
+            await _messageService.GetConversationByUserIdAndCorespondentIdAsync(userId, corespondentId);
 
-        return MessageDTOList == null ? StatusCode(StatusCodes.Status400BadRequest, "Invalid sender or reciver") : Ok(MessageDTOList);
+        return MessageDTOList == null
+            ? StatusCode(StatusCodes.Status400BadRequest, "Invalid sender or reciver")
+            : Ok(MessageDTOList);
     }
 
 
     [HttpPost("createMessage")]
-    //[Authorize]
+    [Authorize]
     public async Task<IActionResult> CreateMessageAsync(MessageDTO messageDTO)
     {
         var createMessageStatus = await _messageService.CreateMessageAsync(messageDTO);
