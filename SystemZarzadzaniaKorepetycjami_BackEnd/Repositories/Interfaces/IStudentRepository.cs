@@ -11,5 +11,5 @@ public interface IStudentRepository
     public Task RemoveStudentAsync(Student student);
     public Task<Student> GetStudentByEmailAsync(string email);
     public Task<Student> GetStudentByIdAsync(int idStudent);
-    public Task<List<StudentDTO>> GetStudentsThatTeachOrWillByTeachTeacherByTeacherIdAsync(int idTeacher);
+    public Task<List<StudentDTO>> GetStudentsThatTeachOrWillByTeachTeacherByTeacherIdAsync(int idTeacher, int idTest);
 }

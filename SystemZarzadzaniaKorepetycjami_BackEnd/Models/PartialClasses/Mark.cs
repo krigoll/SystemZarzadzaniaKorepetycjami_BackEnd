@@ -16,7 +16,8 @@ public partial class Mark
 
     public void SetDescription(string description)
     {
-        if (description.IsNullOrEmpty() || description.Length > 100) throw new ArgumentException("Invalid Description");
+        if (!description.IsNullOrEmpty() && description.Length > 100)
+            throw new ArgumentException("Invalid Description");
 
         Description = description;
     }

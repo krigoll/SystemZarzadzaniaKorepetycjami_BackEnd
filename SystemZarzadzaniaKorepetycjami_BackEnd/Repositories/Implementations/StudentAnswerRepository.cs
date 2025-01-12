@@ -19,7 +19,7 @@ public class StudentAnswerRepository : IStudentAnswerRepository
         foreach (var studentA in studentAnswer)
         {
             var sa = await _context.StudentAnswer.FirstOrDefaultAsync(sa =>
-                sa.IdAssignment == studentA.IdAssignment);
+                sa.IdAssignment == studentA.IdAssignment && sa.IdTestForStudent == idTestForStudent);
             if (sa == null)
             {
                 if (!studentA.Answer.IsNullOrEmpty()) await _context.StudentAnswer.AddAsync(studentA);

@@ -54,7 +54,8 @@ namespace SystemZarzadzaniaKorepetycjami_BackEnd.Repositories.Implementations
             return await _context.Student.FirstOrDefaultAsync(s => s.IdStudent == idStudent);
         }
 
-        public async Task<List<StudentDTO>> GetStudentsThatTeachOrWillByTeachTeacherByTeacherIdAsync(int idTeacher)
+        public async Task<List<StudentDTO>> GetStudentsThatTeachOrWillByTeachTeacherByTeacherIdAsync(int idTeacher,
+            int idTest)
         {
             var students = await (
                 from lesson in _context.Lesson
@@ -62,12 +63,18 @@ namespace SystemZarzadzaniaKorepetycjami_BackEnd.Repositories.Implementations
                     on lesson.IdStudent equals student.IdStudent
                 join person in _context.Person
                     on student.IdStudent equals person.IdPerson
+                join testForStudent in _context.TestForStudent
+                    on new { student.IdStudent, IdTest = idTest }
+                    equals new { testForStudent.IdStudent, testForStudent.IdTest } into tests
+                from test in tests.DefaultIfEmpty()
                 where lesson.IdTeacher == idTeacher && lesson.IdLessonStatus == 2
                 select new StudentDTO
                 {
                     IdStudent = student.IdStudent,
-                    FullName = person.Name + " " + person.Surname
-                }).Distinct().ToListAsync();
+                    FullName = person.Name + " " + person.Surname,
+                    WasGiven = test != null
+                }
+            ).Distinct().ToListAsync();
 
             return students;
         }

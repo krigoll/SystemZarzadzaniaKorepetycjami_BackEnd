@@ -174,7 +174,6 @@ namespace SystemZarzadzaniaKorepetycjami_BackEnd.Models
                     .HasName("Mark_pk");
 
                 entity.Property(e => e.Description)
-                    .IsRequired()
                     .HasMaxLength(100)
                     .IsUnicode(false);
 
