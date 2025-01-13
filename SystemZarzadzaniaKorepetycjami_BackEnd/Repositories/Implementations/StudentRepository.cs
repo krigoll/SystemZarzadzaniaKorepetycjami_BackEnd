@@ -76,7 +76,8 @@ namespace SystemZarzadzaniaKorepetycjami_BackEnd.Repositories.Implementations
                 }
             ).Distinct().ToListAsync();
 
-            return students;
+            var sortedStudents = students.OrderBy(s => s.FullName).ToList();
+            return sortedStudents;
         }
     }
 }

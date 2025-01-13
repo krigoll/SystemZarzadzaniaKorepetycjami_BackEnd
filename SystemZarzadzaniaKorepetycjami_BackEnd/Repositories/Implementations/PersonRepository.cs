@@ -71,11 +71,14 @@ public class PersonRepository : IPersonRepository
                 (p.Name.Contains(secondTerm) && p.Surname.Contains(firstTerm)));
         }
 
-        return await query.Select(person => new PersonDTO
+        var results = await query.Select(person => new PersonDTO
         {
             IdPerson = person.IdPerson,
             FullName = $"{person.Name} {person.Surname}"
         }).ToListAsync();
+        var sortedResults = results.OrderBy(p => p.FullName).ToList();
+
+        return sortedResults;
     }
 
     public async Task<List<PersonInfoDTO>> GetAllPersonsAsync()
@@ -97,6 +100,8 @@ public class PersonRepository : IPersonRepository
                 IsTeacher = teacher.IdTeacher != null
             }
         ).ToListAsync();
-        return persons;
+        var sortedPersons = persons.OrderBy(p => p.Name).ThenBy(p => p.Surname).ToList();
+
+        return sortedPersons;
     }
 }

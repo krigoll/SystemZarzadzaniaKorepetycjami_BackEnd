@@ -35,7 +35,9 @@ namespace SystemZarzadzaniaKorepetycjami_BackEnd.Repositories.Implementations
                 })
                 .ToList();
 
-            return formattedResult;
+            var sortedFormattedResult = formattedResult.OrderBy(s => s.SubjectFullName).ToList();
+
+            return sortedFormattedResult;
         }
 
         public async Task<List<SubjectDTO>> GetAllSubjects()
@@ -65,7 +67,9 @@ namespace SystemZarzadzaniaKorepetycjami_BackEnd.Repositories.Implementations
                 })
                 .ToList();
 
-            return formattedResult;
+            var sortedFormattedResult = formattedResult.OrderBy(s => s.SubjectFullName).ToList();
+
+            return sortedFormattedResult;
         }
 
         public async Task<List<SubjectTeacherDTO>> GetAllFullSubjectsByTeacherId(int teacherId)
@@ -91,8 +95,9 @@ namespace SystemZarzadzaniaKorepetycjami_BackEnd.Repositories.Implementations
                     Price = x.Salary != null ? x.Salary.HourlyRate : 0
                 })
                 .ToListAsync();
+            var sortedResult = result.OrderBy(s => s.SubjectFullName).ToList();
 
-            return result;
+            return sortedResult;
         }
 
         public async Task<Subject> FindSubjectByIdAsync(int idSubject)

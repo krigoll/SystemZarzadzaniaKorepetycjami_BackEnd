@@ -37,7 +37,9 @@ public class TestRepository : ITestRepository
                 NumberOfAssignments = g.Count(a => a != null)
             }).ToListAsync();
 
-        return tests;
+        var sortedTests = tests.OrderBy(t => t.Title).ToList();
+
+        return sortedTests;
     }
 
     public async Task CreateTestAsync(Test test)

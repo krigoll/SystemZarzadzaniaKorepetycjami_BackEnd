@@ -83,7 +83,9 @@ namespace SystemZarzadzaniaKorepetycjami_BackEnd.Repositories.Implementations
                         .Average() ?? 0
                 }).ToListAsync();
 
-            return teachers;
+            var sortedTeachers = teachers.OrderBy(p => p.Name).ThenBy(p => p.Surname).ToList();
+
+            return sortedTeachers;
         }
 
         public async Task<List<TeacherDTO>> GetTeachersBySubjectCategoryAsync(int subjectLevelId)
@@ -115,7 +117,9 @@ namespace SystemZarzadzaniaKorepetycjami_BackEnd.Repositories.Implementations
                         .Average() ?? 0
                 }).ToListAsync();
 
-            return teachers;
+            var sortedTeachers = teachers.OrderBy(p => p.Name).ThenBy(p => p.Surname).ToList();
+
+            return sortedTeachers;
         }
 
 
@@ -166,7 +170,9 @@ namespace SystemZarzadzaniaKorepetycjami_BackEnd.Repositories.Implementations
                 }
             ).ToList();
 
-            return result;
+            var sortedTeachers = result.OrderBy(p => p.Name).ThenBy(p => p.Surname).ToList();
+
+            return sortedTeachers;
         }
     }
 }

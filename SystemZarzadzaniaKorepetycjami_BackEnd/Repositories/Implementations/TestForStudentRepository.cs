@@ -51,7 +51,9 @@ public class TestForStudentRepository : ITestForStudentRepository
                 IdTestForStudent = g.Key.IdTestForStudent
             }).ToListAsync();
 
-        return tests;
+        var sortedTests = tests.OrderBy(t => t.Title).ThenBy(t => t.CreationTime).ToList();
+
+        return sortedTests;
     }
 
 
@@ -86,7 +88,9 @@ public class TestForStudentRepository : ITestForStudentRepository
                 IdTestForStudent = g.Key.IdTestForStudent
             }).ToListAsync();
 
-        return tests;
+        var sortedTests = tests.OrderBy(t => t.Title).ThenBy(t => t.CreationTime).ToList();
+
+        return sortedTests;
     }
 
     public async Task<TestForStudentDetailsDTO> GetTestForStudentDetails(int idTestForStudent)

@@ -13,7 +13,7 @@ public class OpinionRepository : IOpinionRepository
 
     public async Task<List<OpinionDTO>> GetOpinionsByStudentAsync(int idStudent)
     {
-        return await (from opinion in _context.Opinion
+        var opinions = await (from opinion in _context.Opinion
             join person in _context.Person on opinion.IdTeacher equals person.IdPerson
             where opinion.IdStudent == idStudent
             select new OpinionDTO
@@ -24,11 +24,14 @@ public class OpinionRepository : IOpinionRepository
                 IdOpinion = opinion.IdOpinion,
                 FullName = person.Name + ' ' + person.Surname
             }).ToListAsync();
+        var sortedOpinions = opinions.OrderBy(o => o.FullName).ToList();
+
+        return sortedOpinions;
     }
 
     public async Task<List<OpinionDTO>> GetOpinionsByTeacherAsync(int idTeacher)
     {
-        return await (from opinion in _context.Opinion
+        var opinions = await (from opinion in _context.Opinion
             join person in _context.Person on opinion.IdStudent equals person.IdPerson
             join student in _context.Student on opinion.IdStudent equals student.IdStudent
             where opinion.IdTeacher == idTeacher
@@ -40,6 +43,10 @@ public class OpinionRepository : IOpinionRepository
                 IdOpinion = opinion.IdOpinion,
                 FullName = person.Name + ' ' + person.Surname
             }).ToListAsync();
+
+        var sortedOpinions = opinions.OrderBy(o => o.FullName).ToList();
+
+        return sortedOpinions;
     }
 
     public async Task AddOpinionAsync(Opinion newOpinion)

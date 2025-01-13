@@ -19,8 +19,11 @@ public class LessonService : ILessonService
     {
         var teacher = await _teacherRepository.GetTeacherByEmailAsync(email);
         if (teacher == null) return null;
-
-        return await _lessonRepository.getAllReservedLessonsByTeacherAsync(teacher);
+        var lessons = await _lessonRepository.getAllReservedLessonsByTeacherAsync(teacher);
+        var sortedLessons = lessons
+            .OrderBy(lesson => DateTime.Parse(lesson.DateTime)) // Parse string to DateTime and sort
+            .ToList();
+        return sortedLessons;
     }
 
     public async Task<bool> AcceptLessonByIdAsync(int lessonId)

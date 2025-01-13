@@ -25,7 +25,9 @@ public class ReportRepository : IReportRepository
                 IsDealt = report.Dealt
             }
         ).ToListAsync();
-        return reports;
+        var sortedReports = reports.OrderByDescending(r => r.IdReport).ToList();
+
+        return sortedReports;
     }
 
     public async Task<Report> FindReportByIdAsync(int idReport)
@@ -46,7 +48,9 @@ public class ReportRepository : IReportRepository
                 IsDealt = report.Dealt
             }
         ).ToListAsync();
-        return reports;
+        var sortedReports = reports.OrderByDescending(r => r.IdReport).ToList();
+
+        return sortedReports;
     }
 
     public async Task CreateRepostAsync(Report newReport)
