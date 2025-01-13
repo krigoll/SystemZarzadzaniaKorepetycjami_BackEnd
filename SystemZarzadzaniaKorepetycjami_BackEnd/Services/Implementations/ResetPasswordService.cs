@@ -61,6 +61,22 @@ public class ResetPasswordService : IResetPasswordService
         }
     }
 
+    public async Task<ResetStatus> ResetPasswordWitOutCodeAsync(string password, int personId)
+    {
+        try
+        {
+            var person = await _personRepository.FindPersonByIdAsync(personId);
+            person.SetPassword(password);
+            await _personRepository.UpdateUserAsync(person);
+            return ResetStatus.OK;
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            return ResetStatus.SERVER_ERROR;
+        }
+    }
+
     private async Task SendEmailAsync(string email, string code)
     {
         var smtpClient = new SmtpClient("smtp.gmail.com")

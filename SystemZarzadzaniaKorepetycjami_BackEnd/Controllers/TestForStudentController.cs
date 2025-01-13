@@ -50,6 +50,7 @@ public class TestForStudentController : ControllerBase
     }
 
     [HttpPut]
+    [Authorize]
     public async Task<IActionResult> GetGiveTestToStudentAsync(int idStudent, int idTest)
     {
         var testForStudentStatus = await _testForStudentService.GetGiveTestToStudentAsync(idStudent, idTest);
