@@ -138,10 +138,19 @@ public class TestForStudentRepository : ITestForStudentRepository
         return testForStudentDetails;
     }
 
-    public async Task<TestForStudent> GetTestForStudent(int idTestForStudent)
+    public async Task<TestForStudent> GetTestForStudentAsync(int idTestForStudent)
     {
         var testForStudent =
             await _context.TestForStudent.FirstOrDefaultAsync(tfs => tfs.IdTestForStudent == idTestForStudent);
         return testForStudent;
+    }
+
+    public async Task ChangeStatusAsync(int idTestForStudent, int idTestForStudentStatus)
+    {
+        var testForStudent =
+            await _context.TestForStudent.FirstOrDefaultAsync(tfs => tfs.IdTestForStudent == idTestForStudent);
+        testForStudent.SetIdTestForStudentStatus(idTestForStudentStatus);
+        _context.TestForStudent.Update(testForStudent);
+        await _context.SaveChangesAsync();
     }
 }

@@ -9,10 +9,15 @@ namespace SystemZarzadzaniaKorepetycjami_BackEnd.Services.Implementations;
 public class MarkService : IMarkService
 {
     private readonly IMarkRepository _markRepository;
+    private readonly IStudentAnswerRepository _studentAnswerRepository;
+    private readonly ITestForStudentRepository _testForStudentRepository;
 
-    public MarkService(IMarkRepository markRepository)
+    public MarkService(IMarkRepository markRepository, ITestForStudentRepository testForStudentRepository,
+        IStudentAnswerRepository studentAnswerRepository)
     {
         _markRepository = markRepository;
+        _testForStudentRepository = testForStudentRepository;
+        _studentAnswerRepository = studentAnswerRepository;
     }
 
     public async Task<MarkStatus> CreateAndUpdateMark(List<MarkDTO> marks)
@@ -26,6 +31,10 @@ public class MarkService : IMarkService
 
 
             await _markRepository.CreateAndUpdateMark(makr);
+            var studentAnswer = await _studentAnswerRepository.GetStudentAnswerByIdAsync(marks[0].IdStudentAnswer);
+            var testForStudentStatusProven = 3;
+            await _testForStudentRepository.ChangeStatusAsync(studentAnswer.IdTestForStudent,
+                testForStudentStatusProven);
 
             return MarkStatus.OK;
         }

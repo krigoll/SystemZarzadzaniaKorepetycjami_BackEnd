@@ -40,4 +40,10 @@ public class StudentAnswerRepository : IStudentAnswerRepository
 
         await _context.SaveChangesAsync();
     }
+
+    public Task<StudentAnswer> GetStudentAnswerByIdAsync(int idStudentAnswer)
+    {
+        var studentAnswer = _context.StudentAnswer.FirstOrDefaultAsync(sa => sa.IdStudentAnswer == idStudentAnswer);
+        return studentAnswer;
+    }
 }

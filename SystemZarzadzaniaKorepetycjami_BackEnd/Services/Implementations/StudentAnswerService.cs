@@ -33,6 +33,8 @@ public class StudentAnswerService : IStudentAnswerService
                 studentA.Add(new StudentAnswer(sa.Answer, idTestForStudent, sa.IdAssignment));
 
             await _studentAnswerRepository.CreateAndUpdateStudentAnswer(idTestForStudent, studentA);
+            var testForStudentStatusSolved = 2;
+            await _testForStudentRepository.ChangeStatusAsync(idTestForStudent, testForStudentStatusSolved);
 
             return StudentAnswersStatus.OK;
         }
