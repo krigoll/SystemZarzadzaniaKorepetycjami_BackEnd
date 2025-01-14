@@ -10,4 +10,5 @@ public class LessonDatailsDTO
     public string TeacherName { get; set; }
     public int TeacherId { get; set; }
     public string StudentName { get; set; }
+    public int Cost { get; set; }
 }

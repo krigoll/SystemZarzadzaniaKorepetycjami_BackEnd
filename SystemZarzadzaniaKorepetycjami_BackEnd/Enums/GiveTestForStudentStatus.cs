@@ -1,6 +1,6 @@
 ﻿namespace SystemZarzadzaniaKorepetycjami_BackEnd.Enums;
 
-public enum TestForStudentStatus
+public enum GiveTestForStudentStatus
 {
     INVALID_TEST_ID,
     OK,

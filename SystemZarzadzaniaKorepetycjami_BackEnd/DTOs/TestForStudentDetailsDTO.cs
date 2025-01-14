@@ -4,5 +4,7 @@ public class TestForStudentDetailsDTO
 {
     public int IdTestForStudent { get; set; }
     public string Title { get; set; }
+
+    public string Status { get; set; }
     public List<StudentAnswerAndMarkDTO> Assignment { get; set; }
 }

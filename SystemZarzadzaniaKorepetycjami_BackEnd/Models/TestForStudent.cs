@@ -1,22 +1,21 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace SystemZarzadzaniaKorepetycjami_BackEnd.Models
+﻿namespace SystemZarzadzaniaKorepetycjami_BackEnd.Models
 {
-public partial class TestForStudent
-{
-    private TestForStudent()
+    public partial class TestForStudent
     {
-        StudentAnswer = new HashSet<StudentAnswer>();
+        private TestForStudent()
+        {
+            StudentAnswer = new HashSet<StudentAnswer>();
+        }
+
+        public int IdTestForStudent { get; }
+        public int IdTest { get; private set; }
+        public int IdStudent { get; private set; }
+        public DateTime DateOfCreation { get; private set; }
+        public int IdTestForStudentStatus { get; private set; }
+
+        public virtual Student IdStudentNavigation { get; }
+        public virtual TestForStudentStatus IdTestForStudentStatusNavigation { get; }
+        public virtual Test IdTestNavigation { get; }
+        public virtual ICollection<StudentAnswer> StudentAnswer { get; private set; }
     }
-
-    public int IdTestForStudent { get; private set; }
-    public int IdTest { get; private set; }
-    public int IdStudent { get; private set; }
-    public DateTime DateOfCreation { get; private set; }
-
-            public virtual Student IdStudentNavigation { get; private set; }
-            public virtual Test IdTestNavigation { get; private set; }
-            public virtual ICollection<StudentAnswer> StudentAnswer { get; private set; }
-}
 }

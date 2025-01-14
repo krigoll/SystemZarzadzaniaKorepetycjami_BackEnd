@@ -4,6 +4,7 @@ public class TestForStudentDTO
 {
     public int IdTest { get; set; }
     public string Title { get; set; }
+    public string Status { get; set; }
     public int NumberOfAssignments { get; set; }
     public string Fullname { get; set; }
     public string CreationTime { get; set; }

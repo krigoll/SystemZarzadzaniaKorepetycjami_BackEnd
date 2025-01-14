@@ -56,19 +56,19 @@ public class TestForStudentController : ControllerBase
         var testForStudentStatus = await _testForStudentService.GetGiveTestToStudentAsync(idStudent, idTest);
         switch (testForStudentStatus)
         {
-            case TestForStudentStatus.INVALID_TEST_ID:
+            case GiveTestForStudentStatus.INVALID_TEST_ID:
                 return StatusCode(StatusCodes.Status400BadRequest, "Invalid Test Id");
                 break;
-            case TestForStudentStatus.OK:
+            case GiveTestForStudentStatus.OK:
                 return Ok();
                 break;
-            case TestForStudentStatus.SERVER_ERROR:
+            case GiveTestForStudentStatus.SERVER_ERROR:
                 return StatusCode(StatusCodes.Status500InternalServerError, "Server error");
                 break;
-            case TestForStudentStatus.INVALID_STUDENT_ID:
+            case GiveTestForStudentStatus.INVALID_STUDENT_ID:
                 return StatusCode(StatusCodes.Status400BadRequest, "Invalid Student Id");
                 break;
-            case TestForStudentStatus.INVALID_TEST_FOR_STUDENT:
+            case GiveTestForStudentStatus.INVALID_TEST_FOR_STUDENT:
                 return StatusCode(StatusCodes.Status400BadRequest, "Invalid Test For Student");
                 break;
             default:

@@ -69,7 +69,6 @@ public class OpinionService : IOpinionService
     {
         try
         {
-            Console.WriteLine(opinionCreateDTO);
             var student = await _studentRepository.GetStudentByEmailAsync(opinionCreateDTO.StudentEmail);
             var teacher = await _teacherRepository.GetTeacherByIdAsync(opinionCreateDTO.IdTeacher);
             if (student == null || teacher == null) return OpinionStatus.INVALID_STUDENT_OR_TEACHER;
@@ -77,7 +76,7 @@ public class OpinionService : IOpinionService
             if (!await _lessonRepository.AreThisTeacherTeachThisStudentAsync(teacher.IdTeacher, student.IdStudent))
                 return OpinionStatus.CAN_NOT_OPINION_TEACHER_WITCH_NOT_TEACHED_YOU;
 
-            if (await _opinionRepository.GetOpinionByIdTeacherAndStudentIdAsync(teacher.IdTeacher, student.IdStudent) ==
+            if (await _opinionRepository.GetOpinionByIdTeacherAndStudentIdAsync(teacher.IdTeacher, student.IdStudent) !=
                 null)
                 return OpinionStatus.INVALID_OPINION;
 
@@ -92,7 +91,6 @@ public class OpinionService : IOpinionService
         }
         catch (ArgumentException e)
         {
-            Console.WriteLine(e);
             return OpinionStatus.INVALID_OPINION;
         }
         catch (Exception e)

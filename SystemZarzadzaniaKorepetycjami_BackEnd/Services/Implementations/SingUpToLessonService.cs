@@ -16,10 +16,12 @@ namespace SystemZarzadzaniaKorepetycjami_BackEnd.Services.Implementations
         private readonly IStudentRepository _studentRepository;
         private readonly ISubjectLevelRepository _subjectLevelRepository;
         private readonly ITeacherRepository _teacherRepository;
+        private readonly ITeacherSalaryRepository _teacherSalaryRepository;
 
         public SingUpToLessonService(ILessonRepository lessonRepository, IPersonRepository personRepository,
             IStudentRepository studentRepository, ISubjectLevelRepository subjectLevelRepository,
-            ITeacherRepository teacherRepository, IAvailabilityRepository availabilityRepository)
+            ITeacherRepository teacherRepository, IAvailabilityRepository availabilityRepository,
+            ITeacherSalaryRepository teacherSalaryRepository)
         {
             _lessonRepository = lessonRepository;
             _personRepository = personRepository;
@@ -27,6 +29,7 @@ namespace SystemZarzadzaniaKorepetycjami_BackEnd.Services.Implementations
             _subjectLevelRepository = subjectLevelRepository;
             _teacherRepository = teacherRepository;
             _availabilityRepository = availabilityRepository;
+            _teacherSalaryRepository = teacherSalaryRepository;
         }
 
 
@@ -67,9 +70,15 @@ namespace SystemZarzadzaniaKorepetycjami_BackEnd.Services.Implementations
                     return SingUpToLessonStatus.INVALID_LESSON;
 
                 var lessonStatusId = 1;
+
+                var teacherSalary = await _teacherSalaryRepository.FindByTeacherAndSubjectAsync(teacher.IdPerson,
+                    singUpToLessonDTO.SubjectLevelId);
+
+                var cost = decimal.ToInt32(teacherSalary.HourlyRate * singUpToLessonDTO.DurationInMinutes / 60);
+
                 var lesson = new Lesson(student.IdPerson, teacher.IdPerson, singUpToLessonDTO.SubjectLevelId,
                     lessonStatusId,
-                    startDate, singUpToLessonDTO.DurationInMinutes);
+                    startDate, singUpToLessonDTO.DurationInMinutes, cost);
 
                 if (!await _availabilityRepository.IsThisLessonInAvailabilityTime(lesson))
                     return SingUpToLessonStatus.NOT_AVAILABILITY;

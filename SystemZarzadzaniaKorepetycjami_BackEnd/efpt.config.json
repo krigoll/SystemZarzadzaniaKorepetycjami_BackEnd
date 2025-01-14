@@ -105,6 +105,10 @@
       {
          "Name": "[dbo].[Test_For_Student]",
          "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Test_For_Student_Status]",
+         "ObjectType": 0
       }
    ],
    "UiHint": null,

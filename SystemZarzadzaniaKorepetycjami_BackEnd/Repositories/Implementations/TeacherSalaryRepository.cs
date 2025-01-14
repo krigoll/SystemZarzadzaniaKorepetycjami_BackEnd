@@ -23,7 +23,7 @@ namespace SystemZarzadzaniaKorepetycjami_BackEnd.Repositories.Implementations
         public async Task<TeacherSalary> FindByTeacherAndSubjectAsync(int teacherId, int subjectLevelId)
         {
             return await _context.TeacherSalary
-                .FirstOrDefaultAsync(ts => ts.IdTeacher == teacherId && ts.IdTeacherSalary == subjectLevelId);
+                .FirstOrDefaultAsync(ts => ts.IdTeacher == teacherId && ts.IdSubject == subjectLevelId);
         }
 
         public async Task UpdateTeacherSalaryAsync(TeacherSalary teacherSalary)

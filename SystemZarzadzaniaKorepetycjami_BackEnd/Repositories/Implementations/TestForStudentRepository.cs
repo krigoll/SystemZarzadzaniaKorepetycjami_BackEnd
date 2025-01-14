@@ -29,6 +29,8 @@ public class TestForStudentRepository : ITestForStudentRepository
             from assignment in assignments.DefaultIfEmpty()
             join testForStudent in _context.TestForStudent
                 on test.IdTest equals testForStudent.IdTest
+            join testForStudentStatus in _context.TestForStudentStatus
+                on testForStudent.IdTestForStudentStatus equals testForStudentStatus.IdTestForStudentStatus
             join teacher in _context.Teacher
                 on test.IdTeacher equals teacher.IdTeacher
             join person in _context.Person
@@ -36,7 +38,7 @@ public class TestForStudentRepository : ITestForStudentRepository
             where testForStudent.IdStudent == idStudent
             group assignment by new
             {
-                test.IdTest, test.Title, testForStudent.DateOfCreation,
+                test.IdTest, test.Title, testForStudent.DateOfCreation, testForStudentStatus.Status,
                 TeacherFullName = person.Name + " " + person.Surname,
                 testForStudent.IdTestForStudent
             }
@@ -45,6 +47,7 @@ public class TestForStudentRepository : ITestForStudentRepository
             {
                 IdTest = g.Key.IdTest,
                 Title = g.Key.Title,
+                Status = g.Key.Status,
                 NumberOfAssignments = g.Count(a => a != null),
                 CreationTime = g.Key.DateOfCreation.ToString("yyyy-MM-dd HH:mm"),
                 Fullname = g.Key.TeacherFullName,
@@ -66,6 +69,8 @@ public class TestForStudentRepository : ITestForStudentRepository
             from assignment in assignments.DefaultIfEmpty()
             join testForStudent in _context.TestForStudent
                 on test.IdTest equals testForStudent.IdTest
+            join testForStudentStatus in _context.TestForStudentStatus
+                on testForStudent.IdTestForStudentStatus equals testForStudentStatus.IdTestForStudentStatus
             join student in _context.Student
                 on testForStudent.IdStudent equals student.IdStudent
             join person in _context.Person
@@ -73,7 +78,7 @@ public class TestForStudentRepository : ITestForStudentRepository
             where test.IdTeacher == idTeacher
             group assignment by new
             {
-                test.IdTest, test.Title, testForStudent.DateOfCreation,
+                test.IdTest, test.Title, testForStudent.DateOfCreation, testForStudentStatus.Status,
                 StudentFullName = person.Name + " " + person.Surname,
                 testForStudent.IdTestForStudent
             }
@@ -82,6 +87,7 @@ public class TestForStudentRepository : ITestForStudentRepository
             {
                 IdTest = g.Key.IdTest,
                 Title = g.Key.Title,
+                Status = g.Key.Status,
                 NumberOfAssignments = g.Count(a => a != null),
                 CreationTime = g.Key.DateOfCreation.ToString("yyyy-MM-dd HH:mm"),
                 Fullname = g.Key.StudentFullName,
@@ -98,11 +104,13 @@ public class TestForStudentRepository : ITestForStudentRepository
         var testForStudentDetails = await (
             from tfs in _context.TestForStudent
             join t in _context.Test on tfs.IdTest equals t.IdTest
+            join tfss in _context.TestForStudentStatus on tfs.IdTestForStudentStatus equals tfss.IdTestForStudentStatus
             where tfs.IdTestForStudent == idTestForStudent
             select new TestForStudentDetailsDTO
             {
                 IdTestForStudent = tfs.IdTestForStudent,
                 Title = t.Title,
+                Status = tfss.Status,
                 Assignment = (
                     from a in _context.Assignment
                     join sa in _context.StudentAnswer

@@ -3,7 +3,7 @@
 public partial class Lesson
 {
     public Lesson(int? idStudent, int? idTeacher, int? idSubjectLevel, int idLessonStatus, DateTime startDate,
-        int durationInMinutes)
+        int durationInMinutes, int cost)
     {
         SetIdStudent(idStudent);
         SetIdTeacher(idTeacher);
@@ -11,6 +11,7 @@ public partial class Lesson
         SetIdLessonStatus(idLessonStatus);
         SetStartDate(startDate);
         SetDurationInMinutes(durationInMinutes);
+        SetCost(cost);
     }
 
     public void SetIdStudent(int? idStudent)
@@ -51,5 +52,12 @@ public partial class Lesson
         if (durationInMinutes <= 0)
             throw new ArgumentException("Duration must be a positive number");
         DurationInMinutes = durationInMinutes;
+    }
+
+    public void SetCost(int cost)
+    {
+        if (cost <= 0)
+            throw new ArgumentException("Cost must be a positive number");
+        Cost = cost;
     }
 }

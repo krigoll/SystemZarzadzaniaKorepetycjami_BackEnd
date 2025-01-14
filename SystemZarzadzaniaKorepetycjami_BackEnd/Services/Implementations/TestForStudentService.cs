@@ -40,31 +40,31 @@ public class TestForStudentService : ITestForStudentService
         return await _testForStudentRepository.GetTestsForStudent(idStudent);
     }
 
-    public async Task<TestForStudentStatus> GetGiveTestToStudentAsync(int idStudent, int idTest)
+    public async Task<GiveTestForStudentStatus> GetGiveTestToStudentAsync(int idStudent, int idTest)
     {
         try
         {
             var student = await _studentRepository.GetStudentByIdAsync(idStudent);
 
-            if (student == null) return TestForStudentStatus.INVALID_STUDENT_ID;
+            if (student == null) return GiveTestForStudentStatus.INVALID_STUDENT_ID;
 
             var test = await _testRepository.GetTestByIdAsync(idTest);
 
-            if (test == null) return TestForStudentStatus.INVALID_TEST_ID;
+            if (test == null) return GiveTestForStudentStatus.INVALID_TEST_ID;
 
             var testForStudent = new TestForStudent(idTest, idStudent);
             await _testForStudentRepository.AddTestForStudent(testForStudent);
-            return TestForStudentStatus.OK;
+            return GiveTestForStudentStatus.OK;
         }
         catch (ArgumentException argumentException)
         {
             Console.WriteLine(argumentException);
-            return TestForStudentStatus.INVALID_TEST_FOR_STUDENT;
+            return GiveTestForStudentStatus.INVALID_TEST_FOR_STUDENT;
         }
         catch (Exception e)
         {
             Console.WriteLine(e);
-            return TestForStudentStatus.SERVER_ERROR;
+            return GiveTestForStudentStatus.SERVER_ERROR;
         }
     }
 

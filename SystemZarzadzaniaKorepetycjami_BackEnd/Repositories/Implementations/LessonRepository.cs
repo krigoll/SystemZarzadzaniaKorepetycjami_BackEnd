@@ -134,7 +134,8 @@ namespace SystemZarzadzaniaKorepetycjami_BackEnd.Repositories.Implementations
                     SubjectName = $"{subject.Name}, {subjectCategory.Name}, {subjectLevel.Name}",
                     TeacherName = $"{personTeacher.Name} {personTeacher.Surname}",
                     TeacherId = teacher.IdTeacher,
-                    StudentName = $"{personStudent.Name} {personStudent.Surname}"
+                    StudentName = $"{personStudent.Name} {personStudent.Surname}",
+                    Cost = lesson.Cost
                 }).FirstOrDefaultAsync();
             return LessonDetail;
         }

@@ -35,6 +35,7 @@ namespace SystemZarzadzaniaKorepetycjami_BackEnd.Models
         public virtual DbSet<TeacherSalary> TeacherSalary { get; set; }
         public virtual DbSet<Test> Test { get; set; }
         public virtual DbSet<TestForStudent> TestForStudent { get; set; }
+        public virtual DbSet<TestForStudentStatus> TestForStudentStatus { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -491,6 +492,25 @@ namespace SystemZarzadzaniaKorepetycjami_BackEnd.Models
                     .WithMany(p => p.TestForStudent)
                     .HasForeignKey(d => d.IdTest)
                     .HasConstraintName("Test_For_Student_Test");
+
+                entity.HasOne(d => d.IdTestForStudentStatusNavigation)
+                    .WithMany(p => p.TestForStudent)
+                    .HasForeignKey(d => d.IdTestForStudentStatus)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("Test_For_Student_Test_For_Student_Status");
+            });
+
+            modelBuilder.Entity<TestForStudentStatus>(entity =>
+            {
+                entity.HasKey(e => e.IdTestForStudentStatus)
+                    .HasName("Test_For_Student_Status_pk");
+
+                entity.ToTable("Test_For_Student_Status");
+
+                entity.Property(e => e.Status)
+                    .IsRequired()
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
             });
 
             OnModelCreatingPartial(modelBuilder);

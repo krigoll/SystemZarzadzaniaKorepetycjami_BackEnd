@@ -7,6 +7,6 @@ public interface ITestForStudentService
 {
     public Task<List<TestForStudentDTO>> GetGivenTestsByTeacherAsync(int idTeacher);
     public Task<List<TestForStudentDTO>> GetGivenTestsByStudentAsync(int idStudent);
-    public Task<TestForStudentStatus> GetGiveTestToStudentAsync(int idStudent, int idTest);
+    public Task<GiveTestForStudentStatus> GetGiveTestToStudentAsync(int idStudent, int idTest);
     public Task<TestForStudentDetailsDTO> GetTestForStudentDetails(int idTestForStudent);
 }

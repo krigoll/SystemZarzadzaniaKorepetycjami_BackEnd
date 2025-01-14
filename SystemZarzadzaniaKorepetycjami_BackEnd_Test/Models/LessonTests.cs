@@ -9,7 +9,7 @@ public class LessonTests
     public void Constructor_ValidInput_ShouldCreateLesson()
     {
         var startDate = DateTime.Now;
-        var lesson = new Lesson(1, 2, 3, 1, startDate, 60);
+        var lesson = new Lesson(1, 2, 3, 1, startDate, 60, 100);
 
         Assert.AreEqual(1, lesson.IdStudent);
         Assert.AreEqual(2, lesson.IdTeacher);
@@ -22,42 +22,42 @@ public class LessonTests
     [Test]
     public void Constructor_InvalidIdStudent_ShouldThrowArgumentException()
     {
-        Assert.Throws<ArgumentException>(() => new Lesson(0, 2, 3, 1, DateTime.Now, 60));
-        Assert.Throws<ArgumentException>(() => new Lesson(-1, 2, 3, 1, DateTime.Now, 60));
+        Assert.Throws<ArgumentException>(() => new Lesson(0, 2, 3, 1, DateTime.Now, 60, 100));
+        Assert.Throws<ArgumentException>(() => new Lesson(-1, 2, 3, 1, DateTime.Now, 60, 100));
     }
 
     [Test]
     public void Constructor_InvalidIdTeacher_ShouldThrowArgumentException()
     {
-        Assert.Throws<ArgumentException>(() => new Lesson(1, 0, 3, 1, DateTime.Now, 60));
-        Assert.Throws<ArgumentException>(() => new Lesson(1, -2, 3, 1, DateTime.Now, 60));
+        Assert.Throws<ArgumentException>(() => new Lesson(1, 0, 3, 1, DateTime.Now, 60, 100));
+        Assert.Throws<ArgumentException>(() => new Lesson(1, -2, 3, 1, DateTime.Now, 60, 100));
     }
 
     [Test]
     public void Constructor_InvalidIdSubjectLevel_ShouldThrowArgumentException()
     {
-        Assert.Throws<ArgumentException>(() => new Lesson(1, 2, 0, 1, DateTime.Now, 60));
-        Assert.Throws<ArgumentException>(() => new Lesson(1, 2, -3, 1, DateTime.Now, 60));
+        Assert.Throws<ArgumentException>(() => new Lesson(1, 2, 0, 1, DateTime.Now, 60, 100));
+        Assert.Throws<ArgumentException>(() => new Lesson(1, 2, -3, 1, DateTime.Now, 60, 100));
     }
 
     [Test]
     public void Constructor_InvalidIdLessonStatus_ShouldThrowArgumentException()
     {
-        Assert.Throws<ArgumentException>(() => new Lesson(1, 2, 3, 0, DateTime.Now, 60));
-        Assert.Throws<ArgumentException>(() => new Lesson(1, 2, 3, -1, DateTime.Now, 60));
+        Assert.Throws<ArgumentException>(() => new Lesson(1, 2, 3, 0, DateTime.Now, 60, 100));
+        Assert.Throws<ArgumentException>(() => new Lesson(1, 2, 3, -1, DateTime.Now, 60, 100));
     }
 
     [Test]
     public void Constructor_InvalidDuration_ShouldThrowArgumentException()
     {
-        Assert.Throws<ArgumentException>(() => new Lesson(1, 2, 3, 1, DateTime.Now, 0));
-        Assert.Throws<ArgumentException>(() => new Lesson(1, 2, 3, 1, DateTime.Now, -15));
+        Assert.Throws<ArgumentException>(() => new Lesson(1, 2, 3, 1, DateTime.Now, 0, 100));
+        Assert.Throws<ArgumentException>(() => new Lesson(1, 2, 3, 1, DateTime.Now, -15, 100));
     }
 
     [Test]
     public void SetIdStudent_ValidInput_ShouldUpdateIdStudent()
     {
-        var lesson = new Lesson(1, 2, 3, 1, DateTime.Now, 60);
+        var lesson = new Lesson(1, 2, 3, 1, DateTime.Now, 60, 100);
         lesson.SetIdStudent(5);
 
         Assert.AreEqual(5, lesson.IdStudent);
@@ -66,7 +66,7 @@ public class LessonTests
     [Test]
     public void SetIdStudent_InvalidInput_ShouldThrowArgumentException()
     {
-        var lesson = new Lesson(1, 2, 3, 1, DateTime.Now, 60);
+        var lesson = new Lesson(1, 2, 3, 1, DateTime.Now, 60, 100);
 
         Assert.Throws<ArgumentException>(() => lesson.SetIdStudent(0));
         Assert.Throws<ArgumentException>(() => lesson.SetIdStudent(-1));
@@ -75,7 +75,7 @@ public class LessonTests
     [Test]
     public void SetIdTeacher_ValidInput_ShouldUpdateIdTeacher()
     {
-        var lesson = new Lesson(1, 2, 3, 1, DateTime.Now, 60);
+        var lesson = new Lesson(1, 2, 3, 1, DateTime.Now, 60, 100);
         lesson.SetIdTeacher(10);
 
         Assert.AreEqual(10, lesson.IdTeacher);
@@ -84,7 +84,7 @@ public class LessonTests
     [Test]
     public void SetIdTeacher_InvalidInput_ShouldThrowArgumentException()
     {
-        var lesson = new Lesson(1, 2, 3, 1, DateTime.Now, 60);
+        var lesson = new Lesson(1, 2, 3, 1, DateTime.Now, 60, 100);
 
         Assert.Throws<ArgumentException>(() => lesson.SetIdTeacher(0));
         Assert.Throws<ArgumentException>(() => lesson.SetIdTeacher(-1));
@@ -93,7 +93,7 @@ public class LessonTests
     [Test]
     public void SetIdSubjectLevel_ValidInput_ShouldUpdateIdSubjectLevel()
     {
-        var lesson = new Lesson(1, 2, 3, 1, DateTime.Now, 60);
+        var lesson = new Lesson(1, 2, 3, 1, DateTime.Now, 60, 100);
         lesson.SetIdSubjectLevel(7);
 
         Assert.AreEqual(7, lesson.IdSubjectLevel);
@@ -102,7 +102,7 @@ public class LessonTests
     [Test]
     public void SetIdSubjectLevel_InvalidInput_ShouldThrowArgumentException()
     {
-        var lesson = new Lesson(1, 2, 3, 1, DateTime.Now, 60);
+        var lesson = new Lesson(1, 2, 3, 1, DateTime.Now, 60, 100);
 
         Assert.Throws<ArgumentException>(() => lesson.SetIdSubjectLevel(0));
         Assert.Throws<ArgumentException>(() => lesson.SetIdSubjectLevel(-3));
@@ -111,7 +111,7 @@ public class LessonTests
     [Test]
     public void SetIdLessonStatus_ValidInput_ShouldUpdateIdLessonStatus()
     {
-        var lesson = new Lesson(1, 2, 3, 1, DateTime.Now, 60);
+        var lesson = new Lesson(1, 2, 3, 1, DateTime.Now, 60, 100);
         lesson.SetIdLessonStatus(2);
 
         Assert.AreEqual(2, lesson.IdLessonStatus);
@@ -120,7 +120,7 @@ public class LessonTests
     [Test]
     public void SetIdLessonStatus_InvalidInput_ShouldThrowArgumentException()
     {
-        var lesson = new Lesson(1, 2, 3, 1, DateTime.Now, 60);
+        var lesson = new Lesson(1, 2, 3, 1, DateTime.Now, 60, 100);
 
         Assert.Throws<ArgumentException>(() => lesson.SetIdLessonStatus(0));
         Assert.Throws<ArgumentException>(() => lesson.SetIdLessonStatus(-2));
@@ -129,7 +129,7 @@ public class LessonTests
     [Test]
     public void SetStartDate_ValidInput_ShouldUpdateStartDate()
     {
-        var lesson = new Lesson(1, 2, 3, 1, DateTime.Now, 60);
+        var lesson = new Lesson(1, 2, 3, 1, DateTime.Now, 60, 100);
         var newDate = DateTime.Now.AddDays(1);
 
         lesson.SetStartDate(newDate);
@@ -140,7 +140,7 @@ public class LessonTests
     [Test]
     public void SetDurationInMinutes_ValidInput_ShouldUpdateDuration()
     {
-        var lesson = new Lesson(1, 2, 3, 1, DateTime.Now, 60);
+        var lesson = new Lesson(1, 2, 3, 1, DateTime.Now, 60, 100);
         lesson.SetDurationInMinutes(90);
 
         Assert.AreEqual(90, lesson.DurationInMinutes);
@@ -149,7 +149,7 @@ public class LessonTests
     [Test]
     public void SetDurationInMinutes_InvalidInput_ShouldThrowArgumentException()
     {
-        var lesson = new Lesson(1, 2, 3, 1, DateTime.Now, 60);
+        var lesson = new Lesson(1, 2, 3, 1, DateTime.Now, 60, 100);
 
         Assert.Throws<ArgumentException>(() => lesson.SetDurationInMinutes(0));
         Assert.Throws<ArgumentException>(() => lesson.SetDurationInMinutes(-10));
