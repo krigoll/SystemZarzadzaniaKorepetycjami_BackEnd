@@ -14,6 +14,7 @@ public class PersonProfileForAdminDTO
     public bool IsStudent { get; set; }
     public bool IsTeacher { get; set; }
     public bool IsBaned { get; set; }
+    public int IdBan { get; set; }
     public int NumberOfDays { get; set; }
-    public string Reason {get; set;}
+    public string Reason { get; set; }
 }

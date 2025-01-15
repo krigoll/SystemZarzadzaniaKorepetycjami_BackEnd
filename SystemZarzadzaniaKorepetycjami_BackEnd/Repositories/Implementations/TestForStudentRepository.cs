@@ -153,4 +153,15 @@ public class TestForStudentRepository : ITestForStudentRepository
         _context.TestForStudent.Update(testForStudent);
         await _context.SaveChangesAsync();
     }
+
+    public async Task DeleteAllByPersonIdAsync(int idPerson)
+    {
+        var testForStudent = await _context.TestForStudent
+            .Where(testForStudent => testForStudent.IdStudent == idPerson ||
+                                     _context.Test.Any(test =>
+                                         test.IdTest == testForStudent.IdTest && test.IdTeacher == idPerson))
+            .ToListAsync();
+        _context.TestForStudent.RemoveRange(testForStudent);
+        await _context.SaveChangesAsync();
+    }
 }

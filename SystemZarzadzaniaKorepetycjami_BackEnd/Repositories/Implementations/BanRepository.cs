@@ -86,6 +86,7 @@ public class BanRepository : IBanRepository
             return new BannedInformationDTO
             {
                 IsBaned = false,
+                IdBan = 0,
                 NummberOfDays = 0,
                 Reason = ""
             };
@@ -96,6 +97,7 @@ public class BanRepository : IBanRepository
         return new BannedInformationDTO
         {
             IsBaned = true,
+            IdBan = latestBan.IdBan,
             NummberOfDays = (int)Math.Ceiling((latestBan.StartTime.AddDays(latestBan.LengthInDays) - now).TotalDays),
             Reason = latestBan.Reason
         };

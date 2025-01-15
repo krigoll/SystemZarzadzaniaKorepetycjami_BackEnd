@@ -17,10 +17,12 @@ public class PersonService : IPersonService
     private readonly IPersonRepository _personRepository;
     private readonly IStudentRepository _studentRepository;
     private readonly ITeacherRepository _teacherRepository;
+    private readonly ITestForStudentRepository _testForStudentRepository;
 
     public PersonService(IAdminRepository adminRepository, ILessonRepository lessonRepository,
         ILoginRepository loginRepository, IPersonRepository personRepository, IStudentRepository studentRepository,
-        ITeacherRepository teacherRepository, IBanRepository banRepository, IOpinionRepository opinionRepository)
+        ITeacherRepository teacherRepository, IBanRepository banRepository, IOpinionRepository opinionRepository,
+        ITestForStudentRepository testForStudentRepository)
     {
         _adminRepository = adminRepository;
         _lessonRepository = lessonRepository;
@@ -30,6 +32,7 @@ public class PersonService : IPersonService
         _teacherRepository = teacherRepository;
         _banRepository = banRepository;
         _opinionRepository = opinionRepository;
+        _testForStudentRepository = testForStudentRepository;
     }
 
     public async Task<RegisterStatus> RegistrationPerson(RegistrationDTO registrationDto)
@@ -135,6 +138,7 @@ public class PersonService : IPersonService
             IsStudent = personRoles.isStudent,
             IsTeacher = personRoles.isTeacher,
             IsBaned = personBan.IsBaned,
+            IdBan = personBan.IdBan,
             NumberOfDays = personBan.NummberOfDays,
             Reason = personBan.Reason
         };
@@ -196,6 +200,9 @@ public class PersonService : IPersonService
 
         if (person != null)
         {
+            await _opinionRepository.DeleteOpinionsByPersonId(person.IdPerson);
+            await _testForStudentRepository.DeleteAllByPersonIdAsync(person.IdPerson);
+
             var personRoles = await GetPersonRoleAsync(person.Email);
             if (personRoles.isStudent)
                 await RemoveStudentAsync(new Student(person.IdPerson));
@@ -204,7 +211,6 @@ public class PersonService : IPersonService
             if (personRoles.isTeacher)
                 await RemoveTeacherAsync(new Teacher(person.IdPerson));
 
-            await _opinionRepository.DeleteOpinionsByPersonId(person.IdPerson);
 
             await _personRepository.DeleteUserAsync(person);
         }
@@ -223,12 +229,14 @@ public class PersonService : IPersonService
     public async Task RemoveStudentAsync(Student student)
     {
         await _lessonRepository.CancelLessonAndSetStudentNullAsync(student);
+        await _testForStudentRepository.DeleteAllByPersonIdAsync(student.IdStudent);
         await _studentRepository.RemoveStudentAsync(student);
     }
 
     public async Task RemoveTeacherAsync(Teacher teacher)
     {
         await _lessonRepository.CancelLessonAndSetTeacherNullAsync(teacher);
+        await _testForStudentRepository.DeleteAllByPersonIdAsync(teacher.IdTeacher);
         await _teacherRepository.RemoveTeacherAsync(teacher);
     }
 }
