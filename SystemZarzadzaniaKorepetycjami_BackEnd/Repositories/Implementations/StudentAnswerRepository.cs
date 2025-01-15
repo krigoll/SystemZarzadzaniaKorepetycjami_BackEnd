@@ -1,5 +1,4 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.IdentityModel.Tokens;
 using SystemZarzadzaniaKorepetycjami_BackEnd.Models;
 using SystemZarzadzaniaKorepetycjami_BackEnd.Repositories.Interfaces;
 
@@ -14,7 +13,28 @@ public class StudentAnswerRepository : IStudentAnswerRepository
         _context = context;
     }
 
-    public async Task CreateAndUpdateStudentAnswer(int idTestForStudent, List<StudentAnswer> studentAnswer)
+    public async Task CreateAndUpdateStudentAnswer(int idTestForStudent, List<StudentAnswer> studentAnswers)
+    {
+        var assignments = await _context.Assignment
+            .Where(a => a.IdTest == _context.TestForStudent
+                .Where(tfs => tfs.IdTestForStudent == idTestForStudent)
+                .Select(tfs => tfs.IdTest).FirstOrDefault())
+            .ToListAsync();
+
+        foreach (var assignment in assignments)
+            if (!studentAnswers.Any(sa => sa.IdAssignment == assignment.IdAssignment))
+            {
+                var newAnswer = new StudentAnswer("Brak odpowiedzi", idTestForStudent, assignment.IdAssignment);
+                studentAnswers.Add(newAnswer);
+            }
+
+        await _context.StudentAnswer.AddRangeAsync(studentAnswers);
+
+        await _context.SaveChangesAsync();
+    }
+
+
+    /*public async Task CreateAndUpdateStudentAnswer(int idTestForStudent, List<StudentAnswer> studentAnswer)
     {
         foreach (var studentA in studentAnswer)
         {
@@ -39,7 +59,7 @@ public class StudentAnswerRepository : IStudentAnswerRepository
         }
 
         await _context.SaveChangesAsync();
-    }
+    }*/
 
     public Task<StudentAnswer> GetStudentAnswerByIdAsync(int idStudentAnswer)
     {
