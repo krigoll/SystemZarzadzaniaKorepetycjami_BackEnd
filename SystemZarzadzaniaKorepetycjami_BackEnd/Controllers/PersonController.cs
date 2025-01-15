@@ -94,6 +94,10 @@ public class PersonController : ControllerBase
     {
         try
         {
+            var isAdminClaim = HttpContext.User.FindFirst("isAdmin")?.Value;
+
+            if (isAdminClaim == null || !bool.TryParse(isAdminClaim, out var isAdmin) || !isAdmin) return Forbid();
+
             var personProfileDto = await _personService.GetPersonProfileByIdAsync(userId);
             return personProfileDto == null
                 ? StatusCode(StatusCodes.Status400BadRequest, "Invalid user id")

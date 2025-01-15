@@ -27,6 +27,7 @@ public class ReportService : IReportService
     {
         var report = await _reportRepository.FindReportByIdAsync(idReport);
         if (report == null) return null;
+        var person = await _personRepository.FindPersonByIdAsync(report.Sender);
 
         var reportDetails = new ReportDetailsDTO
         {
@@ -34,7 +35,8 @@ public class ReportService : IReportService
             Title = report.Title,
             Content = report.Content,
             DateTime = report.Date.ToString("yyyy-MM-dd HH:mm", new CultureInfo("pl-Pl")),
-            IsDealt = report.Dealt
+            IsDealt = report.Dealt,
+            FullName = person == null ? "Konto usunięte" : $"{person.Name} {person.Surname}"
         };
 
         return reportDetails;

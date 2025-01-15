@@ -54,7 +54,7 @@ public class TestForStudentRepository : ITestForStudentRepository
                 IdTestForStudent = g.Key.IdTestForStudent
             }).ToListAsync();
 
-        var sortedTests = tests.OrderBy(t => t.Title).ThenBy(t => t.CreationTime).ToList();
+        var sortedTests = tests.OrderByDescending(t => t.CreationTime).ThenBy(t => t.Title).ToList();
 
         return sortedTests;
     }
@@ -94,7 +94,7 @@ public class TestForStudentRepository : ITestForStudentRepository
                 IdTestForStudent = g.Key.IdTestForStudent
             }).ToListAsync();
 
-        var sortedTests = tests.OrderBy(t => t.Title).ThenBy(t => t.CreationTime).ToList();
+        var sortedTests = tests.OrderByDescending(t => t.CreationTime).ThenBy(t => t.Title).ToList();
 
         return sortedTests;
     }
