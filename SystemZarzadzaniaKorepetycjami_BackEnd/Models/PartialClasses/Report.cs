@@ -15,14 +15,14 @@ public partial class Report
 
     public void SetTitle(string title)
     {
-        if (title.IsNullOrEmpty() || title.Length > 20)
+        if (title.IsNullOrEmpty() || title.Length >= 50)
             throw new ArgumentException("Invalid Title");
         Title = title;
     }
 
     public void SetContent(string content)
     {
-        if (content.IsNullOrEmpty() || content.Length > 500)
+        if (content.IsNullOrEmpty() || content.Length >= 500)
             throw new ArgumentException("Invalid Content");
         Content = content;
     }

@@ -20,7 +20,7 @@ public class ReportTests
     public void Constructor_InvalidTitle_ShouldThrowArgumentException()
     {
         Assert.Throws<ArgumentException>(() => new Report("", "Valid content", 1, DateTime.Now));
-        Assert.Throws<ArgumentException>(() => new Report(new string('A', 21), "Valid content", 1, DateTime.Now));
+        Assert.Throws<ArgumentException>(() => new Report(new string('A', 51), "Valid content", 1, DateTime.Now));
     }
 
     [Test]
@@ -52,7 +52,7 @@ public class ReportTests
         var report = new Report("Initial Title", "Content", 1, DateTime.Now);
 
         Assert.Throws<ArgumentException>(() => report.SetTitle(""));
-        Assert.Throws<ArgumentException>(() => report.SetTitle(new string('A', 21)));
+        Assert.Throws<ArgumentException>(() => report.SetTitle(new string('A', 51)));
     }
 
     [Test]
