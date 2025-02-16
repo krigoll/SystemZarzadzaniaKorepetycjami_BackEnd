@@ -9,7 +9,7 @@
         public int IdLessonStatus { get; private set; }
         public DateTime StartDate { get; private set; }
         public int DurationInMinutes { get; private set; }
-        public int Cost { get; private set; }
+        public decimal Cost { get; private set; }
 
         public virtual LessonStatus IdLessonStatusNavigation { get; }
         public virtual Student IdStudentNavigation { get; }
