@@ -161,6 +161,11 @@ public class TestForStudentRepository : ITestForStudentRepository
                                      _context.Test.Any(test =>
                                          test.IdTest == testForStudent.IdTest && test.IdTeacher == idPerson))
             .ToListAsync();
+        foreach (var test in testForStudent)
+        {
+            var studentAnswers = await _context.StudentAnswer.Where(sa => sa.IdTestForStudent == test.IdTestForStudent).ToListAsync();
+            _context.StudentAnswer.RemoveRange(studentAnswers);
+        }
         _context.TestForStudent.RemoveRange(testForStudent);
         await _context.SaveChangesAsync();
     }

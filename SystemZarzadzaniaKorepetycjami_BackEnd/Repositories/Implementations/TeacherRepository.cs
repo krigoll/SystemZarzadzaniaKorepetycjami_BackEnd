@@ -39,6 +39,8 @@ namespace SystemZarzadzaniaKorepetycjami_BackEnd.Repositories.Implementations
                 .Where(ts => ts.IdTeacher == teacher.IdTeacher)
                 .ToListAsync();
             _context.TeacherSalary.RemoveRange(teacherSalaries);
+            var tests = await _context.Test.Where(sa => sa.IdTeacher == teacher.IdTeacher).ToListAsync();
+            _context.Test.RemoveRange(tests);
             _context.Teacher.Remove(teacher);
             await _context.SaveChangesAsync();
         }
